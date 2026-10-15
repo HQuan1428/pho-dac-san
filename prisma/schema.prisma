@@ -1,0 +1,403 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Users & auth ----------
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  LOCKED
+}
+
+enum TokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  name          String
+  phone         String?
+  passwordHash  String
+  emailVerified DateTime?
+  role          UserRole   @default(USER)
+  status        UserStatus @default(ACTIVE)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  tokens        AuthToken[]
+  ownedShop     Shop?          @relation("ShopOwner")
+  memberships   ShopMember[]
+  orders        Order[]
+  reviews       Review[]
+  wishlist      WishlistItem[]
+  follows       ShopFollow[]
+  addresses     Address[]
+  notifications Notification[]
+  orderEvents   OrderEvent[]
+}
+
+model AuthToken {
+  id        String    @id @default(cuid())
+  userId    String
+  type      TokenType
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+// ---------- Catalog reference data (admin managed) ----------
+
+model Region {
+  id        String     @id @default(cuid())
+  name      String     @unique // Miền Bắc, Miền Trung, Miền Nam
+  slug      String     @unique
+  sortOrder Int        @default(0)
+  provinces Province[]
+}
+
+model Province {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  regionId String
+  region   Region    @relation(fields: [regionId], references: [id])
+  shops    Shop[]
+  products Product[]
+  addresses Address[]
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  parentId  String?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryTree")
+  sortOrder Int        @default(0)
+  products  Product[]
+}
+
+// ---------- Shops ----------
+
+enum ShopStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+  SUSPENDED
+}
+
+enum ShopPlan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+model Shop {
+  id           String     @id @default(cuid())
+  ownerId      String     @unique
+  owner        User       @relation("ShopOwner", fields: [ownerId], references: [id])
+  slug         String     @unique
+  name         String
+  description  String?
+  logo         String?
+  banner       String?
+  phone        String
+  address      String?
+  provinceId   String
+  province     Province   @relation(fields: [provinceId], references: [id])
+  status       ShopStatus @default(PENDING)
+  statusReason String?
+  plan         ShopPlan   @default(FREE)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  members   ShopMember[]
+  invites   ShopInvite[]
+  products  Product[]
+  orders    Order[]
+  vouchers  Voucher[]
+  followers ShopFollow[]
+  flags     CustomerFlag[]
+
+  @@index([status])
+}
+
+// Owner is Shop.ownerId; members are staff with fixed permissions
+// (manage orders + edit products; no shop settings, no staff management).
+model ShopMember {
+  id        String   @id @default(cuid())
+  shopId    String
+  userId    String
+  createdAt DateTime @default(now())
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([shopId, userId])
+}
+
+model ShopInvite {
+  id         String    @id @default(cuid())
+  shopId     String
+  email      String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+  shop       Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId])
+}
+
+// ---------- Products ----------
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  HIDDEN
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  shopId      String
+  categoryId  String
+  provinceId  String // origin of the specialty
+  name        String
+  slug        String
+  description String
+  images      String[]
+  status      ProductStatus @default(DRAFT)
+  ratingAvg   Float         @default(0)
+  ratingCount Int           @default(0)
+  soldCount   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  shop       Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  category   Category         @relation(fields: [categoryId], references: [id])
+  province   Province         @relation(fields: [provinceId], references: [id])
+  variants   ProductVariant[]
+  reviews    Review[]
+  wishlistedBy WishlistItem[]
+  orderItems OrderItem[]
+
+  @@unique([shopId, slug])
+  @@index([status, categoryId])
+  @@index([status, provinceId])
+}
+
+// Prices are integer VND.
+model ProductVariant {
+  id             String      @id @default(cuid())
+  productId      String
+  name           String // "500g", "1kg", "Hộp quà"
+  price          Int
+  compareAtPrice Int?
+  stock          Int         @default(0)
+  sku            String?
+  sortOrder      Int         @default(0)
+  product        Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems     OrderItem[]
+}
+
+// ---------- Orders (no online payment; shop calls customer to confirm) ----------
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  SHIPPING
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  code            String      @unique // ORD-YYMMDD-XXXX
+  checkoutId      String // groups orders split from one cart checkout
+  shopId          String
+  customerId      String? // null for guest checkout
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  provinceId      String
+  shippingAddress String
+  note            String?
+  status          OrderStatus @default(NEW)
+  cancelReason    String?
+  voucherId       String?
+  subtotal        Int
+  discount        Int         @default(0)
+  total           Int
+  ip              String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  shop     Shop         @relation(fields: [shopId], references: [id])
+  customer User?        @relation(fields: [customerId], references: [id])
+  voucher  Voucher?     @relation(fields: [voucherId], references: [id])
+  items    OrderItem[]
+  events   OrderEvent[]
+
+  @@index([shopId, status, createdAt])
+  @@index([customerId])
+  @@index([customerPhone, createdAt])
+  @@index([checkoutId])
+}
+
+// Snapshot of product data at order time.
+model OrderItem {
+  id          String          @id @default(cuid())
+  orderId     String
+  productId   String?
+  variantId   String?
+  productName String
+  variantName String
+  price       Int
+  quantity    Int
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  review      Review?
+}
+
+// Status changes and call notes ("Đã gọi, khách hẹn chiều mai").
+model OrderEvent {
+  id        String       @id @default(cuid())
+  orderId   String
+  actorId   String?
+  status    OrderStatus?
+  note      String?
+  createdAt DateTime     @default(now())
+  order     Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  actor     User?        @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([orderId, createdAt])
+}
+
+// Shop marks a phone number as "bom hàng".
+model CustomerFlag {
+  id        String   @id @default(cuid())
+  shopId    String
+  phone     String
+  reason    String?
+  createdAt DateTime @default(now())
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@unique([shopId, phone])
+}
+
+// ---------- Vouchers ----------
+
+enum VoucherType {
+  PERCENT
+  FIXED
+}
+
+model Voucher {
+  id          String      @id @default(cuid())
+  shopId      String
+  code        String
+  type        VoucherType
+  value       Int // percent (1-100) or VND
+  minOrder    Int         @default(0)
+  maxDiscount Int?
+  startsAt    DateTime
+  endsAt      DateTime
+  usageLimit  Int?
+  usedCount   Int         @default(0)
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  shop        Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  orders      Order[]
+
+  @@unique([shopId, code])
+}
+
+// ---------- Customer engagement ----------
+
+model Review {
+  id          String    @id @default(cuid())
+  productId   String
+  orderItemId String    @unique // one review per purchased item, only after COMPLETED
+  userId      String
+  rating      Int // 1-5
+  content     String?
+  createdAt   DateTime  @default(now())
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId, createdAt])
+}
+
+model WishlistItem {
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+}
+
+model ShopFollow {
+  userId    String
+  shopId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@id([userId, shopId])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  phone      String
+  provinceId String
+  detail     String
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  province   Province @relation(fields: [provinceId], references: [id])
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+// Landing page contact form.
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
