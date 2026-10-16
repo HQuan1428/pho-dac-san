@@ -32,7 +32,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   return (
     <div className="space-y-6">
       {/* Top bar with back button & checkout id */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         <Button
           variant="ghost"
           size="sm"
@@ -42,7 +42,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           Quay lại danh sách đơn hàng
         </Button>
 
-        <span className="font-mono text-xs text-muted-foreground">
+        <span
+          className="font-mono text-xs text-muted-foreground break-all max-w-full"
+          title={`Checkout ID: ${order.checkoutId}`}
+        >
           Checkout ID: {order.checkoutId}
         </span>
       </div>

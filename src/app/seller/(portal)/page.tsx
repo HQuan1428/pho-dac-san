@@ -51,7 +51,7 @@ export default async function SellerDashboardPage() {
       />
 
       {/* KPI row: 5 StatCards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           label="Đơn hàng mới"
           value={String(stats.newOrders)}
@@ -84,7 +84,7 @@ export default async function SellerDashboardPage() {
       {/* 2/3 + 1/3 Grid: Chart on the left, Latest orders on the right */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left: 2/3 width Orders Chart */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-w-0">
           <OrdersChart data={chartData} />
         </div>
 
