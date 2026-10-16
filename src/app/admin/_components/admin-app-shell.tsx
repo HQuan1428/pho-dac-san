@@ -61,11 +61,11 @@ interface AdminAppShellProps {
 
 const navItems = [
   { href: "/admin", label: "Tổng quan", icon: LayoutDashboard, exact: true },
-  { href: "/admin/gian-hang", label: "Gian hàng", icon: Store, exact: false },
-  { href: "/admin/nguoi-dung", label: "Người dùng", icon: Users, exact: false },
-  { href: "/admin/danh-muc", label: "Danh mục", icon: FolderTree, exact: false },
-  { href: "/admin/vung-mien", label: "Vùng miền & Tỉnh", icon: MapPin, exact: false },
-  { href: "/admin/lien-he", label: "Tin nhắn liên hệ", icon: MessageSquare, exact: false },
+  { href: "/admin/shops", label: "Gian hàng", icon: Store, exact: false },
+  { href: "/admin/users", label: "Người dùng", icon: Users, exact: false },
+  { href: "/admin/categories", label: "Danh mục", icon: FolderTree, exact: false },
+  { href: "/admin/regions", label: "Vùng miền & Tỉnh", icon: MapPin, exact: false },
+  { href: "/admin/contacts", label: "Tin nhắn liên hệ", icon: MessageSquare, exact: false },
 ];
 
 function getBreadcrumbs(pathname: string) {
@@ -73,15 +73,15 @@ function getBreadcrumbs(pathname: string) {
 
   if (pathname === "/admin") {
     crumbs.push({ label: "Tổng quan" });
-  } else if (pathname.startsWith("/admin/gian-hang")) {
+  } else if (pathname.startsWith("/admin/shops")) {
     crumbs.push({ label: "Gian hàng" });
-  } else if (pathname.startsWith("/admin/nguoi-dung")) {
+  } else if (pathname.startsWith("/admin/users")) {
     crumbs.push({ label: "Người dùng" });
-  } else if (pathname.startsWith("/admin/danh-muc")) {
+  } else if (pathname.startsWith("/admin/categories")) {
     crumbs.push({ label: "Danh mục" });
-  } else if (pathname.startsWith("/admin/vung-mien")) {
+  } else if (pathname.startsWith("/admin/regions")) {
     crumbs.push({ label: "Vùng miền & Tỉnh" });
-  } else if (pathname.startsWith("/admin/lien-he")) {
+  } else if (pathname.startsWith("/admin/contacts")) {
     crumbs.push({ label: "Tin nhắn liên hệ" });
   }
 
@@ -318,7 +318,7 @@ export function AdminAppShell({ admin, children }: AdminAppShellProps) {
 
             {/* Right: Search + User Menu */}
             <div className="flex items-center gap-3">
-              <form method="GET" action="/admin/gian-hang" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
+              <form method="GET" action="/admin/shops" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
                 <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none" />
                 <input
                   type="search"

@@ -76,7 +76,7 @@ export function CtaBand() {
                 size="lg"
                 variant="secondary"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-medium shadow-sm"
-                render={<Link href="/kenh-ban/dang-ky" />}
+                render={<Link href="/seller/register" />}
               >
                 <Store data-icon="inline-start" />
                 Mở gian hàng miễn phí
@@ -85,7 +85,7 @@ export function CtaBand() {
                 size="lg"
                 variant="outline"
                 className="border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
-                render={<Link href="/lien-he" />}
+                render={<Link href="/contact" />}
               >
                 <Phone data-icon="inline-start" />
                 Liên hệ hợp tác

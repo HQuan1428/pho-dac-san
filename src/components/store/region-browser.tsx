@@ -32,13 +32,13 @@ function RegionColumn({ region }: { region: RegionData }) {
       <div>
         <div className="flex items-center justify-between border-b pb-2 mb-2.5">
           <Link
-            href={`/tim-kiem?vung=${region.slug}`}
+            href={`/search?vung=${region.slug}`}
             className="font-semibold text-sm text-foreground hover:text-primary transition"
           >
             {region.name}
           </Link>
           <Link
-            href={`/tim-kiem?vung=${region.slug}`}
+            href={`/search?vung=${region.slug}`}
             className="text-[11px] text-muted-foreground hover:text-primary transition"
           >
             Xem tất cả
@@ -49,7 +49,7 @@ function RegionColumn({ region }: { region: RegionData }) {
           {visibleProvinces.map((prov) => (
             <Link
               key={prov.id}
-              href={`/tim-kiem?tinh=${prov.slug}`}
+              href={`/search?tinh=${prov.slug}`}
               className="inline-flex items-center rounded-md border border-border/70 bg-muted/30 px-2 py-0.5 text-xs text-muted-foreground transition hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
             >
               <span>{prov.name}</span>

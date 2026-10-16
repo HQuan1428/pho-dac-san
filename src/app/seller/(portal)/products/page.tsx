@@ -1,0 +1,259 @@
+import Link from "next/link";
+import Image from "next/image";
+import { Plus, Search, Edit } from "lucide-react";
+import { PageHeader } from "@/components/common/page-header";
+import { Price } from "@/components/common/price";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { getSellerProducts } from "@/server/seller/products";
+
+export const metadata = {
+  title: "Quản lý sản phẩm",
+};
+
+interface ProductListPageProps {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    status?: string;
+  }>;
+}
+
+const statusBadgeMap = {
+  ACTIVE: { label: "Đang bán", className: "bg-primary/10 text-primary border-primary/20" },
+  DRAFT: { label: "Bản nháp", className: "bg-muted text-muted-foreground border-border" },
+  HIDDEN: { label: "Ẩn", className: "bg-destructive/10 text-destructive border-destructive/20" },
+};
+
+export default async function ProductListPage({ searchParams }: ProductListPageProps) {
+  const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+  const search = params.search || "";
+  const status = params.status || "";
+
+  const { items, total, totalPages, currentPage } = await getSellerProducts({
+    page,
+    search,
+    status,
+    pageSize: 10,
+  });
+
+  const statuses = [
+    { value: "", label: "Tất cả" },
+    { value: "ACTIVE", label: "Đang bán" },
+    { value: "DRAFT", label: "Bản nháp" },
+    { value: "HIDDEN", label: "Đã ẩn" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Sản phẩm của gian hàng"
+        description={`Tổng số ${total} sản phẩm đặc sản`}
+        actions={
+          <Button size="sm" className="gap-1.5" render={<Link href="/seller/products/new" />}>
+            <Plus className="size-4" />
+            Thêm sản phẩm mới
+          </Button>
+        }
+      />
+
+      {/* Toolbar above: search & filters left, count right */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Status filters */}
+          <div className="flex flex-wrap gap-1">
+            {statuses.map((s) => {
+              const isActive = status === s.value;
+              const queryParams = new URLSearchParams();
+              if (s.value) queryParams.set("status", s.value);
+              if (search) queryParams.set("search", search);
+              const href = `/seller/products${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+
+              return (
+                <Button
+                  key={s.value}
+                  size="xs"
+                  variant={isActive ? "default" : "outline"}
+                  render={<Link href={href} />}
+                >
+                  {s.label}
+                </Button>
+              );
+            })}
+          </div>
+
+          {/* Search input form */}
+          <form method="GET" className="relative w-full sm:w-64">
+            {status && <input type="hidden" name="status" value={status} />}
+            <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none" />
+            <input
+              type="search"
+              name="search"
+              defaultValue={search}
+              placeholder="Tìm theo tên sản phẩm..."
+              className="h-8 w-full rounded-md border border-input bg-transparent pl-8 pr-3 text-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </form>
+        </div>
+
+        <div className="text-xs text-muted-foreground">
+          Hiển thị <span className="font-semibold text-foreground">{items.length}</span> trên tổng số <span className="font-semibold text-foreground">{total}</span>
+        </div>
+      </div>
+
+      {/* Products table: full width, compact rows h-11, sticky header */}
+      <div className="overflow-hidden rounded-lg border bg-card">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
+              <TableRow className="h-11">
+                <TableHead className="w-14">Ảnh</TableHead>
+                <TableHead>Tên sản phẩm</TableHead>
+                <TableHead>Trạng thái</TableHead>
+                <TableHead className="text-right">Giá bán từ</TableHead>
+                <TableHead className="text-right">Tồn kho</TableHead>
+                <TableHead className="text-right">Đã bán</TableHead>
+                <TableHead className="w-16 text-center">Sửa</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {items.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-32 text-center text-sm text-muted-foreground">
+                    Không tìm thấy sản phẩm nào phù hợp.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                items.map((p) => {
+                  const badgeInfo = statusBadgeMap[p.status];
+
+                  return (
+                    <TableRow key={p.id} className="h-11">
+                      <TableCell className="p-2">
+                        <div className="relative size-9 overflow-hidden rounded-md border bg-muted">
+                          {p.image ? (
+                            <Image
+                              src={p.image}
+                              alt={p.name}
+                              fill
+                              unoptimized
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex size-full items-center justify-center text-[9px] text-muted-foreground">
+                              Không ảnh
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          href={`/seller/products/${p.id}`}
+                          className="font-medium text-foreground hover:text-primary transition-colors text-xs line-clamp-1"
+                        >
+                          {p.name}
+                        </Link>
+                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          <span>{p.categoryName}</span>
+                          <span>·</span>
+                          <span>{p.variantCount} phân loại</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`text-[11px] ${badgeInfo.className}`}>
+                          {badgeInfo.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-medium text-xs">
+                        <Price amount={p.minPrice} />
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums text-xs">
+                        {p.totalStock}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums text-xs font-semibold text-primary">
+                        {p.soldCount}
+                      </TableCell>
+                      <TableCell className="text-center p-2">
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          render={<Link href={`/seller/products/${p.id}`} />}
+                          aria-label="Chỉnh sửa sản phẩm"
+                        >
+                          <Edit className="size-3.5" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="border-t p-3">
+            <Pagination>
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href={`/seller/products?page=${currentPage - 1}${search ? `&search=${encodeURIComponent(search)}` : ""}${status ? `&status=${status}` : ""}`}
+                    />
+                  </PaginationItem>
+                )}
+
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const pageNumber = i + 1;
+                  if (
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    Math.abs(pageNumber - currentPage) <= 1
+                  ) {
+                    return (
+                      <PaginationItem key={pageNumber}>
+                        <PaginationLink
+                          href={`/seller/products?page=${pageNumber}${search ? `&search=${encodeURIComponent(search)}` : ""}${status ? `&status=${status}` : ""}`}
+                          isActive={pageNumber === currentPage}
+                        >
+                          {pageNumber}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                })}
+
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext
+                      href={`/seller/products?page=${currentPage + 1}${search ? `&search=${encodeURIComponent(search)}` : ""}${status ? `&status=${status}` : ""}`}
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -135,7 +135,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
           toast.error(res.error);
         } else {
           toast.success("Cập nhật sản phẩm thành công");
-          router.push("/kenh-ban/san-pham");
+          router.push("/seller/products");
           router.refresh();
         }
       } else {
@@ -144,7 +144,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
           toast.error(res.error);
         } else {
           toast.success("Tạo sản phẩm mới thành công");
-          router.push("/kenh-ban/san-pham");
+          router.push("/seller/products");
           router.refresh();
         }
       }
@@ -166,7 +166,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
         toast.error(res.error);
       } else {
         toast.success("Đã xóa sản phẩm thành công");
-        router.push("/kenh-ban/san-pham");
+        router.push("/seller/products");
         router.refresh();
       }
     } catch (err: unknown) {
@@ -186,7 +186,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
           type="button"
           variant="ghost"
           size="sm"
-          render={<Link href="/kenh-ban/san-pham" />}
+          render={<Link href="/seller/products" />}
         >
           <ArrowLeft className="size-4 mr-1.5" />
           Quay lại danh sách sản phẩm
@@ -301,7 +301,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
                 type="button"
                 variant="outline"
                 className="w-full"
-                render={<Link href="/kenh-ban/san-pham" />}
+                render={<Link href="/seller/products" />}
               >
                 Hủy bỏ
               </Button>

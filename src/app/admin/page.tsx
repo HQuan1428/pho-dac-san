@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
         title="Tổng quan hệ thống"
         description="Theo dõi hoạt động của người dùng, gian hàng, sản phẩm và đơn hàng trên toàn sàn."
         actions={
-          <Button size="sm" variant="outline" render={<Link href="/admin/gian-hang?status=PENDING" />}>
+          <Button size="sm" variant="outline" render={<Link href="/admin/shops?status=PENDING" />}>
             <Clock className="size-3.5 mr-1.5" />
             Duyệt gian hàng ({shopStats.PENDING})
           </Button>
@@ -141,7 +141,7 @@ export default async function AdminDashboardPage() {
                   <CardTitle className="text-base font-semibold">Gian hàng theo trạng thái</CardTitle>
                   <CardDescription>Tình trạng kiểm duyệt và hoạt động của các đối tác</CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" render={<Link href="/admin/gian-hang" />}>
+                <Button variant="ghost" size="sm" render={<Link href="/admin/shops" />}>
                   Xem tất cả
                   <ArrowRight className="size-3.5 ml-1" />
                 </Button>
@@ -225,7 +225,7 @@ export default async function AdminDashboardPage() {
               <p className="text-xs text-muted-foreground">{shopStats.PENDING} hồ sơ đang đợi</p>
             </div>
             {latestPendingShops.length > 0 && (
-              <Button size="xs" variant="outline" render={<Link href="/admin/gian-hang?status=PENDING" />}>
+              <Button size="xs" variant="outline" render={<Link href="/admin/shops?status=PENDING" />}>
                 Xem tất cả
               </Button>
             )}
@@ -255,7 +255,7 @@ export default async function AdminDashboardPage() {
                   <Button
                     size="xs"
                     className="w-full text-xs"
-                    render={<Link href={`/admin/gian-hang?status=PENDING&q=${encodeURIComponent(shop.name)}`} />}
+                    render={<Link href={`/admin/shops?status=PENDING&q=${encodeURIComponent(shop.name)}`} />}
                   >
                     Kiểm duyệt hồ sơ
                   </Button>
@@ -276,7 +276,7 @@ export default async function AdminDashboardPage() {
           <Button
             size="sm"
             variant="outline"
-            render={<Link href="/admin/gian-hang" />}
+            render={<Link href="/admin/shops" />}
           >
             Quản lý tất cả gian hàng <ArrowRight className="size-3.5 ml-1" />
           </Button>
@@ -330,7 +330,7 @@ export default async function AdminDashboardPage() {
                     <TableCell className="text-right">
                       <Button
                         size="xs"
-                        render={<Link href={`/admin/gian-hang?status=PENDING&q=${encodeURIComponent(shop.name)}`} />}
+                        render={<Link href={`/admin/shops?status=PENDING&q=${encodeURIComponent(shop.name)}`} />}
                       >
                         Kiểm duyệt ngay
                       </Button>

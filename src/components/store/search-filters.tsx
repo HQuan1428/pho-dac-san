@@ -67,7 +67,7 @@ export function SearchFilters({
         params.set(key, val);
       }
     }
-    return `/tim-kiem?${params.toString()}`;
+    return `/search?${params.toString()}`;
   };
 
   const handlePriceApply = (e: React.FormEvent) => {
@@ -342,7 +342,7 @@ export function ActiveFilterChips({
     } else {
       params.delete(key);
     }
-    router.push(`/tim-kiem?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   const clearAll = () => {
@@ -351,7 +351,7 @@ export function ActiveFilterChips({
     if (sort && sort !== "moi-nhat") {
       params.set("sap-xep", sort);
     }
-    router.push(`/tim-kiem${params.toString() ? `?${params.toString()}` : ""}`);
+    router.push(`/search${params.toString() ? `?${params.toString()}` : ""}`);
   };
 
   return (
@@ -404,7 +404,7 @@ export function SortSelector({
     const params = new URLSearchParams(searchParams.toString());
     params.set("sap-xep", newSort);
     params.delete("page");
-    router.push(`/tim-kiem?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   return (

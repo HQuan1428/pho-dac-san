@@ -40,5 +40,5 @@ pnpm typecheck && pnpm lint # must pass before you finish
 - Slugs via `slugify` from `@/lib/slug`. Email via `sendMail` from `@/lib/mail`.
 - Cart is client-side: `cart` and `useCart` from `@/lib/cart`.
 - Do not change `prisma/schema.prisma`. If you truly need a schema change, stop and explain why.
-- Routes use Vietnamese slugs (see the route map in your task).
+- Routes use English paths (see the route map in your task).
 - Keep it simple: no new dependencies unless the task allows it.

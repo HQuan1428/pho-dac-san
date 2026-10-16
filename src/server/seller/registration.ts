@@ -20,10 +20,10 @@ const registerShopSchema = z.object({
 export type RegisterShopInput = z.infer<typeof registerShopSchema>;
 
 export async function checkUserShopMembership() {
-  const sessionUser = await requireUser("/kenh-ban/dang-ky");
+  const sessionUser = await requireUser("/seller/register");
   const user = await db.user.findUnique({ where: { id: sessionUser.id } });
   if (!user) {
-    redirect("/dang-nhap?callbackUrl=/kenh-ban/dang-ky");
+    redirect("/login?callbackUrl=/seller/register");
   }
 
   const owned = await db.shop.findUnique({ where: { ownerId: user.id } });
@@ -46,16 +46,16 @@ export async function getProvincesForRegistration() {
 }
 
 export async function registerShopAction(formData: FormData) {
-  const user = await requireUser("/kenh-ban/dang-ky");
+  const user = await requireUser("/seller/register");
 
   const existingOwned = await db.shop.findUnique({ where: { ownerId: user.id } });
   if (existingOwned) {
-    redirect("/kenh-ban");
+    redirect("/seller");
   }
 
   const existingMember = await db.shopMember.findFirst({ where: { userId: user.id } });
   if (existingMember) {
-    redirect("/kenh-ban");
+    redirect("/seller");
   }
 
   const raw = {
@@ -106,5 +106,5 @@ export async function registerShopAction(formData: FormData) {
     return { error: "Đăng ký gian hàng thất bại" };
   }
 
-  redirect("/kenh-ban");
+  redirect("/seller");
 }

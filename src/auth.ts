@@ -18,7 +18,7 @@ const credentialsSchema = z.object({
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
-  pages: { signIn: "/dang-nhap" },
+  pages: { signIn: "/login" },
   providers: [
     Credentials({
       credentials: { email: {}, password: {} },

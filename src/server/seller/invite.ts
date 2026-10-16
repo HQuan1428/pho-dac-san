@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/server/access";
 
 export async function verifyInviteToken(rawToken: string) {
-  const sessionUser = await requireUser(`/kenh-ban/moi-nhan-vien?token=${encodeURIComponent(rawToken)}`);
+  const sessionUser = await requireUser(`/seller/invite?token=${encodeURIComponent(rawToken)}`);
   const user = await db.user.findUnique({ where: { id: sessionUser.id } });
 
   if (!user || !user.email) {
@@ -104,5 +104,5 @@ export async function acceptInviteAction(rawToken: string) {
     return { error: "Chấp nhận lời mời thất bại" };
   }
 
-  redirect("/kenh-ban");
+  redirect("/seller");
 }

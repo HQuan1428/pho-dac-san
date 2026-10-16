@@ -163,7 +163,7 @@ export function CartView() {
         <p className="mt-1 text-sm text-muted-foreground">
           Khám phá các món đặc sản thơm ngon, chính gốc từ khắp các vùng miền Việt Nam nhé!
         </p>
-        <Button className="mt-6 gap-2" render={<Link href="/cho" />}>
+        <Button className="mt-6 gap-2" render={<Link href="/market" />}>
           <span>Khám phá đặc sản ngay</span>
           <ArrowRight className="size-4" />
         </Button>
@@ -204,7 +204,7 @@ export function CartView() {
                 {/* Shop Header */}
                 <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
                   <Link
-                    href={`/gian-hang/${group.shopSlug}`}
+                    href={`/shops/${group.shopSlug}`}
                     className="flex items-center gap-2 font-medium hover:text-primary transition"
                   >
                     <Store className="size-4 text-primary" />
@@ -235,7 +235,7 @@ export function CartView() {
                         />
                         <div className="min-w-0">
                           <Link
-                            href={`/san-pham/${line.shopSlug}/${line.productSlug}`}
+                            href={`/products/${line.shopSlug}/${line.productSlug}`}
                             className="font-medium text-foreground hover:underline line-clamp-1 text-sm"
                           >
                             {line.productName}
@@ -391,7 +391,7 @@ export function CartView() {
 
             <Button
               size="lg"
-              onClick={() => router.push("/dat-hang")}
+              onClick={() => router.push("/checkout")}
               className="w-full gap-2 text-base font-semibold"
             >
               <span>Tiến hành đặt hàng</span>

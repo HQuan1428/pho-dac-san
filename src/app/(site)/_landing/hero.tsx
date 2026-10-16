@@ -152,11 +152,11 @@ export function Hero() {
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <Button size="lg" render={<Link href="/kenh-ban/dang-ky" />}>
+              <Button size="lg" render={<Link href="/seller/register" />}>
                 <Store data-icon="inline-start" />
                 Mở gian hàng miễn phí
               </Button>
-              <Button size="lg" variant="outline" render={<Link href="/cho" />}>
+              <Button size="lg" variant="outline" render={<Link href="/market" />}>
                 Khám phá chợ
                 <ArrowRight data-icon="inline-end" />
               </Button>

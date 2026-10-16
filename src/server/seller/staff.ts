@@ -92,7 +92,7 @@ export async function inviteStaffAction(email: string) {
 
     // Send invitation email
     const appUrl = (process.env.APP_URL || "http://localhost:3004").replace(/\/$/, "");
-    const inviteUrl = `${appUrl}/kenh-ban/moi-nhan-vien?token=${rawToken}`;
+    const inviteUrl = `${appUrl}/seller/invite?token=${rawToken}`;
     const safeShopName = escapeHtml(shop.name);
     const safeInviteUrl = escapeHtml(inviteUrl);
 
@@ -113,7 +113,7 @@ export async function inviteStaffAction(email: string) {
       </div>`
     );
 
-    revalidatePath("/kenh-ban/nhan-vien");
+    revalidatePath("/seller/staff");
     return { success: true };
   } catch (err: unknown) {
     console.error("inviteStaffAction error:", err);
@@ -129,7 +129,7 @@ export async function revokeInviteAction(inviteId: string) {
       where: { id: inviteId, shopId: shop.id },
     });
 
-    revalidatePath("/kenh-ban/nhan-vien");
+    revalidatePath("/seller/staff");
     return { success: true };
   } catch (err: unknown) {
     console.error("revokeInviteAction error:", err);
@@ -145,7 +145,7 @@ export async function removeStaffAction(memberId: string) {
       where: { id: memberId, shopId: shop.id },
     });
 
-    revalidatePath("/kenh-ban/nhan-vien");
+    revalidatePath("/seller/staff");
     return { success: true };
   } catch (err: unknown) {
     console.error("removeStaffAction error:", err);

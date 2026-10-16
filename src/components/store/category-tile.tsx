@@ -15,7 +15,7 @@ export function CategoryTile({ category }: { category: CategoryTileData }) {
 
   return (
     <Link
-      href={`/tim-kiem?danh-muc=${category.slug}`}
+      href={`/search?danh-muc=${category.slug}`}
       className="group flex flex-col items-center rounded-lg border bg-card p-2.5 text-center transition hover:border-primary hover:bg-primary/5 hover:shadow-xs shrink-0 w-24 sm:w-28 xl:w-auto"
     >
       {imageUrl ? (

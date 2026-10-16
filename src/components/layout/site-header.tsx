@@ -16,10 +16,10 @@ export async function SiteHeader() {
       <div className="container-page flex h-16 items-center gap-6">
         <Logo />
         <nav className="hidden gap-1 text-sm md:flex">
-          <Link href="/cho" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Khám phá</Link>
-          <Link href="/kenh-ban" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Bán hàng</Link>
+          <Link href="/market" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Khám phá</Link>
+          <Link href="/seller" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Bán hàng</Link>
         </nav>
-        <form action="/tim-kiem" className="relative ml-auto hidden w-full max-w-xs sm:block">
+        <form action="/search" className="relative ml-auto hidden w-full max-w-xs sm:block">
           <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <input
             name="q"
@@ -32,7 +32,7 @@ export async function SiteHeader() {
           <CartButton />
           {user ? (
             <>
-              <Link href="/thong-bao" aria-label="Thông báo" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-muted">
+              <Link href="/notifications" aria-label="Thông báo" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-muted">
                 <Bell className="size-5" />
               </Link>
               <DropdownMenu>
@@ -40,9 +40,9 @@ export async function SiteHeader() {
                   <Avatar className="size-7"><AvatarFallback>{user.name?.slice(0, 1) ?? "U"}</AvatarFallback></Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem render={<Link href="/tai-khoan" />}>Tài khoản</DropdownMenuItem>
-                  <DropdownMenuItem render={<Link href="/tai-khoan/don-hang" />}>Đơn hàng của tôi</DropdownMenuItem>
-                  <DropdownMenuItem render={<Link href="/kenh-ban" />}>Kênh người bán</DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/account" />}>Tài khoản</DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/account/orders" />}>Đơn hàng của tôi</DropdownMenuItem>
+                  <DropdownMenuItem render={<Link href="/seller" />}>Kênh người bán</DropdownMenuItem>
                   {user.role === "ADMIN" && <DropdownMenuItem render={<Link href="/admin" />}>Quản trị</DropdownMenuItem>}
                   <DropdownMenuSeparator />
                   <form
@@ -58,8 +58,8 @@ export async function SiteHeader() {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" render={<Link href="/dang-nhap" />}>Đăng nhập</Button>
-              <Button size="sm" render={<Link href="/dang-ky" />}>Đăng ký</Button>
+              <Button variant="ghost" size="sm" render={<Link href="/login" />}>Đăng nhập</Button>
+              <Button size="sm" render={<Link href="/register" />}>Đăng ký</Button>
             </>
           )}
         </div>
