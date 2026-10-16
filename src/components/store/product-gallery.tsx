@@ -9,10 +9,12 @@ export function ProductGallery({
   images,
   name,
   province,
+  className,
 }: {
   images: string[];
   name: string;
   province?: string;
+  className?: string;
 }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const fallbackSvg = getProductPlaceholder(province || name);
@@ -31,7 +33,7 @@ export function ProductGallery({
   const currentImage = failedIndices[activeIdx] ? fallbackSvg : images[activeIdx] || images[0];
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-[520px] mx-auto lg:mx-0">
+    <div className={cn("flex flex-col gap-3 w-full max-w-[520px] mx-auto lg:mx-0", className)}>
       {/* Main Image (capped max-w-[520px], square, object-cover, rounded-lg) */}
       <div className="relative aspect-square w-full max-w-[520px] overflow-hidden rounded-lg border bg-muted shadow-xs">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -45,13 +47,14 @@ export function ProductGallery({
 
       {/* Thumbnails Row */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none" role="group" aria-label="Danh sách ảnh thu nhỏ">
           {images.map((img, i) => {
             const thumbSrc = failedIndices[i] ? fallbackSvg : img;
             return (
               <button
                 key={i}
                 type="button"
+                aria-label={`Xem ảnh ${i + 1}`}
                 onClick={() => setActiveIdx(i)}
                 className={cn(
                   "relative size-16 shrink-0 overflow-hidden rounded-lg border bg-muted transition cursor-pointer",

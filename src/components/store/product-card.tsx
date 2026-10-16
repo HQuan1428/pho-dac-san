@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Eye, Heart } from "lucide-react";
 import { Price } from "@/components/common/price";
 import { RatingStars } from "@/components/common/rating-stars";
 import { RegionTag } from "@/components/common/region-tag";
@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   return (
     <Link
       href={product.href}
-      className="group flex flex-col overflow-hidden rounded-lg bg-card border border-border/60 hover:border-border hover:shadow-xs transition duration-200"
+      className="group flex flex-col overflow-hidden rounded-lg bg-card border border-border/60 hover:border-border hover:shadow-md hover:-translate-y-1 transition-all duration-200"
     >
       <div className="relative aspect-square w-full overflow-hidden bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -42,8 +42,16 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           loading="lazy"
         />
         <span className="absolute top-1.5 right-1.5 rounded-full bg-background/80 p-1 text-muted-foreground/80 backdrop-blur transition hover:text-destructive">
-          <Heart className="size-3.5" />
+          <Heart className="size-3.5" aria-hidden="true" />
         </span>
+
+        {/* Hover "Xem nhanh" pill (decorative; entire card is the link) */}
+        <div className="absolute inset-x-0 bottom-2.5 flex justify-center pointer-events-none">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-xs backdrop-blur opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0">
+            <Eye className="size-3 text-primary" aria-hidden="true" />
+            <span>Xem nhanh</span>
+          </span>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-2.5">

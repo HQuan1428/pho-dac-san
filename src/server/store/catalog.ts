@@ -433,3 +433,13 @@ export async function getShopDetail(slug: string, page = 1, sort = "moi-nhat") {
     currentPage: page,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Shared product loader for storefront product page and quick-view modal
+// ---------------------------------------------------------------------------
+export type ProductDetailData = NonNullable<Awaited<ReturnType<typeof getProductDetail>>>;
+
+export async function getSharedProductDetail(shopSlug: string, productSlug: string) {
+  return getProductDetail(shopSlug, productSlug);
+}
+

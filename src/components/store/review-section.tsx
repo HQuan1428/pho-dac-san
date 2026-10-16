@@ -72,7 +72,7 @@ export function ReviewSection({
                 <div key={star} className="flex items-center gap-2">
                   <div className="flex items-center gap-1 w-11 shrink-0 text-muted-foreground font-medium">
                     <span>{star}</span>
-                    <Star className="size-3 fill-warning text-warning" />
+                    <Star className="size-3 fill-warning text-warning" aria-hidden="true" />
                   </div>
                   <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                     <div

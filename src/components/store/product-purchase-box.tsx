@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Zap, Check, Truck, ShieldCheck, PhoneCall } from "lucide-react";
 import { toast } from "sonner";
-import { cart } from "@/lib/cart";
+import { cart, setCartSheetOpen } from "@/lib/cart";
 import { formatVnd, Price } from "@/components/common/price";
 import { QuantityInput } from "@/components/common/quantity-input";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,13 @@ export type VariantItem = {
 export function ProductPurchaseBox({
   variants,
   productName,
+  showMobileBar = false,
+  showTrustBadges = true,
 }: {
   variants: VariantItem[];
   productName: string;
+  showMobileBar?: boolean;
+  showTrustBadges?: boolean;
 }) {
   const router = useRouter();
 
@@ -42,12 +46,8 @@ export function ProductPurchaseBox({
       return;
     }
     cart.add(selectedVariant.id, quantity);
-    toast.success(`Đã thêm ${quantity} "${productName} (${selectedVariant.name})" vào giỏ hàng!`, {
-      action: {
-        label: "Xem giỏ hàng",
-        onClick: () => router.push("/cart"),
-      },
-    });
+    toast.success(`Đã thêm ${quantity} "${productName} (${selectedVariant.name})" vào giỏ hàng!`);
+    setCartSheetOpen(true);
   };
 
   const handleBuyNow = () => {
@@ -56,7 +56,7 @@ export function ProductPurchaseBox({
       return;
     }
     cart.add(selectedVariant.id, quantity);
-    router.push("/cart");
+    router.push("/checkout");
   };
 
   return (
@@ -81,13 +81,14 @@ export function ProductPurchaseBox({
         )}
       </div>
 
-      {/* Variant selection */}
+      {/* Variant selection as chips with Check icon on selected */}
       {variants.length > 0 && (
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-foreground uppercase tracking-wider text-muted-foreground">
-            Phân loại: <span className="font-semibold text-foreground">{selectedVariant?.name}</span>
+          <label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
+            <span>Phân loại:</span>
+            <span className="font-semibold text-foreground">{selectedVariant?.name}</span>
           </label>
-          <div className="flex flex-wrap gap-2" role="radiogroup">
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Phân loại sản phẩm">
             {variants.map((v) => {
               const isSelected = v.id === selectedVariantId;
               const disabled = v.stock <= 0;
@@ -104,14 +105,14 @@ export function ProductPurchaseBox({
                     setQuantity(1);
                   }}
                   className={cn(
-                    "relative flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition cursor-pointer",
+                    "relative flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition cursor-pointer",
                     isSelected
-                      ? "border-primary bg-primary/10 text-primary ring-1 ring-primary"
+                      ? "border-primary bg-primary/10 text-primary ring-1 ring-primary font-semibold"
                       : "border-border bg-card text-foreground hover:border-foreground/30",
                     disabled && "cursor-not-allowed opacity-40 line-through hover:border-border"
                   )}
                 >
-                  {isSelected && <Check className="size-3 text-primary" />}
+                  {isSelected && <Check className="size-3.5 text-primary shrink-0" aria-hidden="true" />}
                   <span>{v.name}</span>
                   <span className="text-[11px] font-normal text-muted-foreground">
                     ({formatVnd(v.price)})
@@ -134,47 +135,75 @@ export function ProductPurchaseBox({
         />
       </div>
 
-      {/* CTA action buttons */}
+      {/* CTA action buttons: EXACTLY ONE primary solid green ("Thêm vào giỏ"), outline ("Mua ngay") */}
       <div className="grid grid-cols-2 gap-2.5 pt-2">
         <Button
           type="button"
-          variant="outline"
           size="default"
           disabled={isOutOfStock}
           onClick={handleAddToCart}
-          className="gap-1.5 border-primary text-primary hover:bg-primary/5 hover:text-primary text-xs font-medium h-10"
+          className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-10 shadow-xs cursor-pointer"
         >
-          <ShoppingCart className="size-4" />
+          <ShoppingCart className="size-4 shrink-0" aria-hidden="true" />
           <span>Thêm vào giỏ</span>
         </Button>
 
         <Button
           type="button"
+          variant="outline"
           size="default"
           disabled={isOutOfStock}
           onClick={handleBuyNow}
-          className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-medium h-10"
+          className="gap-1.5 border-primary text-primary hover:bg-primary/10 hover:text-primary text-xs sm:text-sm font-medium h-10 cursor-pointer"
         >
-          <Zap className="size-4" />
+          <Zap className="size-4 shrink-0" aria-hidden="true" />
           <span>Mua ngay</span>
         </Button>
       </div>
 
       {/* Shipping & COD Reassurance Notes */}
-      <div className="rounded-lg border bg-muted/20 p-3 space-y-2 text-xs text-muted-foreground mt-2">
-        <div className="flex items-center gap-2">
-          <Truck className="size-3.5 text-primary shrink-0" />
-          <span>Giao hàng toàn quốc · Đóng gói bảo quản cẩn thận</span>
+      {showTrustBadges && (
+        <div className="rounded-lg border bg-muted/20 p-3 space-y-2 text-xs text-muted-foreground mt-2">
+          <div className="flex items-center gap-2">
+            <Truck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+            <span>Giao hàng toàn quốc · Đóng gói bảo quản cẩn thận</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+            <span>Kiểm tra hàng trước khi thanh toán (COD)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <PhoneCall className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+            <span>Shop gọi điện xác nhận chi tiết trước khi gửi</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="size-3.5 text-primary shrink-0" />
-          <span>Kiểm tra hàng trước khi thanh toán (COD)</span>
+      )}
+
+      {/* Mobile sticky bottom buy bar (price + ONE primary "Thêm vào giỏ") */}
+      {showMobileBar && (
+        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur-md p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg flex items-center justify-between gap-3">
+          <div className="flex flex-col min-w-0">
+            <span className="text-[11px] text-muted-foreground truncate">
+              {selectedVariant ? selectedVariant.name : "Giá"}
+            </span>
+            <Price
+              amount={selectedVariant?.price || 0}
+              className="text-base font-bold text-primary"
+            />
+          </div>
+          <Button
+            type="button"
+            size="default"
+            disabled={isOutOfStock}
+            onClick={handleAddToCart}
+            className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-10 px-5 shadow-xs shrink-0 cursor-pointer"
+          >
+            <ShoppingCart className="size-4 shrink-0" aria-hidden="true" />
+            <span>Thêm vào giỏ</span>
+          </Button>
         </div>
-        <div className="flex items-center gap-2">
-          <PhoneCall className="size-3.5 text-primary shrink-0" />
-          <span>Shop gọi điện xác nhận chi tiết trước khi gửi</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
+

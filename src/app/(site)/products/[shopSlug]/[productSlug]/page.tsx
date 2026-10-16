@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { BadgeCheck, ChevronRight, Store } from "lucide-react";
+import { BadgeCheck, ChevronRight, FileText, Flame, PackageCheck, Star, Store, Tag } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/server/access";
 import { getProductDetail } from "@/server/store/catalog";
@@ -91,28 +91,33 @@ export default async function ProductDetailPage({ params }: PageProps) {
   }
 
   const currentPath = `/products/${shopSlug}/${productSlug}`;
+  const totalStock = product.variants.reduce((acc, v) => acc + v.stock, 0);
 
   return (
-    <div className="container-page py-4 md:py-6 space-y-6">
-      {/* Breadcrumbs */}
+    <div className="container-page py-4 md:py-6 space-y-6 pb-20 lg:pb-6">
+      {/* Breadcrumbs with icons */}
       <nav aria-label="Đường dẫn" className="flex items-center gap-1.5 text-xs text-muted-foreground flex-wrap">
-        <Link href="/market" className="hover:text-foreground transition">Chợ</Link>
-        <ChevronRight className="size-3" />
-        <Link href={`/search?danh-muc=${product.category.slug}`} className="hover:text-foreground transition">
-          {product.category.name}
+        <Link href="/market" className="inline-flex items-center gap-1 hover:text-foreground transition">
+          <Store className="size-3.5 text-muted-foreground" aria-hidden="true" />
+          <span>Chợ</span>
         </Link>
-        <ChevronRight className="size-3" />
+        <ChevronRight className="size-3 text-muted-foreground/60" aria-hidden="true" />
+        <Link href={`/search?danh-muc=${product.category.slug}`} className="inline-flex items-center gap-1 hover:text-foreground transition">
+          <Tag className="size-3 text-muted-foreground" aria-hidden="true" />
+          <span>{product.category.name}</span>
+        </Link>
+        <ChevronRight className="size-3 text-muted-foreground/60" aria-hidden="true" />
         <Link href={`/shops/${product.shop.slug}`} className="hover:text-foreground transition">
           {product.shop.name}
         </Link>
-        <ChevronRight className="size-3" />
-        <span className="text-foreground truncate max-w-[200px] sm:max-w-xs">{product.name}</span>
+        <ChevronRight className="size-3 text-muted-foreground/60" aria-hidden="true" />
+        <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{product.name}</span>
       </nav>
 
-      {/* Main Product Info: Gallery Left + Sticky Buy Box Right (minmax(0,1fr) 420px) */}
+      {/* Main Product Info: Large Gallery Left + Sticky Buy Box Right (minmax(0,1fr) 420px) */}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-start">
-        {/* Gallery left (main image max ~520px, thumbnails row) */}
-        <div className="flex justify-center lg:justify-start">
+        {/* Gallery left (large gallery max ~520px, thumbnails row) */}
+        <div className="flex justify-center lg:justify-start w-full">
           <ProductGallery
             images={product.images}
             name={product.name}
@@ -125,13 +130,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-2">
-                <RegionTag province={product.province.name} />
-                <span>·</span>
+                <RegionTag province={product.province.name} variant="badge" />
+                <span className="text-muted-foreground/50">·</span>
                 <Link
                   href={`/search?danh-muc=${product.category.slug}`}
-                  className="text-xs text-muted-foreground hover:text-foreground transition"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition"
                 >
-                  {product.category.name}
+                  <Tag className="size-3" aria-hidden="true" />
+                  <span>{product.category.name}</span>
                 </Link>
               </div>
               <WishlistButton
@@ -145,28 +151,37 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {product.name}
             </h1>
 
-            {/* Ratings & Sold count */}
-            <div className="mt-2.5 flex items-center gap-3 text-xs">
+            {/* Ratings & Meta rows with icons: Rating, Sold (Flame), Stock (PackageCheck) */}
+            <div className="mt-2.5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <RatingStars value={product.ratingAvg} />
                 <span className="font-semibold text-foreground">
                   {product.ratingAvg > 0 ? product.ratingAvg.toFixed(1) : "0"}
                 </span>
-                <span className="text-muted-foreground">
-                  ({product.ratingCount} đánh giá)
+                <span>({product.ratingCount} đánh giá)</span>
+              </div>
+              <span>·</span>
+              <div className="flex items-center gap-1">
+                <Flame className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+                <span>
+                  Đã bán: <strong className="text-foreground">{product.soldCount}</strong>
                 </span>
               </div>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-muted-foreground">
-                Đã bán: <strong className="text-foreground">{product.soldCount}</strong>
-              </span>
+              <span>·</span>
+              <div className="flex items-center gap-1">
+                <PackageCheck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+                <span>
+                  Kho: <strong className="text-foreground">{totalStock > 0 ? `Còn ${totalStock}` : "Hết hàng"}</strong>
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Price, Variants, Quantity, CTAs, Shipping/COD notes */}
+          {/* Price, Variants, Quantity, CTAs, Shipping/COD notes, and Mobile sticky buy bar */}
           <ProductPurchaseBox
             variants={product.variants}
             productName={product.name}
+            showMobileBar={true}
           />
 
           {/* Shop Mini Card */}
@@ -183,7 +198,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 >
                   <span className="truncate">{product.shop.name}</span>
                   {product.shop.plan !== "FREE" && (
-                    <BadgeCheck className="size-3.5 shrink-0 text-success" />
+                    <BadgeCheck className="size-3.5 shrink-0 text-success" aria-hidden="true" />
                   )}
                 </Link>
                 <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mt-0.5">
@@ -204,7 +219,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 href={`/shops/${product.shop.slug}`}
                 className="hidden sm:inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-xs font-medium hover:bg-muted transition"
               >
-                <Store className="size-3 mr-1" />
+                <Store className="size-3 mr-1" aria-hidden="true" />
                 <span>Xem shop</span>
               </Link>
             </div>
@@ -212,14 +227,20 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Description & Reviews Tabs (or Two-column layout) */}
+      {/* Tabs: Mô tả (FileText) / Đánh giá (Star, with count) / Gian hàng (Store) with icons */}
       <Tabs defaultValue="description" className="space-y-4 pt-4 border-t">
-        <TabsList variant="line" className="border-b w-full justify-start gap-6 h-10 pb-0">
-          <TabsTrigger value="description" className="text-sm font-semibold pb-2">
-            Mô tả sản phẩm
+        <TabsList variant="line" className="border-b w-full justify-start gap-6 h-11 pb-0">
+          <TabsTrigger value="description" className="flex items-center gap-1.5 text-sm font-semibold pb-2.5">
+            <FileText className="size-4 shrink-0" aria-hidden="true" />
+            <span>Mô tả</span>
           </TabsTrigger>
-          <TabsTrigger value="reviews" className="text-sm font-semibold pb-2">
-            Đánh giá & Nhận xét ({product.ratingCount})
+          <TabsTrigger value="reviews" className="flex items-center gap-1.5 text-sm font-semibold pb-2.5">
+            <Star className="size-4 shrink-0" aria-hidden="true" />
+            <span>Đánh giá ({product.ratingCount})</span>
+          </TabsTrigger>
+          <TabsTrigger value="shop" className="flex items-center gap-1.5 text-sm font-semibold pb-2.5">
+            <Store className="size-4 shrink-0" aria-hidden="true" />
+            <span>Gian hàng</span>
           </TabsTrigger>
         </TabsList>
 
@@ -238,6 +259,52 @@ export default async function ProductDetailPage({ params }: PageProps) {
             eligibleOrderItemId={eligibleOrderItemId}
             path={currentPath}
           />
+        </TabsContent>
+
+        <TabsContent value="shop" className="rounded-xl border bg-card p-6 shadow-xs">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Avatar className="size-14 border shrink-0">
+                {product.shop.logo && <AvatarImage src={product.shop.logo} alt={product.shop.name} />}
+                <AvatarFallback className="font-semibold text-base">{product.shop.name.slice(0, 2)}</AvatarFallback>
+              </Avatar>
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-bold text-base text-foreground">{product.shop.name}</h3>
+                  {product.shop.plan !== "FREE" && (
+                    <BadgeCheck className="size-4 text-success" aria-hidden="true" />
+                  )}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <RegionTag province={product.shop.province.name} variant="badge" />
+                  <span>·</span>
+                  <span>{product.shop._count.products} đặc sản</span>
+                  <span>·</span>
+                  <span>{product.shop._count.followers} người theo dõi</span>
+                </div>
+                {product.shop.description && (
+                  <p className="text-xs text-muted-foreground line-clamp-2 max-w-xl pt-1">
+                    {product.shop.description}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+              <FollowButton
+                shopId={product.shop.id}
+                initialFollowed={isFollowingShop}
+                pathname={currentPath}
+              />
+              <Link
+                href={`/shops/${product.shop.slug}`}
+                className="inline-flex h-9 items-center justify-center rounded-lg border px-3 text-xs font-medium hover:bg-muted transition"
+              >
+                <Store className="size-3.5 mr-1.5" aria-hidden="true" />
+                <span>Ghé thăm gian hàng</span>
+              </Link>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
 
@@ -263,3 +330,4 @@ export default async function ProductDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
