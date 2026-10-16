@@ -93,7 +93,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const currentPath = `/san-pham/${shopSlug}/${productSlug}`;
 
   return (
-    <div className="container-page py-6 md:py-8 space-y-8">
+    <div className="container-page py-4 md:py-6 space-y-6">
       {/* Breadcrumbs */}
       <nav aria-label="Đường dẫn" className="flex items-center gap-1.5 text-xs text-muted-foreground flex-wrap">
         <Link href="/cho" className="hover:text-foreground transition">Chợ</Link>
@@ -111,7 +111,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       {/* Main Product Info: Gallery Left + Sticky Buy Box Right (minmax(0,1fr) 420px) */}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-start">
-        {/* Gallery left (main image max ~560px, thumbnails row) */}
+        {/* Gallery left (main image max ~520px, thumbnails row) */}
         <div className="flex justify-center lg:justify-start">
           <ProductGallery
             images={product.images}

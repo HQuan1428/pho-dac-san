@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Search, ArrowRight, Sparkles, Flame, MapPin, Store } from "lucide-react";
 import { getMarketplaceHomeData } from "@/server/store/catalog";
 import { ProductCard } from "@/components/store/product-card";
+import { CategoryTile } from "@/components/store/category-tile";
 import { ShopCard } from "@/components/common/shop-card";
 import { RegionBrowser } from "@/components/store/region-browser";
 import { Button } from "@/components/ui/button";
@@ -141,21 +142,7 @@ export default async function ChoPage() {
         {/* Scrollable on mobile, 8 per row at xl */}
         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-none xl:grid xl:grid-cols-8 xl:gap-3 xl:overflow-visible xl:pb-0">
           {categories.map((c) => (
-            <Link
-              key={c.id}
-              href={`/tim-kiem?danh-muc=${c.slug}`}
-              className="group flex flex-col items-center justify-center rounded-lg border bg-card p-2.5 text-center transition hover:border-primary hover:bg-primary/5 hover:shadow-xs shrink-0 w-24 sm:w-28 xl:w-auto"
-            >
-              <div className="flex size-10 items-center justify-center rounded-full bg-muted font-bold text-primary group-hover:bg-primary group-hover:text-primary-foreground transition text-xs">
-                {c.name.slice(0, 1)}
-              </div>
-              <span className="mt-1.5 text-xs font-medium text-foreground line-clamp-1">
-                {c.name}
-              </span>
-              <span className="text-[10px] text-muted-foreground">
-                {c._count.products} món
-              </span>
-            </Link>
+            <CategoryTile key={c.id} category={c} />
           ))}
         </div>
       </section>
