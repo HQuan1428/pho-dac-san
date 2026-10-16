@@ -295,7 +295,7 @@ export function CheckoutView({
         </div>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_380px] items-start">
         {/* Left Column: Customer Information & Delivery Address */}
         <div className="space-y-6">
           <div className="rounded-lg border bg-card p-6 shadow-xs space-y-5">

@@ -7,8 +7,9 @@ import { getCurrentUser } from "@/server/access";
 import { getProductDetail } from "@/server/store/catalog";
 import { RatingStars } from "@/components/common/rating-stars";
 import { RegionTag } from "@/components/common/region-tag";
-import { ProductCard } from "@/components/common/product-card";
+import { ProductCard } from "@/components/store/product-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductGallery } from "@/components/store/product-gallery";
 import { ProductPurchaseBox } from "@/components/store/product-purchase-box";
 import { WishlistButton } from "@/components/store/wishlist-button";
@@ -92,7 +93,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const currentPath = `/san-pham/${shopSlug}/${productSlug}`;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 space-y-10">
+    <div className="container-page py-6 md:py-8 space-y-8">
       {/* Breadcrumbs */}
       <nav aria-label="Đường dẫn" className="flex items-center gap-1.5 text-xs text-muted-foreground flex-wrap">
         <Link href="/cho" className="hover:text-foreground transition">Chợ</Link>
@@ -108,28 +109,31 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <span className="text-foreground truncate max-w-[200px] sm:max-w-xs">{product.name}</span>
       </nav>
 
-      {/* Main Product Info (2 columns: Gallery & Info) */}
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Gallery */}
-        <ProductGallery images={product.images} name={product.name} province={product.province.name} />
+      {/* Main Product Info: Gallery Left + Sticky Buy Box Right (minmax(0,1fr) 420px) */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-start">
+        {/* Gallery left (main image max ~560px, thumbnails row) */}
+        <div className="flex justify-center lg:justify-start">
+          <ProductGallery
+            images={product.images}
+            name={product.name}
+            province={product.province.name}
+          />
+        </div>
 
-        {/* Purchase & Details */}
-        <div className="space-y-6">
+        {/* Sticky Buy Box Right */}
+        <div className="lg:sticky lg:top-20 space-y-4 rounded-xl border bg-card p-5 shadow-xs">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <RegionTag province={product.province.name} />
-              <Link
-                href={`/tim-kiem?danh-muc=${product.category.slug}`}
-                className="text-xs text-muted-foreground hover:text-foreground transition"
-              >
-                {product.category.name}
-              </Link>
-            </div>
-
-            <div className="flex items-start justify-between gap-4">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {product.name}
-              </h1>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2">
+                <RegionTag province={product.province.name} />
+                <span>·</span>
+                <Link
+                  href={`/tim-kiem?danh-muc=${product.category.slug}`}
+                  className="text-xs text-muted-foreground hover:text-foreground transition"
+                >
+                  {product.category.name}
+                </Link>
+              </div>
               <WishlistButton
                 productId={product.id}
                 initialWishlisted={isWishlisted}
@@ -137,56 +141,60 @@ export default async function ProductDetailPage({ params }: PageProps) {
               />
             </div>
 
+            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              {product.name}
+            </h1>
+
             {/* Ratings & Sold count */}
-            <div className="mt-3 flex items-center gap-4 text-sm">
-              <a href="#danh-gia" className="flex items-center gap-2 hover:opacity-80 transition">
+            <div className="mt-2.5 flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1.5">
                 <RatingStars value={product.ratingAvg} />
                 <span className="font-semibold text-foreground">
                   {product.ratingAvg > 0 ? product.ratingAvg.toFixed(1) : "0"}
                 </span>
-                <span className="text-muted-foreground underline">
+                <span className="text-muted-foreground">
                   ({product.ratingCount} đánh giá)
                 </span>
-              </a>
-              <span className="text-muted-foreground">|</span>
+              </div>
+              <span className="text-muted-foreground">·</span>
               <span className="text-muted-foreground">
                 Đã bán: <strong className="text-foreground">{product.soldCount}</strong>
               </span>
             </div>
           </div>
 
-          {/* Variant picker and Purchase Box */}
+          {/* Price, Variants, Quantity, CTAs, Shipping/COD notes */}
           <ProductPurchaseBox
             variants={product.variants}
             productName={product.name}
           />
 
-          {/* Shop Card with Follow Button */}
-          <div className="rounded-lg border bg-card p-4 flex items-center justify-between gap-4 shadow-xs">
-            <div className="flex items-center gap-3 min-w-0">
-              <Avatar className="size-12 border">
+          {/* Shop Mini Card */}
+          <div className="rounded-lg border bg-muted/20 p-3.5 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Avatar className="size-10 border shrink-0">
                 {product.shop.logo && <AvatarImage src={product.shop.logo} alt={product.shop.name} />}
-                <AvatarFallback className="font-semibold">{product.shop.name.slice(0, 2)}</AvatarFallback>
+                <AvatarFallback className="font-semibold text-xs">{product.shop.name.slice(0, 2)}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <Link
                   href={`/gian-hang/${product.shop.slug}`}
-                  className="flex items-center gap-1 font-semibold text-foreground hover:text-primary transition"
+                  className="flex items-center gap-1 font-semibold text-xs sm:text-sm text-foreground hover:text-primary transition"
                 >
                   <span className="truncate">{product.shop.name}</span>
                   {product.shop.plan !== "FREE" && (
-                    <BadgeCheck className="size-4 shrink-0 text-success" />
+                    <BadgeCheck className="size-3.5 shrink-0 text-success" />
                   )}
                 </Link>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground mt-0.5">
                   <RegionTag province={product.shop.province.name} />
+                  <span>·</span>
                   <span>{product.shop._count.products} món</span>
-                  <span>{product.shop._count.followers} theo dõi</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 shrink-0">
               <FollowButton
                 shopId={product.shop.id}
                 initialFollowed={isFollowingShop}
@@ -194,39 +202,58 @@ export default async function ProductDetailPage({ params }: PageProps) {
               />
               <Link
                 href={`/gian-hang/${product.shop.slug}`}
-                className="hidden sm:inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-medium hover:bg-muted transition"
+                className="hidden sm:inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-xs font-medium hover:bg-muted transition"
               >
-                <Store className="size-3.5 mr-1" />
-                <span>Xem gian hàng</span>
+                <Store className="size-3 mr-1" />
+                <span>Xem shop</span>
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Description Section */}
-      <section className="space-y-4 rounded-lg border bg-card p-6 shadow-xs">
-        <h2 className="text-xl font-bold text-foreground">Mô tả sản phẩm</h2>
-        <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line space-y-2">
-          {product.description}
-        </div>
-      </section>
+      {/* Description & Reviews Tabs (or Two-column layout) */}
+      <Tabs defaultValue="description" className="space-y-4 pt-4 border-t">
+        <TabsList variant="line" className="border-b w-full justify-start gap-6 h-10 pb-0">
+          <TabsTrigger value="description" className="text-sm font-semibold pb-2">
+            Mô tả sản phẩm
+          </TabsTrigger>
+          <TabsTrigger value="reviews" className="text-sm font-semibold pb-2">
+            Đánh giá & Nhận xét ({product.ratingCount})
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Reviews Section with #danh-gia */}
-      <ReviewSection
-        productId={product.id}
-        reviews={product.reviews}
-        ratingAvg={product.ratingAvg}
-        ratingCount={product.ratingCount}
-        eligibleOrderItemId={eligibleOrderItemId}
-        path={currentPath}
-      />
+        <TabsContent value="description" className="rounded-xl border bg-card p-6 shadow-xs">
+          <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line space-y-3">
+            {product.description}
+          </div>
+        </TabsContent>
 
-      {/* Related Products */}
+        <TabsContent value="reviews">
+          <ReviewSection
+            productId={product.id}
+            reviews={product.reviews}
+            ratingAvg={product.ratingAvg}
+            ratingCount={product.ratingCount}
+            eligibleOrderItemId={eligibleOrderItemId}
+            path={currentPath}
+          />
+        </TabsContent>
+      </Tabs>
+
+      {/* Related Products as a 5-col rail */}
       {relatedProducts.length > 0 && (
         <section className="space-y-4 border-t pt-8">
-          <h2 className="text-xl font-bold text-foreground">Sản phẩm cùng danh mục</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-foreground">Sản phẩm cùng danh mục</h2>
+            <Link
+              href={`/tim-kiem?danh-muc=${product.category.slug}`}
+              className="text-xs text-primary font-medium hover:underline"
+            >
+              Xem thêm trong danh mục
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             {relatedProducts.map((p) => (
               <ProductCard key={p.href} product={p} />
             ))}

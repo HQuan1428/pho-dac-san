@@ -45,19 +45,21 @@ export default async function DatHangThanhCongPage({
 
   if (orders.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center space-y-4">
-        <div className="flex size-16 items-center justify-center rounded-full bg-muted text-muted-foreground mx-auto">
-          <ShoppingBag className="size-8" />
-        </div>
-        <h1 className="text-2xl font-bold text-foreground">Không tìm thấy thông tin đơn hàng</h1>
-        <p className="text-sm text-muted-foreground">
-          Đơn hàng không tồn tại hoặc đã quá 24 giờ. Bạn có thể kiểm tra danh sách đơn hàng trong trang tài khoản.
-        </p>
-        <div className="pt-4 flex justify-center gap-3">
-          <Button render={<Link href="/cho" />}>Tiếp tục mua sắm</Button>
-          <Button variant="outline" render={<Link href="/tai-khoan/don-hang" />}>
-            Xem đơn của tôi
-          </Button>
+      <div className="container-page py-12 md:py-16">
+        <div className="mx-auto max-w-3xl text-center space-y-4">
+          <div className="flex size-16 items-center justify-center rounded-full bg-muted text-muted-foreground mx-auto">
+            <ShoppingBag className="size-8" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Không tìm thấy thông tin đơn hàng</h1>
+          <p className="text-sm text-muted-foreground">
+            Đơn hàng không tồn tại hoặc đã quá 24 giờ. Bạn có thể kiểm tra danh sách đơn hàng trong trang tài khoản.
+          </p>
+          <div className="pt-4 flex justify-center gap-3">
+            <Button render={<Link href="/cho" />}>Tiếp tục mua sắm</Button>
+            <Button variant="outline" render={<Link href="/tai-khoan/don-hang" />}>
+              Xem đơn của tôi
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -67,8 +69,9 @@ export default async function DatHangThanhCongPage({
   const firstOrder = orders[0];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 space-y-8">
-      {/* Success banner */}
+    <div className="container-page py-8 md:py-12">
+      <div className="mx-auto max-w-3xl space-y-8">
+        {/* Success banner */}
       <div className="text-center space-y-3">
         <div className="inline-flex size-16 items-center justify-center rounded-full bg-success/10 text-success">
           <CheckCircle2 className="size-10" />
@@ -195,6 +198,7 @@ export default async function DatHangThanhCongPage({
           </Button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

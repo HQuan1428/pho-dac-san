@@ -54,7 +54,7 @@ export default async function DatHangPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 space-y-6">
+    <div className="container-page py-6 md:py-8 space-y-6">
       {/* Breadcrumb */}
       <nav aria-label="Đường dẫn" className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link href="/cho" className="hover:text-foreground transition">Chợ</Link>

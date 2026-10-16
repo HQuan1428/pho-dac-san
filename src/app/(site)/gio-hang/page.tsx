@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function CartPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 space-y-6">
+    <div className="container-page py-6 md:py-8 space-y-6">
       {/* Breadcrumb */}
       <nav aria-label="Đường dẫn" className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link href="/cho" className="hover:text-foreground transition">Chợ</Link>
@@ -17,12 +17,12 @@ export default function CartPage() {
         <span className="text-foreground font-medium">Giỏ hàng</span>
       </nav>
 
-      <div className="flex items-center gap-3 border-b pb-4">
+      <div className="flex items-center gap-3 border-b pb-3">
         <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <ShoppingCart className="size-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
             Giỏ hàng của bạn
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">

@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 import { searchProducts, type SearchParams } from "@/server/store/catalog";
-import { ProductCard } from "@/components/common/product-card";
+import { ProductCard } from "@/components/store/product-card";
 import { EmptyState } from "@/components/common/empty-state";
-import { SearchFilters, SortSelector } from "@/components/store/search-filters";
+import { SearchFilters, SortSelector, ActiveFilterChips } from "@/components/store/search-filters";
 import {
   Pagination,
   PaginationContent,
@@ -43,37 +43,40 @@ export default async function TimKiemPage({
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 space-y-6">
+    <div className="container-page py-6 md:py-8 space-y-5">
       {/* Header bar */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b pb-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          <h1 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
             {q ? `Kết quả tìm kiếm cho "${q}"` : "Khám phá đặc sản"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Tìm thấy <strong className="text-foreground">{total}</strong> sản phẩm phù hợp
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Tìm thấy <strong className="text-foreground">{total}</strong> sản phẩm đặc sản chính gốc
           </p>
         </div>
       </div>
 
-      {/* Main layout: Filters + Product Grid */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left: Filter Sidebar (desktop) & Mobile Sheet */}
+      {/* Main layout: 260px Sticky Filter Sidebar + Results Area */}
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        {/* Left: 260px Sticky Filter Sidebar */}
         <SearchFilters categories={categories} regions={regions} />
 
-        {/* Right: Products Area */}
-        <div className="flex-1 space-y-6">
-          {/* Top Sort Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-card p-3 shadow-xs">
+        {/* Right: Results Area */}
+        <div className="flex-1 min-w-0 w-full space-y-4">
+          {/* Active Filter Chips */}
+          <ActiveFilterChips categories={categories} regions={regions} />
+
+          {/* Toolbar row: Result count left, Sort select right */}
+          <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3.5 py-2 shadow-xs">
             <div className="text-xs text-muted-foreground">
               Hiển thị <span className="font-semibold text-foreground">{products.length}</span> / {total} sản phẩm
             </div>
             <SortSelector currentSort={currentSort} />
           </div>
 
-          {/* Product Grid or Empty State */}
+          {/* Product Grid (4 cols lg / 5 cols xl) or Empty State */}
           {products.length === 0 ? (
-            <div className="rounded-lg border border-dashed bg-card p-12 text-center">
+            <div className="rounded-lg border border-dashed bg-card p-10 text-center">
               <EmptyState
                 icon={SearchX}
                 title="Không tìm thấy đặc sản phù hợp"
@@ -82,14 +85,14 @@ export default async function TimKiemPage({
               <div className="mt-4">
                 <Link
                   href="/tim-kiem"
-                  className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-4 text-xs font-medium hover:bg-muted transition"
+                  className="inline-flex h-8 items-center justify-center rounded-md border bg-background px-4 text-xs font-medium hover:bg-muted transition"
                 >
                   Xóa bộ lọc và xem tất cả
                 </Link>
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {products.map((p) => (
                 <ProductCard key={p.href} product={p} />
               ))}
@@ -111,31 +114,31 @@ export default async function TimKiemPage({
                   )}
 
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                    // Show first, last, and pages around current
-                    if (
-                      p === 1 ||
-                      p === totalPages ||
-                      (p >= currentPage - 1 && p <= currentPage + 1)
-                    ) {
-                      return (
-                        <PaginationItem key={p}>
-                          <PaginationLink
-                            href={createPageUrl(p)}
-                            isActive={p === currentPage}
-                          >
-                            {p}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
+                    const isCurrent = p === currentPage;
+                    const isNear = Math.abs(p - currentPage) <= 1;
+                    const isEnd = p === 1 || p === totalPages;
+
+                    if (!isNear && !isEnd) {
+                      if (p === 2 || p === totalPages - 1) {
+                        return (
+                          <PaginationItem key={p}>
+                            <PaginationEllipsis />
+                          </PaginationItem>
+                        );
+                      }
+                      return null;
                     }
-                    if (p === currentPage - 2 || p === currentPage + 2) {
-                      return (
-                        <PaginationItem key={p}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      );
-                    }
-                    return null;
+
+                    return (
+                      <PaginationItem key={p}>
+                        <PaginationLink
+                          href={createPageUrl(p)}
+                          isActive={isCurrent}
+                        >
+                          {p}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
                   })}
 
                   {currentPage < totalPages && (
