@@ -16,8 +16,8 @@ export async function SiteHeader() {
       <div className="container-page flex h-16 items-center gap-6">
         <Logo />
         <nav className="hidden gap-1 text-sm md:flex">
-          <Link href="/cho" className="rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Khám phá</Link>
-          <Link href="/kenh-ban" className="rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Bán hàng</Link>
+          <Link href="/cho" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Khám phá</Link>
+          <Link href="/kenh-ban" className="rounded-full px-3 py-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Bán hàng</Link>
         </nav>
         <form action="/tim-kiem" className="relative ml-auto hidden w-full max-w-xs sm:block">
           <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />

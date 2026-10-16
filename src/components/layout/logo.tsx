@@ -26,7 +26,7 @@ export function BrandMark({
 
 export function Logo({ href = "/" }: { href?: string }) {
   return (
-    <Link href={href} className="flex items-center gap-2 font-bold tracking-tight">
+    <Link href={href} className="flex shrink-0 items-center gap-2 font-bold tracking-tight whitespace-nowrap">
       <BrandMark />
       Phố Đặc Sản
     </Link>
