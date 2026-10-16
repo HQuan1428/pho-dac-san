@@ -9,9 +9,9 @@ import {
   Ticket,
   Users,
   Settings,
-  Store,
   ExternalLink,
 } from "lucide-react";
+import { BrandMark } from "@/components/layout/logo";
 import type { ShopRole } from "@/server/access";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,9 +101,7 @@ export function SellerNavContent({ shop, role, user, onNavigate }: SellerNavProp
             onClick={onNavigate}
             className="flex items-center gap-2 font-semibold tracking-tight text-foreground hover:opacity-90"
           >
-            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Store className="size-4" />
-            </span>
+            <BrandMark className="size-7" />
             <span className="text-base font-bold">Kênh Người Bán</span>
           </Link>
 

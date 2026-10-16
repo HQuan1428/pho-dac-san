@@ -408,7 +408,7 @@ export async function placeOrder(input: CheckoutInput) {
 
       const shopEmailHtml = `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #059669;">Bạn có đơn hàng mới #${escapeHtml(ord.code)}</h2>
+          <h2 style="color: #0b6b55;">Bạn có đơn hàng mới #${escapeHtml(ord.code)}</h2>
           <p>Xin chào <strong>${escapeHtml(ord.shop.name)}</strong>,</p>
           <p>Khách hàng <strong>${escapeHtml(data.name)}</strong> vừa đặt một đơn hàng mới từ gian hàng của bạn.</p>
           
@@ -436,12 +436,12 @@ export async function placeOrder(input: CheckoutInput) {
               </tr>
               ${ord.discount > 0 ? `
               <tr>
-                <td colspan="2" style="padding: 8px; text-align: right; color: #059669;"><strong>Giảm giá:</strong></td>
-                <td style="padding: 8px; text-align: right; color: #059669;">-${formatVnd(ord.discount)}</td>
+                <td colspan="2" style="padding: 8px; text-align: right; color: #0b6b55;"><strong>Giảm giá:</strong></td>
+                <td style="padding: 8px; text-align: right; color: #0b6b55;">-${formatVnd(ord.discount)}</td>
               </tr>` : ""}
               <tr>
                 <td colspan="2" style="padding: 8px; text-align: right; font-size: 16px;"><strong>Tổng cộng:</strong></td>
-                <td style="padding: 8px; text-align: right; font-size: 16px; font-weight: bold; color: #059669;">${formatVnd(ord.total)}</td>
+                <td style="padding: 8px; text-align: right; font-size: 16px; font-weight: bold; color: #0b6b55;">${formatVnd(ord.total)}</td>
               </tr>
             </tfoot>
           </table>
@@ -462,11 +462,11 @@ export async function placeOrder(input: CheckoutInput) {
       if (data.email) {
         const customerEmailHtml = `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #059669;">Đặt hàng thành công #${escapeHtml(ord.code)}</h2>
+            <h2 style="color: #0b6b55;">Đặt hàng thành công #${escapeHtml(ord.code)}</h2>
             <p>Xin chào <strong>${escapeHtml(data.name)}</strong>,</p>
             <p>Cảm ơn bạn đã đặt hàng tại <strong>${escapeHtml(ord.shop.name)}</strong> trên Phố Đặc Sản.</p>
             
-            <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px; margin: 16px 0;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #0b6b55; padding: 12px; margin: 16px 0;">
               <strong>Shop sẽ gọi điện xác nhận đơn, thanh toán khi nhận hàng.</strong>
             </div>
 
@@ -486,12 +486,12 @@ export async function placeOrder(input: CheckoutInput) {
                 </tr>
                 ${ord.discount > 0 ? `
                 <tr>
-                  <td colspan="2" style="padding: 8px; text-align: right; color: #059669;"><strong>Giảm giá:</strong></td>
-                  <td style="padding: 8px; text-align: right; color: #059669;">-${formatVnd(ord.discount)}</td>
+                  <td colspan="2" style="padding: 8px; text-align: right; color: #0b6b55;"><strong>Giảm giá:</strong></td>
+                  <td style="padding: 8px; text-align: right; color: #0b6b55;">-${formatVnd(ord.discount)}</td>
                 </tr>` : ""}
                 <tr>
                   <td colspan="2" style="padding: 8px; text-align: right; font-size: 16px;"><strong>Tổng cộng:</strong></td>
-                  <td style="padding: 8px; text-align: right; font-size: 16px; font-weight: bold; color: #059669;">${formatVnd(ord.total)}</td>
+                  <td style="padding: 8px; text-align: right; font-size: 16px; font-weight: bold; color: #0b6b55;">${formatVnd(ord.total)}</td>
                 </tr>
               </tfoot>
             </table>

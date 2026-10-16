@@ -100,13 +100,13 @@ export async function inviteStaffAction(email: string) {
       normalizedEmail,
       `[Phố Đặc Sản] Lời mời tham gia quản lý gian hàng ${shop.name}`,
       `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="color: #059669;">Phố Đặc Sản</h2>
+        <h2 style="color: #0b6b55;">Phố Đặc Sản</h2>
         <p>Xin chào,</p>
         <p>Bạn đã được mời làm nhân viên quản lý cho gian hàng <strong>${safeShopName}</strong> trên sàn Phố Đặc Sản.</p>
         <p>Với vai trò nhân viên, bạn có quyền quản lý đơn hàng và cập nhật sản phẩm cho gian hàng.</p>
         <p>Vui lòng bấm vào liên kết dưới đây để chấp nhận lời mời (liên kết có hiệu lực trong 7 ngày):</p>
         <p style="margin: 24px 0;">
-          <a href="${safeInviteUrl}" style="background-color: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Chấp nhận lời mời</a>
+          <a href="${safeInviteUrl}" style="background-color: #0b6b55; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Chấp nhận lời mời</a>
         </p>
         <p>Hoặc truy cập đường dẫn: <br/><a href="${safeInviteUrl}">${safeInviteUrl}</a></p>
         <p>Nếu bạn không nhận ra lời mời này, vui lòng bỏ qua email.</p>

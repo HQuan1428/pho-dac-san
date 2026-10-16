@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Store } from "lucide-react";
+import { Menu } from "lucide-react";
+import { BrandMark } from "@/components/layout/logo";
 import type { ShopRole } from "@/server/access";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,9 +56,7 @@ export function SellerMobileNav({ shop, role, user }: SellerMobileNavProps) {
           </SheetContent>
         </Sheet>
         <div className="flex items-center gap-2 font-semibold">
-          <span className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Store className="size-3.5" />
-          </span>
+          <BrandMark className="size-6" />
           <span className="truncate text-sm">{shop.name}</span>
         </div>
       </div>

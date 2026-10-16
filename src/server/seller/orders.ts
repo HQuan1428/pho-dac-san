@@ -419,7 +419,7 @@ async function notifyCustomer({
         customerEmail,
         `[Phố Đặc Sản] ${content.title}`,
         `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-          <h2 style="color: #059669;">Phố Đặc Sản</h2>
+          <h2 style="color: #0b6b55;">Phố Đặc Sản</h2>
           <p>Xin chào ${safeCustomerName},</p>
           <p>${emailBody}</p>
           <p>Mã đơn hàng: <strong>${safeOrderCode}</strong></p>

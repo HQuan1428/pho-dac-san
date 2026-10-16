@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Store } from "lucide-react";
+import { BrandMark } from "@/components/layout/logo";
 import { verifyInviteToken } from "@/server/seller/invite";
 import { AcceptInviteView } from "@/components/seller/accept-invite-view";
 
@@ -22,9 +22,7 @@ export default async function InviteStaffPage({ searchParams }: InvitePageProps)
       <header className="border-b bg-background">
         <div className="container-page flex items-center px-4 py-3 md:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Store className="size-4" />
-            </span>
+            <BrandMark className="size-7" />
             <span className="text-base font-bold">Phố Đặc Sản</span>
             <span className="text-xs text-muted-foreground ml-1">· Lời mời cộng tác</span>
           </Link>
