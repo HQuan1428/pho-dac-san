@@ -109,13 +109,13 @@ export function ImageUploader({
               unoptimized
               className="object-cover"
             />
-            {idx === 0 && (
-              <span className="absolute top-1.5 left-1.5 rounded bg-primary/90 px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground shadow-sm">
+            {maxImages > 1 && idx === 0 && (
+              <span className="pointer-events-none absolute top-1.5 left-1.5 rounded bg-primary/90 px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground shadow-sm">
                 Ảnh đại diện
               </span>
             )}
             {/* Control buttons */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 flex flex-col justify-between p-1.5">
+            <div className="invisible group-hover:visible absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 flex flex-col justify-between p-1.5">
               <div className="flex justify-end">
                 <Button
                   type="button"

@@ -51,6 +51,8 @@ export function SettingsForm({ shop, provinces }: SettingsFormProps) {
   const [banners, setBanners] = useState<string[]>(shop.banner ? [shop.banner] : []);
   const [loading, setLoading] = useState(false);
 
+  const provinceItems = provinces.map((p) => ({ value: p.id, label: p.name }));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

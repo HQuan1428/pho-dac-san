@@ -375,19 +375,30 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
                 <PanelLeft className="size-4" />
               </Button>
 
-              <div className="hidden sm:block min-w-0">
-                <Breadcrumb>
-                  <BreadcrumbList>
+              <div className="hidden sm:block min-w-0 flex-1">
+                <Breadcrumb className="min-w-0">
+                  <BreadcrumbList className="flex-nowrap whitespace-nowrap overflow-hidden">
                     {crumbs.map((crumb, idx) => {
                       const isLast = idx === crumbs.length - 1;
+                      const isMiddle = idx > 0 && !isLast;
                       return (
-                        <span key={crumb.label} className="inline-flex items-center gap-1.5">
-                          {idx > 0 && <BreadcrumbSeparator />}
-                          <BreadcrumbItem>
+                        <span key={crumb.label} className="inline-flex items-center gap-1.5 min-w-0 shrink">
+                          {idx > 0 && <BreadcrumbSeparator className="shrink-0" />}
+                          <BreadcrumbItem className="min-w-0">
                             {isLast || !crumb.href ? (
-                              <BreadcrumbPage className="font-medium text-foreground">{crumb.label}</BreadcrumbPage>
+                              <BreadcrumbPage className="font-medium text-foreground truncate max-w-36 md:max-w-52">
+                                {crumb.label}
+                              </BreadcrumbPage>
                             ) : (
-                              <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
+                              <BreadcrumbLink
+                                href={crumb.href}
+                                className={cn(
+                                  "truncate",
+                                  isMiddle ? "max-w-24 md:max-w-32 lg:max-w-36" : "max-w-28 md:max-w-40"
+                                )}
+                              >
+                                {crumb.label}
+                              </BreadcrumbLink>
                             )}
                           </BreadcrumbItem>
                         </span>
@@ -399,8 +410,8 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
             </div>
 
             {/* Right side: Search and User dropdown */}
-            <div className="flex items-center gap-3">
-              <form method="GET" action="/seller/products" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
+            <div className="flex items-center gap-3 shrink-0">
+              <form method="GET" action="/seller/products" className="relative hidden sm:block w-36 md:w-44 lg:w-56 shrink-0">
                 <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none" />
                 <input
                   type="search"
@@ -457,8 +468,8 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
             </div>
           </header>
 
-          {/* Main content: p-6 with container-page wrapper */}
-          <main className="flex-1 p-6">
+          {/* Main content: container-page handles horizontal gutters */}
+          <main className="flex-1 py-4 md:py-6 min-w-0">
             <div className="container-page space-y-6">
               <ShopStatusAlert status={shop.status} statusReason={shop.statusReason} />
               {children}

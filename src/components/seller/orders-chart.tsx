@@ -50,7 +50,7 @@ export function OrdersChart({ data }: OrdersChartProps) {
           </div>
 
           {/* Bar columns */}
-          <div className="relative z-10 flex h-full items-end gap-1 sm:gap-1.5 md:gap-2 pt-5">
+          <div className="relative z-10 flex h-full items-end gap-1 sm:gap-1.5 xl:gap-2 pt-5">
             {data.map((item) => {
               const heightPercent = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
               const hasOrders = item.count > 0;
