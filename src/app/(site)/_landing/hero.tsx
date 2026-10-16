@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Store, Sparkles, ShoppingBag, TrendingUp, PackageOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,39 +8,34 @@ import { StatCard } from "@/components/common/stat-card";
 import { Price } from "@/components/common/price";
 import { RatingStars } from "@/components/common/rating-stars";
 
-const placeholderSvg = (hue: number, label: string) =>
-  `data:image/svg+xml;utf8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="hsl(${hue} 12% 90%)"/><text x="100" y="106" font-family="sans-serif" font-size="14" text-anchor="middle" fill="hsl(${hue} 10% 45%)">${label}</text></svg>`,
-  )}`;
-
 const mockMiniProducts = [
   {
     name: "Chè Tân Cương đặc biệt",
     price: 320000,
     province: "Thái Nguyên",
     rating: 4.8,
-    image: placeholderSvg(120, "Trà Thái"),
+    image: "/images/products/che-tan-cuong-1.webp",
   },
   {
     name: "Mắm tôm Sầm Sơn hũ 500g",
     price: 85000,
     province: "Thanh Hóa",
     rating: 4.9,
-    image: placeholderSvg(25, "Mắm Sầm Sơn"),
+    image: "/images/products/mam-tom-sam-son-2.webp",
   },
   {
-    name: "Kẹo dừa Bến Tre nguyên chất",
-    price: 45000,
-    province: "Bến Tre",
-    rating: 5.0,
-    image: placeholderSvg(40, "Kẹo dừa"),
+    name: "Nem chua Thanh Hóa",
+    price: 50000,
+    province: "Thanh Hóa",
+    rating: 4.9,
+    image: "/images/products/nem-chua-thanh-hoa-1.webp",
   },
   {
     name: "Mực khô Sầm Sơn loại 1",
     price: 620000,
     province: "Thanh Hóa",
     rating: 4.7,
-    image: placeholderSvg(35, "Mực khô"),
+    image: "/images/products/muc-kho-sam-son-1.webp",
   },
 ];
 
@@ -73,7 +69,7 @@ export function Hero() {
       <div className="container-page">
         <div className="grid items-center gap-8 lg:gap-12 lg:grid-cols-[1.1fr_1fr]">
           {/* Left Column: Headline, CTAs, Social Proof */}
-          <div className="space-y-6">
+          <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500">
             <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium text-muted-foreground">
               <Sparkles className="size-3.5 text-primary" />
               <span>Dành cho nhà sản xuất &amp; chủ hộ kinh doanh đặc sản</span>
@@ -123,7 +119,7 @@ export function Hero() {
           </div>
 
           {/* Right Column: Dense UI Mock of Seller Center */}
-          <div className="relative">
+          <div className="relative motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500 motion-safe:delay-150">
             {/* Background glow */}
             <div className="pointer-events-none absolute -right-6 -top-6 -z-10 size-72 rounded-full bg-primary/10 blur-3xl" />
 
@@ -189,14 +185,17 @@ export function Hero() {
                     {mockMiniProducts.map((p) => (
                       <div
                         key={p.name}
-                        className="flex flex-col overflow-hidden rounded-md border bg-card p-1.5 transition-colors"
+                        className="flex flex-col overflow-hidden rounded-md border bg-card p-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:-translate-y-0.5"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={p.image}
-                          alt={p.name}
-                          className="aspect-square w-full rounded object-cover"
-                        />
+                        <div className="relative aspect-square w-full overflow-hidden rounded">
+                          <Image
+                            src={p.image}
+                            alt={p.name}
+                            fill
+                            sizes="120px"
+                            className="object-cover"
+                          />
+                        </div>
                         <p className="mt-1 line-clamp-1 text-[11px] font-medium text-foreground">
                           {p.name}
                         </p>
