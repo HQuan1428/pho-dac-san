@@ -27,7 +27,7 @@ const steps = [
 export function HowItWorks() {
   return (
     <section className="border-t bg-muted/20 py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
+      <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Bắt đầu kinh doanh chỉ với 3 bước đơn giản
@@ -37,33 +37,36 @@ export function HowItWorks() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {steps.map((item, index) => {
+        {/* Horizontal 3-step grid with desktop connecting line */}
+        <div className="relative mt-12 grid gap-6 md:grid-cols-3">
+          {/* Connecting line on desktop */}
+          <div
+            className="hidden md:block absolute top-11 left-[15%] right-[15%] h-0.5 bg-border z-0"
+            aria-hidden="true"
+          />
+
+          {steps.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.step}
-                className="relative flex flex-col rounded-xl border bg-card p-6 shadow-none"
+                className="relative z-10 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-semibold text-primary">
-                    BƯỚC {item.step}
-                  </span>
-                  <div className="flex size-9 items-center justify-center rounded-md bg-muted text-foreground">
-                    <Icon className="size-4" />
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex size-10 items-center justify-center rounded-full border-2 border-primary bg-background font-mono text-sm font-bold text-primary shadow-xs">
+                      {item.step}
+                    </div>
+                    <div className="flex size-9 items-center justify-center rounded-md bg-muted text-foreground">
+                      <Icon className="size-4" />
+                    </div>
                   </div>
+
+                  <h3 className="mt-5 text-lg font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {item.description}
+                  </p>
                 </div>
-
-                <h3 className="mt-6 text-xl font-semibold">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
-
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute -right-4 top-1/2 -translate-y-1/2 z-10 text-muted-foreground/40 font-mono text-xl">
-                    →
-                  </div>
-                )}
               </div>
             );
           })}
