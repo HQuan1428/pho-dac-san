@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Bell, Search } from "lucide-react";
-import { auth, signOut } from "@/auth";
+import { signOut } from "@/auth";
+import { getCurrentUser } from "@/server/access";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -8,8 +9,7 @@ import { CartButton } from "./cart-button";
 import { Logo } from "./logo";
 
 export async function SiteHeader() {
-  const session = await auth();
-  const user = session?.user;
+  const user = await getCurrentUser();
 
   return (
     <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-md">
