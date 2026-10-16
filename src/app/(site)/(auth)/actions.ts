@@ -7,6 +7,7 @@ import { z } from "zod";
 import { signIn } from "@/auth";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/server/access";
+import { isValidCallbackUrl } from "@/lib/callback-url";
 import {
   checkPasswordResetRateLimit,
   consumeAuthToken,
@@ -20,16 +21,6 @@ import {
 const failedLoginAttempts = new Map<string, number[]>();
 const FAILED_LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const MAX_FAILED_LOGIN_ATTEMPTS = 10;
-
-export function isValidCallbackUrl(cb?: string | null): cb is string {
-  if (!cb || typeof cb !== "string") return false;
-  if (!cb.startsWith("/") || cb.includes("\\")) return false;
-  try {
-    return new URL(cb, "http://x").origin === "http://x";
-  } catch {
-    return false;
-  }
-}
 
 const vnPhoneRegex = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;

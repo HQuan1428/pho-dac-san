@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { type Metadata } from "next";
 import { getCurrentUser } from "@/server/access";
-import { isValidCallbackUrl } from "../actions";
+import { isValidCallbackUrl } from "@/lib/callback-url";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
