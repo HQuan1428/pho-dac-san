@@ -50,7 +50,7 @@ export async function FollowingPanel({ userId }: { userId: string }) {
           action={<Button render={<Link href="/market" />}>Khám phá gian hàng</Button>}
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {formattedShops.map((shop) => (
             <FollowedShopCard key={shop.id} shop={shop} />
           ))}

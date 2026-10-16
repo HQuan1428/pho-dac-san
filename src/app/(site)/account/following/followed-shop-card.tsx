@@ -32,7 +32,7 @@ export function FollowedShopCard({ shop }: { shop: FollowedShopData }) {
   };
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-border/80">
+    <div className="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-border/80">
       <Avatar className="size-12 shrink-0">
         {shop.logo && <AvatarImage src={shop.logo} alt={shop.name} />}
         <AvatarFallback className="bg-primary/10 text-primary font-semibold">

@@ -181,7 +181,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Top action header */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Button
           type="button"
           variant="ghost"
@@ -243,9 +243,9 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
       </div>
 
       {/* 2 columns at lg: main fields left (2/3), side panel right (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         {/* Main fields left (2/3 width) */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="min-w-0 xl:col-span-2 space-y-6">
           {/* Basic information */}
           <div className="rounded-lg border bg-card p-5 space-y-4">
             <h2 className="text-base font-semibold text-foreground border-b pb-3">
@@ -286,7 +286,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
         </div>
 
         {/* Side panel right (1/3 width, sticky actions, status, category/province, images) */}
-        <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-20">
+        <div className="min-w-0 xl:col-span-1 space-y-6 xl:sticky xl:top-20">
           {/* Sticky Actions Card */}
           <div className="rounded-lg border bg-card p-5 space-y-3 shadow-xs">
             <h3 className="text-sm font-semibold text-foreground border-b pb-2">
