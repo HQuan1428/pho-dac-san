@@ -20,10 +20,12 @@ export function AuthButtons() {
         variant="ghost"
         size="sm"
         onClick={() => handleOpen("login")}
-        className="gap-1.5"
+        aria-label="Đăng nhập"
+        title="Đăng nhập"
+        className="gap-1.5 max-sm:px-2"
       >
-        <LogIn className="size-4" aria-hidden />
-        <span>Đăng nhập</span>
+        <LogIn className="size-4" aria-hidden="true" />
+        <span className="max-sm:hidden">Đăng nhập</span>
       </Button>
       <Button
         size="sm"

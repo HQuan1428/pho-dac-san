@@ -276,9 +276,9 @@ export function Hero() {
                         <p className="mt-1 line-clamp-1 text-[11px] font-medium text-foreground">
                           {p.name}
                         </p>
-                        <div className="mt-0.5 flex items-center justify-between">
+                        <div className="mt-0.5 flex items-center justify-between gap-1">
                           <Price amount={p.price} className="text-[11px] font-semibold text-foreground" />
-                          <RatingStars value={p.rating} compact className="scale-75 origin-right" />
+                          <RatingStars value={p.rating} compact className="hidden xl:inline-flex scale-75 origin-right shrink-0" />
                         </div>
                       </div>
                     ))}

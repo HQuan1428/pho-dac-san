@@ -114,9 +114,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
       </nav>
 
       {/* Main Product Info: gallery column (max 560px) + sticky buy box filling the rest */}
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] xl:gap-12 items-start">
+      <div className="grid gap-6 lg:gap-8 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] xl:gap-12 items-start">
         {/* Gallery left (large gallery max ~520px, thumbnails row) */}
-        <div className="flex justify-center lg:justify-start w-full">
+        <div className="flex justify-center lg:justify-start w-full min-w-0">
           <ProductGallery
             images={product.images}
             name={product.name}
@@ -125,18 +125,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
 
         {/* Sticky Buy Box Right */}
-        <div className="lg:sticky lg:top-20 space-y-4 rounded-xl border bg-card p-5 shadow-xs">
+        <div className="lg:sticky lg:top-20 space-y-4 rounded-xl border bg-card p-4 sm:p-5 shadow-xs min-w-0">
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-wrap">
                 <RegionTag province={product.province.name} variant="badge" />
                 <span className="text-muted-foreground/50">·</span>
                 <Link
                   href={`/search?danh-muc=${product.category.slug}`}
-                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition"
+                  className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition truncate"
                 >
-                  <Tag className="size-3" aria-hidden="true" />
-                  <span>{product.category.name}</span>
+                  <Tag className="size-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{product.category.name}</span>
                 </Link>
               </div>
               <WishlistButton
@@ -146,7 +146,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               />
             </div>
 
-            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl break-words">
               {product.name}
             </h1>
 
@@ -177,9 +177,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
           />
 
           {/* Shop Mini Card */}
-          <div className="rounded-lg border bg-muted/20 p-3.5 flex items-center justify-between gap-3">
+          <div className="rounded-lg border bg-muted/20 p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <Avatar className="size-10 border shrink-0">
+              <Avatar className="size-9 sm:size-10 border shrink-0">
                 {product.shop.logo && <AvatarImage src={product.shop.logo} alt={product.shop.name} />}
                 <AvatarFallback className="font-semibold text-xs">{product.shop.name.slice(0, 2)}</AvatarFallback>
               </Avatar>
@@ -201,7 +201,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
               <FollowButton
                 shopId={product.shop.id}
                 initialFollowed={isFollowingShop}
@@ -221,7 +221,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       {/* Tabs: Mô tả (FileText) / Đánh giá (Star, with count) / Gian hàng (Store) with icons */}
       <Tabs defaultValue="description" className="space-y-4 pt-4 border-t">
-        <TabsList variant="line" className="border-b w-full justify-start gap-6 h-11 pb-0">
+        <TabsList variant="line" className="border-b w-full justify-start gap-4 sm:gap-6 h-11 pb-0 overflow-x-auto max-w-full scrollbar-none">
           <TabsTrigger value="description" className="flex items-center gap-1.5 text-sm font-semibold pb-2.5">
             <FileText className="size-4 shrink-0" aria-hidden="true" />
             <span>Mô tả</span>
