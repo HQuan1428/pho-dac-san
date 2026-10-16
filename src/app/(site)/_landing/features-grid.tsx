@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { PhoneCall, Store, Layers, TrendingUp } from "lucide-react";
 import { OrderStatusBadge } from "@/components/common/order-status-badge";
 import { Price } from "@/components/common/price";
@@ -19,7 +20,12 @@ export function FeaturesGrid() {
         {/* 3x2 Bento Grid */}
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Bento Item 1: Col-span-2 with Mini UI (Nhận đơn & gọi chốt) */}
-          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
+          <div
+            data-spotlight
+            style={{ "--spot": "var(--primary)" } as CSSProperties}
+            className="reveal relative overflow-hidden flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2"
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-primary/20" aria-hidden="true" />
             <div>
               <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <PhoneCall className="size-5" />
@@ -53,9 +59,14 @@ export function FeaturesGrid() {
           </div>
 
           {/* Bento Item 2: Col-span-1 (Gian hàng riêng biệt) */}
-          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
+          <div
+            data-spotlight
+            style={{ "--spot": "var(--lotus)" } as CSSProperties}
+            className="reveal relative overflow-hidden flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1"
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-lotus to-lotus/20" aria-hidden="true" />
             <div>
-              <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <div className="flex size-10 items-center justify-center rounded-md bg-lotus/10 text-lotus">
                 <Store className="size-5" />
               </div>
               <h3 className="mt-4 text-xl font-semibold">Gian hàng riêng biệt</h3>
@@ -63,16 +74,21 @@ export function FeaturesGrid() {
                 Sở hữu trang cửa hàng riêng mang đậm bản sắc vùng miền với logo, banner, câu chuyện thương hiệu và địa chỉ xuất xứ 34 tỉnh thành rõ ràng.
               </p>
             </div>
-            <div className="mt-6 rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground">
+            <div className="mt-6 rounded-lg border border-lotus/20 bg-lotus/5 p-3 text-xs text-muted-foreground">
               <p className="font-medium text-foreground">Chỉ dẫn xuất xứ rõ ràng</p>
               <p className="mt-0.5">Khách hàng tra cứu nhanh nguồn gốc cơ sở chế biến truyền thống.</p>
             </div>
           </div>
 
           {/* Bento Item 3: Col-span-1 (Sản phẩm đa biến thể) */}
-          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
+          <div
+            data-spotlight
+            style={{ "--spot": "var(--turmeric)" } as CSSProperties}
+            className="reveal relative overflow-hidden flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1"
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-turmeric to-turmeric/20" aria-hidden="true" />
             <div>
-              <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <div className="flex size-10 items-center justify-center rounded-md bg-turmeric/10 text-turmeric">
                 <Layers className="size-5" />
               </div>
               <h3 className="mt-4 text-xl font-semibold">Sản phẩm có biến thể</h3>
@@ -80,16 +96,21 @@ export function FeaturesGrid() {
                 Tùy biến phân loại theo khối lượng, đóng gói (hũ 250g, túi 500g, hộp quà biếu), tự động cập nhật giá bán và kiểm soát tồn kho riêng cho từng biến thể.
               </p>
             </div>
-            <div className="mt-6 rounded-lg border bg-muted/40 p-3 text-xs text-muted-foreground">
+            <div className="mt-6 rounded-lg border border-turmeric/20 bg-turmeric/5 p-3 text-xs text-muted-foreground">
               <p className="font-medium text-foreground">Linh hoạt quy cách</p>
               <p className="mt-0.5">Định giá riêng cho mua lẻ hũ nhỏ hoặc mua combo thùng sỉ.</p>
             </div>
           </div>
 
           {/* Bento Item 4: Col-span-2 with Mini UI (Thống kê doanh số & Voucher) */}
-          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
+          <div
+            data-spotlight
+            style={{ "--spot": "var(--sky)" } as CSSProperties}
+            className="reveal relative overflow-hidden flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2"
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky to-sky/20" aria-hidden="true" />
             <div>
-              <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <div className="flex size-10 items-center justify-center rounded-md bg-sky/10 text-sky">
                 <TrendingUp className="size-5" />
               </div>
               <h3 className="mt-4 text-xl font-semibold">Thống kê doanh số &amp; Mã giảm giá</h3>
@@ -112,16 +133,16 @@ export function FeaturesGrid() {
                   {[35, 50, 45, 65, 60, 80, 95, 85, 100].map((h, i) => (
                     <div
                       key={i}
-                      className="flex-1 rounded-t-sm bg-primary/30"
+                      className="flex-1 rounded-t-sm bg-sky/40"
                       style={{ height: `${h}%` }}
                     />
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col justify-between rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3">
+              <div className="flex flex-col justify-between rounded-lg border border-dashed border-sky/40 bg-sky/5 p-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-primary">DACSAN20K</span>
-                  <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                  <span className="font-mono text-xs font-bold text-sky">DACSAN20K</span>
+                  <span className="rounded bg-sky/20 px-1.5 py-0.5 text-[10px] font-medium text-sky">
                     Đang hoạt động
                   </span>
                 </div>
@@ -138,3 +159,4 @@ export function FeaturesGrid() {
     </section>
   );
 }
+
