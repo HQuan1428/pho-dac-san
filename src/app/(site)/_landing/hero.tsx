@@ -4,9 +4,9 @@ import { ArrowRight, Store, Sparkles, ShoppingBag, TrendingUp, PackageOpen } fro
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { OrderStatusBadge } from "@/components/common/order-status-badge";
-import { StatCard } from "@/components/common/stat-card";
 import { Price } from "@/components/common/price";
 import { RatingStars } from "@/components/common/rating-stars";
+import { cn } from "@/lib/utils";
 
 const mockMiniProducts = [
   {
@@ -15,6 +15,7 @@ const mockMiniProducts = [
     province: "Thái Nguyên",
     rating: 4.8,
     image: "/images/products/che-tan-cuong-1.webp",
+    spot: "var(--primary)",
   },
   {
     name: "Mắm tôm Sầm Sơn hũ 500g",
@@ -22,6 +23,7 @@ const mockMiniProducts = [
     province: "Thanh Hóa",
     rating: 4.9,
     image: "/images/products/mam-tom-sam-son-2.webp",
+    spot: "var(--turmeric)",
   },
   {
     name: "Nem chua Thanh Hóa",
@@ -29,6 +31,7 @@ const mockMiniProducts = [
     province: "Thanh Hóa",
     rating: 4.9,
     image: "/images/products/nem-chua-thanh-hoa-1.webp",
+    spot: "var(--lotus)",
   },
   {
     name: "Mực khô Sầm Sơn loại 1",
@@ -36,6 +39,7 @@ const mockMiniProducts = [
     province: "Thanh Hóa",
     rating: 4.7,
     image: "/images/products/muc-kho-sam-son-1.webp",
+    spot: "var(--sky)",
   },
 ];
 
@@ -56,27 +60,85 @@ const mockOrders = [
   },
   {
     code: "ORD-0840",
-    item: "Kẹo dừa Bến Tre nguyên chất",
+    item: "Nem chua Thanh Hóa",
     customer: "Nam Hải (TP.HCM)",
-    amount: 135000,
+    amount: 50000,
     status: "SHIPPING" as const,
   },
+];
+
+const mockStats = [
+  {
+    label: "Đơn mới",
+    value: "18",
+    delta: "+12%",
+    icon: ShoppingBag,
+    iconBg: "bg-lotus/10",
+    iconColor: "text-lotus",
+    trendColor: "text-lotus",
+  },
+  {
+    label: "Doanh thu",
+    value: "12,4 tr",
+    delta: "+15%",
+    icon: TrendingUp,
+    iconBg: "bg-turmeric/10",
+    iconColor: "text-turmeric",
+    trendColor: "text-turmeric",
+  },
+  {
+    label: "Sản phẩm",
+    value: "24",
+    delta: "+4%",
+    icon: PackageOpen,
+    iconBg: "bg-sky/10",
+    iconColor: "text-sky",
+    trendColor: "text-sky",
+  },
+];
+
+const regionAvatars = [
+  { initials: "LH", bg: "bg-lotus/15 text-lotus" },
+  { initials: "TT", bg: "bg-turmeric/20 text-turmeric" },
+  { initials: "HN", bg: "bg-sky/15 text-sky" },
+  { initials: "MĐ", bg: "bg-clay/15 text-clay" },
 ];
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden py-16 lg:py-24">
-      {/* Decorative top green glow for sticky glass header */}
+      {/* Decorative blurred color blobs with cursor parallax */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 left-1/2 -z-10 -translate-x-1/2 h-72 w-[600px] max-w-full rounded-full bg-primary/10 blur-3xl"
+        data-parallax
+        style={{ "--depth": "30px" } as React.CSSProperties}
+        className="pointer-events-none absolute -top-24 left-1/4 -z-10 h-80 w-80 sm:h-96 sm:w-96 rounded-full bg-primary/20 blur-3xl"
       />
+      <div
+        aria-hidden="true"
+        data-parallax
+        style={{ "--depth": "-20px" } as React.CSSProperties}
+        className="pointer-events-none absolute top-1/3 -left-12 -z-10 h-72 w-72 sm:h-80 sm:w-80 rounded-full bg-lotus/20 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        data-parallax
+        style={{ "--depth": "16px" } as React.CSSProperties}
+        className="pointer-events-none absolute -bottom-10 left-1/3 -z-10 h-72 w-72 sm:h-80 sm:w-80 rounded-full bg-turmeric/20 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        data-parallax
+        style={{ "--depth": "-36px" } as React.CSSProperties}
+        className="pointer-events-none absolute -top-12 -right-12 -z-10 h-80 w-80 sm:h-96 sm:w-96 rounded-full bg-sky/20 blur-3xl"
+      />
+
       <div className="container-page">
         <div className="grid items-center gap-8 lg:gap-12 lg:grid-cols-[1.1fr_1fr]">
           {/* Left Column: Headline, CTAs, Social Proof */}
           <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500">
-            <div className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium text-muted-foreground">
-              <Sparkles className="size-3.5 text-primary" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-lotus/30 bg-lotus/10 px-3 py-1 text-xs font-medium text-foreground">
+              <Sparkles className="size-3.5 text-lotus" />
               <span>Dành cho nhà sản xuất &amp; chủ hộ kinh doanh đặc sản</span>
             </div>
 
@@ -103,10 +165,10 @@ export function Hero() {
             {/* Social proof under CTAs */}
             <div className="flex items-center gap-3 pt-2">
               <div className="flex -space-x-2">
-                {["LH", "TT", "HN", "MD"].map((initials, idx) => (
+                {regionAvatars.map((avatar, idx) => (
                   <Avatar key={idx} className="size-8 border-2 border-background ring-1 ring-border">
-                    <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
-                      {initials}
+                    <AvatarFallback className={cn("text-[11px] font-semibold", avatar.bg)}>
+                      {avatar.initials}
                     </AvatarFallback>
                   </Avatar>
                 ))}
@@ -125,10 +187,7 @@ export function Hero() {
 
           {/* Right Column: Dense UI Mock of Seller Center */}
           <div className="relative motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500 motion-safe:delay-150">
-            {/* Background glow */}
-            <div className="pointer-events-none absolute -right-6 -top-6 -z-10 size-72 rounded-full bg-primary/10 blur-3xl" />
-
-            <div className="rounded-xl border bg-card p-4 shadow-sm md:p-5">
+            <div data-tilt className="rounded-xl border bg-card p-4 shadow-sm md:p-5">
               {/* Mock Header Bar */}
               <div className="mb-4 flex items-center justify-between border-b pb-3">
                 <div className="flex items-center gap-2">
@@ -146,11 +205,22 @@ export function Hero() {
                 </span>
               </div>
 
-              {/* Stat row (3 StatCards) */}
+              {/* Stat row (3 StatCards with accents) */}
               <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
-                <StatCard label="Đơn mới" value="18" delta={12} icon={ShoppingBag} />
-                <StatCard label="Doanh thu" value="12,4 tr" delta={15} icon={TrendingUp} />
-                <StatCard label="Sản phẩm" value="24" delta={4} icon={PackageOpen} />
+                {mockStats.map((stat) => (
+                  <div key={stat.label} className="rounded-lg border bg-card p-2.5 sm:p-3">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span className="truncate">{stat.label}</span>
+                      <span className={cn("flex size-6 shrink-0 items-center justify-center rounded-md", stat.iconBg, stat.iconColor)}>
+                        <stat.icon className="size-3.5" />
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-base sm:text-lg font-semibold tabular-nums text-foreground">{stat.value}</p>
+                    <p className={cn("mt-0.5 text-[10px] sm:text-[11px] font-medium truncate", stat.trendColor)}>
+                      {stat.delta} so với tháng trước
+                    </p>
+                  </div>
+                ))}
               </div>
 
               {/* Layered / offset section: Orders + 2x2 Mini Product Grid */}
@@ -190,6 +260,8 @@ export function Hero() {
                     {mockMiniProducts.map((p) => (
                       <div
                         key={p.name}
+                        data-spotlight
+                        style={{ "--spot": p.spot } as React.CSSProperties}
                         className="flex flex-col overflow-hidden rounded-md border bg-card p-1.5 transition-colors motion-safe:transition-transform motion-safe:hover:-translate-y-0.5"
                       >
                         <div className="relative aspect-square w-full overflow-hidden rounded">
