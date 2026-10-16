@@ -3,55 +3,73 @@
 import { useState } from "react";
 import { Package } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getProductPlaceholder } from "./placeholder";
 
 export function ProductGallery({
   images,
   name,
+  province,
 }: {
   images: string[];
   name: string;
   province?: string;
 }) {
   const [activeIdx, setActiveIdx] = useState(0);
+  const fallbackSvg = getProductPlaceholder(province || name);
+  const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex aspect-square w-full flex-col items-center justify-center rounded-lg border bg-muted/50 p-6 text-muted-foreground">
-        <Package className="size-20 stroke-1 text-muted-foreground/50" />
+      <div className="flex aspect-square w-full max-w-[560px] flex-col items-center justify-center rounded-xl border bg-muted/50 p-6 text-muted-foreground shadow-xs">
+        <Package className="size-16 stroke-1 text-muted-foreground/50" />
         <span className="mt-3 text-sm font-medium">Chưa có hình ảnh sản phẩm</span>
         <span className="mt-1 text-xs text-muted-foreground">Đặc sản chính gốc đóng gói chuẩn chất lượng</span>
       </div>
     );
   }
 
-  const currentImage = images[activeIdx] || images[0];
+  const currentImage = failedIndices[activeIdx] ? fallbackSvg : images[activeIdx] || images[0];
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-muted">
+    <div className="flex flex-col gap-3 w-full max-w-[560px] mx-auto lg:mx-0">
+      {/* Main Image (max ~560px, aspect-square) */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl border bg-muted shadow-xs">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={currentImage}
           alt={name}
+          onError={() => setFailedIndices((prev) => ({ ...prev, [activeIdx]: true }))}
           className="size-full object-cover"
         />
       </div>
+
+      {/* Thumbnails Row */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {images.map((img, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setActiveIdx(i)}
-              className={cn(
-                "relative size-16 shrink-0 overflow-hidden rounded-md border bg-muted transition",
-                activeIdx === i ? "border-primary ring-2 ring-primary/20" : "opacity-70 hover:opacity-100"
-              )}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img} alt={`${name} - ${i + 1}`} className="size-full object-cover" />
-            </button>
-          ))}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {images.map((img, i) => {
+            const thumbSrc = failedIndices[i] ? fallbackSvg : img;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setActiveIdx(i)}
+                className={cn(
+                  "relative size-16 shrink-0 overflow-hidden rounded-lg border bg-muted transition cursor-pointer",
+                  activeIdx === i
+                    ? "border-primary ring-2 ring-primary/30"
+                    : "opacity-70 hover:opacity-100 border-border"
+                )}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={thumbSrc}
+                  alt={`${name} - ${i + 1}`}
+                  onError={() => setFailedIndices((prev) => ({ ...prev, [i]: true }))}
+                  className="size-full object-cover"
+                />
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

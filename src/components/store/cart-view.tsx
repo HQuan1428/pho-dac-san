@@ -12,7 +12,7 @@ import { QuantityInput } from "@/components/common/quantity-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getProductImageUrl } from "./placeholder";
+import { getProductImageUrl, getProductPlaceholder } from "./placeholder";
 
 export function CartView() {
   const router = useRouter();
@@ -191,7 +191,7 @@ export function CartView() {
         </Alert>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_380px] items-start">
         {/* Main Cart Items Grouped by Shop */}
         <div className="space-y-6">
           {shopGroups.map((group) => {
@@ -228,6 +228,9 @@ export function CartView() {
                         <img
                           src={getProductImageUrl(line.productImages, line.provinceName)}
                           alt={line.productName}
+                          onError={(e) => {
+                            e.currentTarget.src = getProductPlaceholder(line.provinceName);
+                          }}
                           className="size-16 rounded-md border object-cover bg-muted shrink-0"
                         />
                         <div className="min-w-0">
