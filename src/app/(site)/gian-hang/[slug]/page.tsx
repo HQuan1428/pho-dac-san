@@ -77,7 +77,7 @@ export default async function ShopDetailPage({ params, searchParams }: PageProps
       {/* Shop Profile Header */}
       <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
         {/* Banner */}
-        <div className="relative h-40 w-full bg-gradient-to-r from-emerald-800/80 via-emerald-700/60 to-zinc-800 sm:h-52">
+        <div className="relative h-40 w-full bg-gradient-to-r from-primary/80 via-primary/60 to-muted sm:h-52">
           {shop.banner && (
             // eslint-disable-next-line @next/next/no-img-element
             <img

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireUser } from "@/server/access";
 
@@ -47,34 +48,41 @@ export async function submitReview(formData: FormData) {
     return { error: "Bạn không thể đánh giá sản phẩm này hoặc đã đánh giá trước đó." };
   }
 
-  await db.$transaction(async (tx) => {
-    await tx.review.create({
-      data: {
-        productId,
-        orderItemId,
-        userId: user.id,
-        rating,
-        content: content?.trim() || null,
-      },
-    });
+  try {
+    await db.$transaction(async (tx) => {
+      await tx.review.create({
+        data: {
+          productId,
+          orderItemId,
+          userId: user.id,
+          rating,
+          content: content?.trim() || null,
+        },
+      });
 
-    const reviews = await tx.review.findMany({
-      where: { productId },
-      select: { rating: true },
-    });
+      const reviews = await tx.review.findMany({
+        where: { productId },
+        select: { rating: true },
+      });
 
-    const count = reviews.length;
-    const avg = count > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / count : 0;
-    const roundedAvg = Math.round(avg * 10) / 10;
+      const count = reviews.length;
+      const avg = count > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / count : 0;
+      const roundedAvg = Math.round(avg * 10) / 10;
 
-    await tx.product.update({
-      where: { id: productId },
-      data: {
-        ratingAvg: roundedAvg,
-        ratingCount: count,
-      },
+      await tx.product.update({
+        where: { id: productId },
+        data: {
+          ratingAvg: roundedAvg,
+          ratingCount: count,
+        },
+      });
     });
-  });
+  } catch (err: unknown) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      return { error: "Bạn không thể đánh giá sản phẩm này hoặc đã đánh giá trước đó." };
+    }
+    throw err;
+  }
 
   if (path) {
     revalidatePath(path);

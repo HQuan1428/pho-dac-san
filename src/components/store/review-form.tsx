@@ -78,7 +78,7 @@ export function ReviewForm({
                 <Star
                   className={cn(
                     "size-5 transition",
-                    active ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"
+                    active ? "fill-warning text-warning" : "text-muted-foreground/30"
                   )}
                 />
               </button>

@@ -1,10 +1,26 @@
 "use server";
 
+import crypto from "crypto";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/server/access";
 import { sendMail } from "@/lib/mail";
+import { escapeHtml } from "@/lib/html";
+
+class OutOfStockError extends Error {
+  constructor(productName: string) {
+    super(`Sản phẩm ${productName} không đủ hàng`);
+    this.name = "OutOfStockError";
+  }
+}
+
+class VoucherError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "VoucherError";
+  }
+}
 
 const phoneRegex = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
 
@@ -30,7 +46,7 @@ function generateOrderCode(date: Date): string {
   const yy = String(date.getFullYear()).slice(-2);
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase().padEnd(4, "X");
+  const random = crypto.randomInt(0, 36 ** 4).toString(36).toUpperCase().padStart(4, "0");
   return `ORD-${yy}${mm}${dd}-${random}`;
 }
 
@@ -87,6 +103,13 @@ export async function placeOrder(input: CheckoutInput) {
   }
 
   // 3. Re-read variants & products & shops from DB
+  const province = await db.province.findUnique({
+    where: { id: data.provinceId },
+  });
+  if (!province) {
+    return { error: "Tỉnh/Thành phố không hợp lệ" };
+  }
+
   const variantIds = data.items.map((i) => i.variantId);
   const variants = await db.productVariant.findMany({
     where: { id: { in: variantIds } },
@@ -117,7 +140,7 @@ export async function placeOrder(input: CheckoutInput) {
     }
     if (v.stock < item.quantity) {
       return {
-        error: `Sản phẩm "${v.product.name} - ${v.name}" chỉ còn ${v.stock} sản phẩm trong kho.`,
+        error: `Sản phẩm ${v.product.name} không đủ hàng`,
       };
     }
   }
@@ -147,7 +170,7 @@ export async function placeOrder(input: CheckoutInput) {
     });
   }
 
-  const checkoutId = `chk_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  const checkoutId = crypto.randomUUID();
   const now = new Date();
 
   // Validate vouchers for each shop beforehand
@@ -273,31 +296,49 @@ export async function placeOrder(input: CheckoutInput) {
           },
         });
 
-        // Decrement stock for each variant & increment soldCount on product
+        // Decrement stock for each variant with concurrency check
         for (const i of orderData.items) {
-          await tx.productVariant.update({
-            where: { id: i.variant.id },
+          const res = await tx.productVariant.updateMany({
+            where: { id: i.variant.id, stock: { gte: i.quantity } },
             data: {
               stock: { decrement: i.quantity },
             },
           });
 
-          await tx.product.update({
-            where: { id: i.variant.product.id },
-            data: {
-              soldCount: { increment: i.quantity },
-            },
-          });
+          if (res.count === 0) {
+            throw new OutOfStockError(i.variant.product.name);
+          }
         }
 
-        // Increment voucher usedCount if applicable
+        // Re-check voucher inside the transaction and increment usedCount
         if (orderData.voucherId) {
-          await tx.voucher.update({
+          const voucher = await tx.voucher.findUnique({
             where: { id: orderData.voucherId },
+          });
+
+          if (!voucher || !voucher.active) {
+            throw new VoucherError("Mã giảm giá đã hết lượt sử dụng");
+          }
+
+          const voucherUpdate = await tx.voucher.updateMany({
+            where: {
+              id: orderData.voucherId,
+              active: true,
+              OR: [
+                { usageLimit: null },
+                ...(voucher.usageLimit !== null
+                  ? [{ usedCount: { lt: voucher.usageLimit } }]
+                  : []),
+              ],
+            },
             data: {
               usedCount: { increment: 1 },
             },
           });
+
+          if (voucherUpdate.count === 0) {
+            throw new VoucherError("Mã giảm giá đã hết lượt sử dụng");
+          }
         }
 
         results.push({
@@ -319,6 +360,9 @@ export async function placeOrder(input: CheckoutInput) {
       return results;
     });
   } catch (err: unknown) {
+    if (err instanceof OutOfStockError || err instanceof VoucherError) {
+      return { error: err.message };
+    }
     console.error("Order transaction error:", err);
     return { error: "Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại." };
   }
@@ -355,7 +399,7 @@ export async function placeOrder(input: CheckoutInput) {
         .map(
           (it) =>
             `<tr>
-              <td style="padding: 8px; border-bottom: 1px solid #eee;">${it.productName} (${it.variantName})</td>
+              <td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(it.productName)} (${escapeHtml(it.variantName)})</td>
               <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${it.quantity}</td>
               <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${formatVnd(it.price)}</td>
             </tr>`
@@ -364,16 +408,16 @@ export async function placeOrder(input: CheckoutInput) {
 
       const shopEmailHtml = `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #059669;">Bạn có đơn hàng mới #${ord.code}</h2>
-          <p>Xin chào <strong>${ord.shop.name}</strong>,</p>
-          <p>Khách hàng <strong>${data.name}</strong> vừa đặt một đơn hàng mới từ gian hàng của bạn.</p>
+          <h2 style="color: #059669;">Bạn có đơn hàng mới #${escapeHtml(ord.code)}</h2>
+          <p>Xin chào <strong>${escapeHtml(ord.shop.name)}</strong>,</p>
+          <p>Khách hàng <strong>${escapeHtml(data.name)}</strong> vừa đặt một đơn hàng mới từ gian hàng của bạn.</p>
           
           <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0;">Thông tin nhận hàng</h3>
-            <p style="margin: 4px 0;"><strong>Họ tên:</strong> ${data.name}</p>
-            <p style="margin: 4px 0;"><strong>Điện thoại:</strong> ${data.phone}</p>
-            <p style="margin: 4px 0;"><strong>Địa chỉ:</strong> ${data.addressDetail}</p>
-            ${data.note ? `<p style="margin: 4px 0;"><strong>Ghi chú:</strong> ${data.note}</p>` : ""}
+            <p style="margin: 4px 0;"><strong>Họ tên:</strong> ${escapeHtml(data.name)}</p>
+            <p style="margin: 4px 0;"><strong>Điện thoại:</strong> ${escapeHtml(data.phone)}</p>
+            <p style="margin: 4px 0;"><strong>Địa chỉ:</strong> ${escapeHtml(data.addressDetail)}</p>
+            ${data.note ? `<p style="margin: 4px 0;"><strong>Ghi chú:</strong> ${escapeHtml(data.note)}</p>` : ""}
           </div>
 
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -403,7 +447,7 @@ export async function placeOrder(input: CheckoutInput) {
           </table>
 
           <p style="color: #6b7280; font-size: 14px;">
-            Vui lòng sớm liên hệ với khách hàng qua số điện thoại <strong>${data.phone}</strong> để xác nhận và giao hàng.
+            Vui lòng sớm liên hệ với khách hàng qua số điện thoại <strong>${escapeHtml(data.phone)}</strong> để xác nhận và giao hàng.
           </p>
         </div>
       `;
@@ -418,9 +462,9 @@ export async function placeOrder(input: CheckoutInput) {
       if (data.email) {
         const customerEmailHtml = `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #059669;">Đặt hàng thành công #${ord.code}</h2>
-            <p>Xin chào <strong>${data.name}</strong>,</p>
-            <p>Cảm ơn bạn đã đặt hàng tại <strong>${ord.shop.name}</strong> trên Phố Đặc Sản.</p>
+            <h2 style="color: #059669;">Đặt hàng thành công #${escapeHtml(ord.code)}</h2>
+            <p>Xin chào <strong>${escapeHtml(data.name)}</strong>,</p>
+            <p>Cảm ơn bạn đã đặt hàng tại <strong>${escapeHtml(ord.shop.name)}</strong> trên Phố Đặc Sản.</p>
             
             <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px; margin: 16px 0;">
               <strong>Shop sẽ gọi điện xác nhận đơn, thanh toán khi nhận hàng.</strong>
@@ -453,8 +497,8 @@ export async function placeOrder(input: CheckoutInput) {
             </table>
 
             <p style="color: #6b7280; font-size: 14px;">
-              Địa chỉ giao hàng: ${data.addressDetail}<br/>
-              Số điện thoại người nhận: ${data.phone}
+              Địa chỉ giao hàng: ${escapeHtml(data.addressDetail)}<br/>
+              Số điện thoại người nhận: ${escapeHtml(data.phone)}
             </p>
           </div>
         `;
