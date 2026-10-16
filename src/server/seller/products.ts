@@ -22,7 +22,7 @@ const productSchema = z.object({
   categoryId: z.string().min(1, "Vui lòng chọn danh mục"),
   provinceId: z.string().min(1, "Vui lòng chọn tỉnh thành xuất xứ"),
   description: z.string().min(10, "Mô tả sản phẩm phải có ít nhất 10 ký tự"),
-  images: z.array(z.string().url("URL ảnh không hợp lệ")).max(8, "Tối đa 8 hình ảnh"),
+  images: z.array(z.string()).max(8, "Tối đa 8 hình ảnh"),
   status: z.enum(["DRAFT", "ACTIVE", "HIDDEN"]),
   variants: z.array(variantSchema).min(1, "Sản phẩm phải có ít nhất 1 phân loại hàng"),
 });
@@ -144,6 +144,26 @@ export async function createProductAction(data: ProductFormValues) {
 
   const { name, categoryId, provinceId, description, images, status, variants } = parsed.data;
 
+  // Validate category and province exist
+  const [category, province] = await Promise.all([
+    db.category.findUnique({ where: { id: categoryId } }),
+    db.province.findUnique({ where: { id: provinceId } }),
+  ]);
+  if (!category) {
+    return { error: "Danh mục không tồn tại" };
+  }
+  if (!province) {
+    return { error: "Tỉnh thành không tồn tại" };
+  }
+
+  // Validate images belong to this shop
+  const imageRegex = new RegExp(`^/uploads/${shop.id}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
+  for (const img of images) {
+    if (!imageRegex.test(img)) {
+      return { error: "Hình ảnh không hợp lệ hoặc không thuộc gian hàng của bạn" };
+    }
+  }
+
   // Generate unique slug for shop
   const baseSlug = slugify(name) || "san-pham";
   let slug = baseSlug;
@@ -183,8 +203,8 @@ export async function createProductAction(data: ProductFormValues) {
     revalidatePath("/kenh-ban");
     return { success: true, productId: product.id };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Thêm sản phẩm thất bại";
-    return { error: msg };
+    console.error("createProductAction error:", err);
+    return { error: "Thêm sản phẩm thất bại" };
   }
 }
 
@@ -205,6 +225,26 @@ export async function updateProductAction(id: string, data: ProductFormValues) {
   }
 
   const { name, categoryId, provinceId, description, images, status, variants } = parsed.data;
+
+  // Validate category and province exist
+  const [category, province] = await Promise.all([
+    db.category.findUnique({ where: { id: categoryId } }),
+    db.province.findUnique({ where: { id: provinceId } }),
+  ]);
+  if (!category) {
+    return { error: "Danh mục không tồn tại" };
+  }
+  if (!province) {
+    return { error: "Tỉnh thành không tồn tại" };
+  }
+
+  // Validate images belong to this shop
+  const imageRegex = new RegExp(`^/uploads/${shop.id}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
+  for (const img of images) {
+    if (!imageRegex.test(img)) {
+      return { error: "Hình ảnh không hợp lệ hoặc không thuộc gian hàng của bạn" };
+    }
+  }
 
   // Update slug if name changed
   let slug = existing.slug;
@@ -245,10 +285,13 @@ export async function updateProductAction(id: string, data: ProductFormValues) {
         };
 
         if (v.id) {
-          await tx.productVariant.update({
-            where: { id: v.id },
+          const updateResult = await tx.productVariant.updateMany({
+            where: { id: v.id, productId: id },
             data: variantData,
           });
+          if (updateResult.count === 0) {
+            throw new Error("Phân loại hàng không hợp lệ");
+          }
         } else {
           await tx.productVariant.create({
             data: {
@@ -279,8 +322,8 @@ export async function updateProductAction(id: string, data: ProductFormValues) {
     revalidatePath("/kenh-ban");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật sản phẩm thất bại";
-    return { error: msg };
+    console.error("updateProductAction error:", err);
+    return { error: "Cập nhật sản phẩm thất bại" };
   }
 }
 
@@ -310,7 +353,8 @@ export async function deleteProductAction(id: string) {
     revalidatePath("/kenh-ban");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Xóa sản phẩm thất bại";
-    return { error: msg };
+    console.error("deleteProductAction error:", err);
+    return { error: "Xóa sản phẩm thất bại" };
   }
 }
+

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import type { OrderStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { sendMail } from "@/lib/mail";
+import { escapeHtml } from "@/lib/html";
 import { requireShop } from "@/server/access";
 
 export async function getSellerOrders({
@@ -179,14 +180,18 @@ export async function updateOrderStatusAction({
 
   try {
     await db.$transaction(async (tx) => {
-      // Update order status
-      await tx.order.update({
-        where: { id: order.id },
+      // Update order status with optimistic concurrency check
+      const updateResult = await tx.order.updateMany({
+        where: { id: order.id, status: order.status },
         data: {
           status: nextStatus,
           cancelReason: nextStatus === "CANCELLED" ? reason : undefined,
         },
       });
+
+      if (updateResult.count === 0) {
+        throw new Error("Đơn hàng vừa được cập nhật bởi người khác, vui lòng tải lại");
+      }
 
       // Add order event
       await tx.orderEvent.create({
@@ -227,6 +232,7 @@ export async function updateOrderStatusAction({
     await notifyCustomer({
       customerId: order.customerId,
       customerEmail: order.customerEmail,
+      customerName: order.customerName,
       orderCode: order.code,
       shopName: shop.name,
       status: nextStatus,
@@ -239,8 +245,14 @@ export async function updateOrderStatusAction({
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật trạng thái thất bại";
-    return { error: msg };
+    if (
+      err instanceof Error &&
+      err.message === "Đơn hàng vừa được cập nhật bởi người khác, vui lòng tải lại"
+    ) {
+      return { error: err.message };
+    }
+    console.error("updateOrderStatusAction error:", err);
+    return { error: "Cập nhật trạng thái thất bại" };
   }
 }
 
@@ -278,8 +290,8 @@ export async function addCallNoteAction({
     revalidatePath(`/kenh-ban/don-hang/${code}`);
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Thêm ghi chú thất bại";
-    return { error: msg };
+    console.error("addCallNoteAction error:", err);
+    return { error: "Thêm ghi chú thất bại" };
   }
 }
 
@@ -294,22 +306,34 @@ export async function toggleCustomerFlagAction({
 }) {
   const { shop } = await requireShop();
 
-  if (!phone) {
+  if (!phone || !phone.trim()) {
     return { error: "Số điện thoại không hợp lệ" };
+  }
+
+  const trimmedPhone = phone.trim();
+
+  // Only accept a phone that appears on one of this shop's orders
+  const hasOrder = await db.order.findFirst({
+    where: { shopId: shop.id, customerPhone: trimmedPhone },
+    select: { id: true },
+  });
+
+  if (!hasOrder) {
+    return { error: "Số điện thoại này chưa từng đặt hàng tại gian hàng" };
   }
 
   try {
     if (remove) {
       await db.customerFlag.deleteMany({
-        where: { shopId: shop.id, phone },
+        where: { shopId: shop.id, phone: trimmedPhone },
       });
     } else {
       await db.customerFlag.upsert({
-        where: { shopId_phone: { shopId: shop.id, phone } },
+        where: { shopId_phone: { shopId: shop.id, phone: trimmedPhone } },
         update: { reason: reason?.trim() || "Bom hàng / không nhận hàng" },
         create: {
           shopId: shop.id,
-          phone,
+          phone: trimmedPhone,
           reason: reason?.trim() || "Bom hàng / không nhận hàng",
         },
       });
@@ -318,14 +342,15 @@ export async function toggleCustomerFlagAction({
     revalidatePath("/kenh-ban/don-hang");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật đánh dấu thất bại";
-    return { error: msg };
+    console.error("toggleCustomerFlagAction error:", err);
+    return { error: "Cập nhật đánh dấu thất bại" };
   }
 }
 
 async function notifyCustomer({
   customerId,
   customerEmail,
+  customerName,
   orderCode,
   shopName,
   status,
@@ -333,6 +358,7 @@ async function notifyCustomer({
 }: {
   customerId?: string | null;
   customerEmail?: string | null;
+  customerName?: string | null;
   orderCode: string;
   shopName: string;
   status: OrderStatus;
@@ -374,14 +400,29 @@ async function notifyCustomer({
     }
 
     if (customerEmail) {
+      const safeShopName = escapeHtml(shopName);
+      const safeReason = escapeHtml(reason);
+      const safeOrderCode = escapeHtml(orderCode);
+      const safeCustomerName = customerName ? escapeHtml(customerName) : "quý khách";
+
+      const emailBodies: Record<OrderStatus, string | null> = {
+        NEW: null,
+        CONFIRMED: `Gian hàng ${safeShopName} đã xác nhận đơn hàng của bạn và đang chuẩn bị sản phẩm.`,
+        SHIPPING: `Đơn hàng từ ${safeShopName} đã được bàn giao cho đơn vị vận chuyển. Vui lòng để ý điện thoại.`,
+        COMPLETED: `Cảm ơn bạn đã mua hàng tại ${safeShopName}! Chúc bạn có trải nghiệm tuyệt vời.`,
+        CANCELLED: `Đơn hàng #${safeOrderCode} từ ${safeShopName} đã bị hủy.${reason ? ` Lý do: ${safeReason}` : ""}`,
+      };
+
+      const emailBody = emailBodies[status];
+
       await sendMail(
         customerEmail,
         `[Phố Đặc Sản] ${content.title}`,
         `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">
           <h2 style="color: #059669;">Phố Đặc Sản</h2>
-          <p>Xin chào quý khách,</p>
-          <p>${content.body}</p>
-          <p>Mã đơn hàng: <strong>${orderCode}</strong></p>
+          <p>Xin chào ${safeCustomerName},</p>
+          <p>${emailBody}</p>
+          <p>Mã đơn hàng: <strong>${safeOrderCode}</strong></p>
           <p>Trân trọng,<br/>Đội ngũ Phố Đặc Sản</p>
         </div>`
       );
@@ -390,3 +431,4 @@ async function notifyCustomer({
     console.error("Lỗi gửi thông báo cho khách hàng:", err);
   }
 }
+

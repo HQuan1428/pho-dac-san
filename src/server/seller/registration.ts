@@ -102,8 +102,8 @@ export async function registerShopAction(formData: FormData) {
       },
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Đăng ký gian hàng thất bại";
-    return { error: msg };
+    console.error("registerShopAction error:", err);
+    return { error: "Đăng ký gian hàng thất bại" };
   }
 
   redirect("/kenh-ban");

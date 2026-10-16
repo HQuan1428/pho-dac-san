@@ -56,6 +56,15 @@ export async function updateShopSettingsAction(data: ShopSettingsFormValues) {
     return { error: "Tỉnh/Thành phố không tồn tại" };
   }
 
+  // Validate logo & banner images belong to this shop
+  const imageRegex = new RegExp(`^/uploads/${shop.id}/[0-9a-f-]{36}\\.(jpg|png|webp)$`);
+  if (logo && !imageRegex.test(logo)) {
+    return { error: "Ảnh đại diện (logo) không hợp lệ hoặc không thuộc gian hàng của bạn" };
+  }
+  if (banner && !imageRegex.test(banner)) {
+    return { error: "Ảnh bìa (banner) không hợp lệ hoặc không thuộc gian hàng của bạn" };
+  }
+
   // If name changed, update slug
   let slug = shop.slug;
   if (name !== shop.name) {
@@ -89,7 +98,7 @@ export async function updateShopSettingsAction(data: ShopSettingsFormValues) {
     revalidatePath("/kenh-ban");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật thông tin thất bại";
-    return { error: msg };
+    console.error("updateShopSettingsAction error:", err);
+    return { error: "Cập nhật thông tin thất bại" };
   }
 }

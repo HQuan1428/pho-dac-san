@@ -47,7 +47,7 @@ function detectImageExtension(buffer: Buffer): string | null {
   return null;
 }
 
-export async function saveUploadedImage(
+async function saveUploadedImage(
   file: File,
   shopId: string
 ): Promise<{ url?: string; error?: string }> {
@@ -93,7 +93,7 @@ export async function uploadSellerImageAction(
     }
     return await saveUploadedImage(file, shop.id);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Tải ảnh thất bại";
-    return { error: message };
+    console.error("uploadSellerImageAction error:", err);
+    return { error: "Tải ảnh thất bại" };
   }
 }
