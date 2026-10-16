@@ -6,6 +6,7 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { sendMail } from "@/lib/mail";
+import { escapeHtml } from "@/lib/html";
 import { requireShop } from "@/server/access";
 
 const inviteSchema = z.object({
@@ -92,6 +93,8 @@ export async function inviteStaffAction(email: string) {
     // Send invitation email
     const appUrl = (process.env.APP_URL || "http://localhost:3004").replace(/\/$/, "");
     const inviteUrl = `${appUrl}/kenh-ban/moi-nhan-vien?token=${rawToken}`;
+    const safeShopName = escapeHtml(shop.name);
+    const safeInviteUrl = escapeHtml(inviteUrl);
 
     await sendMail(
       normalizedEmail,
@@ -99,13 +102,13 @@ export async function inviteStaffAction(email: string) {
       `<div style="font-family: sans-serif; line-height: 1.6; color: #333;">
         <h2 style="color: #059669;">Phố Đặc Sản</h2>
         <p>Xin chào,</p>
-        <p>Bạn đã được mời làm nhân viên quản lý cho gian hàng <strong>${shop.name}</strong> trên sàn Phố Đặc Sản.</p>
+        <p>Bạn đã được mời làm nhân viên quản lý cho gian hàng <strong>${safeShopName}</strong> trên sàn Phố Đặc Sản.</p>
         <p>Với vai trò nhân viên, bạn có quyền quản lý đơn hàng và cập nhật sản phẩm cho gian hàng.</p>
         <p>Vui lòng bấm vào liên kết dưới đây để chấp nhận lời mời (liên kết có hiệu lực trong 7 ngày):</p>
         <p style="margin: 24px 0;">
-          <a href="${inviteUrl}" style="background-color: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Chấp nhận lời mời</a>
+          <a href="${safeInviteUrl}" style="background-color: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Chấp nhận lời mời</a>
         </p>
-        <p>Hoặc truy cập đường dẫn: <br/><a href="${inviteUrl}">${inviteUrl}</a></p>
+        <p>Hoặc truy cập đường dẫn: <br/><a href="${safeInviteUrl}">${safeInviteUrl}</a></p>
         <p>Nếu bạn không nhận ra lời mời này, vui lòng bỏ qua email.</p>
       </div>`
     );
@@ -113,8 +116,8 @@ export async function inviteStaffAction(email: string) {
     revalidatePath("/kenh-ban/nhan-vien");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gửi lời mời thất bại";
-    return { error: msg };
+    console.error("inviteStaffAction error:", err);
+    return { error: "Gửi lời mời thất bại" };
   }
 }
 
@@ -129,8 +132,8 @@ export async function revokeInviteAction(inviteId: string) {
     revalidatePath("/kenh-ban/nhan-vien");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Thu hồi lời mời thất bại";
-    return { error: msg };
+    console.error("revokeInviteAction error:", err);
+    return { error: "Thu hồi lời mời thất bại" };
   }
 }
 
@@ -145,7 +148,7 @@ export async function removeStaffAction(memberId: string) {
     revalidatePath("/kenh-ban/nhan-vien");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Xóa nhân viên thất bại";
-    return { error: msg };
+    console.error("removeStaffAction error:", err);
+    return { error: "Xóa nhân viên thất bại" };
   }
 }

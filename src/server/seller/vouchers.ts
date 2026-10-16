@@ -89,8 +89,8 @@ export async function createVoucherAction(data: VoucherFormValues) {
     revalidatePath("/kenh-ban/khuyen-mai");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Tạo mã giảm giá thất bại";
-    return { error: msg };
+    console.error("createVoucherAction error:", err);
+    return { error: "Tạo mã giảm giá thất bại" };
   }
 }
 
@@ -140,8 +140,8 @@ export async function updateVoucherAction(id: string, data: VoucherFormValues) {
     revalidatePath("/kenh-ban/khuyen-mai");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật mã giảm giá thất bại";
-    return { error: msg };
+    console.error("updateVoucherAction error:", err);
+    return { error: "Cập nhật mã giảm giá thất bại" };
   }
 }
 
@@ -157,8 +157,8 @@ export async function toggleVoucherActiveAction(id: string, active: boolean) {
     revalidatePath("/kenh-ban/khuyen-mai");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Cập nhật trạng thái thất bại";
-    return { error: msg };
+    console.error("toggleVoucherActiveAction error:", err);
+    return { error: "Cập nhật trạng thái thất bại" };
   }
 }
 
@@ -179,7 +179,7 @@ export async function deleteVoucherAction(id: string) {
     revalidatePath("/kenh-ban/khuyen-mai");
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Xóa mã giảm giá thất bại";
-    return { error: msg };
+    console.error("deleteVoucherAction error:", err);
+    return { error: "Xóa mã giảm giá thất bại" };
   }
 }

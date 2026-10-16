@@ -100,8 +100,8 @@ export async function acceptInviteAction(rawToken: string) {
       });
     });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Chấp nhận lời mời thất bại";
-    return { error: msg };
+    console.error("acceptInviteAction error:", err);
+    return { error: "Chấp nhận lời mời thất bại" };
   }
 
   redirect("/kenh-ban");
