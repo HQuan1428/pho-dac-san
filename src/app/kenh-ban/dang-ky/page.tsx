@@ -26,7 +26,7 @@ export default async function RegisterShopPage() {
     <div className="min-h-dvh bg-muted/30">
       {/* Header */}
       <header className="border-b bg-background">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
+        <div className="container-page flex items-center justify-between py-3">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
             <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Store className="size-4" />
@@ -43,8 +43,8 @@ export default async function RegisterShopPage() {
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-2xl px-4 py-10 md:px-6">
-        <div className="rounded-lg border bg-card p-6 md:p-8 shadow-sm">
+      <main className="container-page py-10">
+        <div className="mx-auto max-w-2xl rounded-lg border bg-card p-6 md:p-8 shadow-sm">
           <div className="border-b pb-5">
             <div className="flex items-center gap-2 text-primary font-semibold text-sm">
               <ShieldCheck className="size-4" />

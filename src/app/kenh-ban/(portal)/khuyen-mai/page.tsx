@@ -23,34 +23,46 @@ export default async function VouchersPage() {
       <PageHeader
         title="Khuyến mãi & Mã giảm giá"
         description="Tạo ưu đãi giảm giá theo phần trăm hoặc số tiền cố định cho khách mua đặc sản tại gian hàng"
-        actions={<VoucherDialog />}
       />
 
-      <div className="overflow-x-auto rounded-lg border bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="min-w-[120px]">Mã voucher</TableHead>
-              <TableHead className="min-w-[140px]">Mức giảm</TableHead>
-              <TableHead className="min-w-[110px]">Đơn tối thiểu</TableHead>
-              <TableHead className="min-w-[160px]">Thời hạn áp dụng</TableHead>
-              <TableHead className="text-center min-w-[100px]">Đã dùng</TableHead>
-              <TableHead className="text-center w-24">Trạng thái</TableHead>
-              <TableHead className="text-center w-20">Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {vouchers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-32 text-center text-sm text-muted-foreground">
-                  Gian hàng chưa có mã giảm giá nào. Hãy bấm &quot;Tạo mã giảm giá&quot; để bắt đầu.
-                </TableCell>
+      {/* Toolbar above: summary info left, primary action right */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-xs text-muted-foreground">
+          Hiện có: <strong className="text-foreground">{vouchers.length}</strong> mã ưu đãi
+        </div>
+
+        <div>
+          <VoucherDialog />
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-lg border bg-card">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
+              <TableRow className="h-11">
+                <TableHead className="min-w-[120px]">Mã voucher</TableHead>
+                <TableHead className="min-w-[140px]">Mức giảm</TableHead>
+                <TableHead className="min-w-[110px]">Đơn tối thiểu</TableHead>
+                <TableHead className="min-w-[160px]">Thời hạn áp dụng</TableHead>
+                <TableHead className="text-center min-w-[100px]">Đã dùng</TableHead>
+                <TableHead className="text-center w-24">Trạng thái</TableHead>
+                <TableHead className="text-center w-20">Thao tác</TableHead>
               </TableRow>
-            ) : (
-              vouchers.map((v) => <VoucherTableRow key={v.id} voucher={v} />)
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {vouchers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-32 text-center text-sm text-muted-foreground">
+                    Gian hàng chưa có mã giảm giá nào. Hãy bấm &quot;Tạo mã giảm giá&quot; để bắt đầu.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                vouchers.map((v) => <VoucherTableRow key={v.id} voucher={v} />)
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

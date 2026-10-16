@@ -20,7 +20,7 @@ export default async function InviteStaffPage({ searchParams }: InvitePageProps)
   return (
     <div className="min-h-dvh bg-muted/30">
       <header className="border-b bg-background">
-        <div className="mx-auto flex max-w-6xl items-center px-4 py-3 md:px-6">
+        <div className="container-page flex items-center px-4 py-3 md:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
             <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Store className="size-4" />
@@ -31,8 +31,8 @@ export default async function InviteStaffPage({ searchParams }: InvitePageProps)
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-12">
-        <div className="rounded-lg border bg-card p-6 shadow-sm">
+      <main className="container-page py-12">
+        <div className="mx-auto max-w-md rounded-lg border bg-card p-6 shadow-sm">
           <h1 className="text-xl font-bold tracking-tight text-center text-foreground">
             Lời mời tham gia gian hàng
           </h1>
