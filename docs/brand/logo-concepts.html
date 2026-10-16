@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phố Đặc Sản — Ý tưởng logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #0b6b55; --paper: #ffffff; --page: #f5f3ee; --text: #1c1b18; --muted: #6b675e; --line: #e4e0d6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font-family: "Be Vietnam Pro", system-ui, sans-serif; }
+  header { padding: 32px 24px 8px; max-width: 1240px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+  header p { margin: 0; color: var(--muted); max-width: 760px; line-height: 1.55; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; }
+  .controls span { font-size: 13px; color: var(--muted); margin-right: 4px; }
+  .sw { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; outline-offset: 2px; }
+  .sw[aria-pressed="true"] { border-color: var(--text); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; padding: 24px; max-width: 1240px; margin: 0 auto; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; }
+  .hero > div { display: flex; align-items: center; justify-content: center; padding: 28px 0; }
+  .hero .light { color: var(--ink); background: var(--paper); }
+  .hero .dark { color: #fff; background: var(--ink); }
+  .hero svg { width: 132px; height: 132px; }
+  .meta { padding: 16px 18px 18px; border-top: 1px solid var(--line); flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .meta h2 { margin: 0; font-size: 17px; font-weight: 700; }
+  .meta h2 b { color: var(--ink); margin-right: 6px; }
+  .meta p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+  .sizes { display: flex; align-items: center; gap: 14px; color: var(--ink); margin-top: auto; }
+  .sizes svg { display: block; }
+  .lockup { display: flex; align-items: center; gap: 8px; color: var(--ink); margin-left: auto; }
+  .lockup svg { width: 30px; height: 30px; }
+  .lockup span { font-weight: 800; font-size: 17px; letter-spacing: -0.02em; color: var(--text); }
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- Sprite: every concept is one <symbol>; cut-outs are masks so the background shows through. -->
+<svg class="sprite" aria-hidden="true">
+  <defs>
+    <!-- Unit petal: base at (0,0), tip at (0,-100). -->
+    <path id="petal" d="M0 0 C -30 -22 -28 -68 0 -100 C 28 -68 30 -22 0 0 Z" vector-effect="non-scaling-stroke"/>
+
+    <!-- 1. Sen Ba Miền -->
+    <mask id="m1" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <use href="#petal" fill="#000" transform="translate(100 150) rotate(-40) scale(.85)"/>
+      <use href="#petal" fill="#000" transform="translate(100 150) rotate(40) scale(.85)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="6" stroke-linejoin="round" transform="translate(100 150) scale(1)"/>
+      <path d="M44 164 Q72 156 100 164 T156 164" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+      <path d="M66 178 Q83 172 100 178 T134 178" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+    </mask>
+    <symbol id="logo-1" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m1)"/></symbol>
+
+    <!-- 2. Đồng Xu Sen -->
+    <mask id="m2" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#000" stroke-width="3"/>
+      <use href="#petal" fill="#000" transform="translate(100 104) rotate(-60) scale(.66)"/>
+      <use href="#petal" fill="#000" transform="translate(100 104) rotate(60) scale(.66)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round" transform="translate(100 104) scale(.8)"/>
+      <rect x="87" y="91" width="26" height="26" fill="#000" stroke="#fff" stroke-width="6"/>
+      <path d="M58 132 Q79 124 100 132 T142 132" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+      <path d="M72 146 Q86 140 100 146 T128 146" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round"/>
+    </mask>
+    <symbol id="logo-2" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m2)"/></symbol>
+
+    <!-- 3. Sạp Chợ -->
+    <mask id="m3" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <use href="#petal" fill="#000" transform="translate(100 106) rotate(-46) scale(.6)"/>
+      <use href="#petal" fill="#000" transform="translate(100 106) rotate(46) scale(.6)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round" transform="translate(100 106) scale(.7)"/>
+      <rect x="0" y="111" width="200" height="5" fill="#000"/>
+      <g fill="#000">
+        <rect x="18.5" y="116" width="3" height="26"/><rect x="38.5" y="116" width="3" height="26"/>
+        <rect x="58.5" y="116" width="3" height="26"/><rect x="78.5" y="116" width="3" height="26"/>
+        <rect x="98.5" y="116" width="3" height="26"/><rect x="118.5" y="116" width="3" height="26"/>
+        <rect x="138.5" y="116" width="3" height="26"/><rect x="158.5" y="116" width="3" height="26"/>
+        <rect x="178.5" y="116" width="3" height="26"/>
+      </g>
+      <path fill="#000" d="M0 140 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 a10 10 0 0 0 20 0 L200 158 L0 158 Z"/>
+      <g fill="#000"><circle cx="78" cy="174" r="5"/><circle cx="100" cy="174" r="5"/><circle cx="122" cy="174" r="5"/></g>
+    </mask>
+    <symbol id="logo-3" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m3)"/></symbol>
+
+    <!-- 4. Gánh Hàng -->
+    <mask id="m4" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <use href="#petal" fill="#000" transform="translate(100 97) rotate(-44) scale(.56)"/>
+      <use href="#petal" fill="#000" transform="translate(100 97) rotate(44) scale(.56)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round" transform="translate(100 97) scale(.66)"/>
+      <path d="M26 116 Q100 92 174 116" fill="none" stroke="#000" stroke-width="6" stroke-linecap="round"/>
+      <g fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
+        <path d="M44 111 L34 138 M44 111 L54 138"/>
+        <path d="M156 111 L166 138 M156 111 L146 138"/>
+      </g>
+      <path d="M28 138 H60 L55 158 Q44 164 33 158 Z" fill="#000"/>
+      <path d="M140 138 H172 L167 158 Q156 164 145 158 Z" fill="#000"/>
+    </mask>
+    <symbol id="logo-4" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m4)"/></symbol>
+
+    <!-- 5. Gương Sen -->
+    <mask id="m5" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <g fill="#000">
+        <use href="#petal" transform="rotate(60 100 100) translate(100 72) scale(.32)"/>
+        <use href="#petal" transform="rotate(180 100 100) translate(100 72) scale(.32)"/>
+        <use href="#petal" transform="rotate(300 100 100) translate(100 72) scale(.32)"/>
+        <use href="#petal" transform="translate(100 74) scale(.62)"/>
+        <use href="#petal" transform="rotate(120 100 100) translate(100 74) scale(.62)"/>
+        <use href="#petal" transform="rotate(240 100 100) translate(100 74) scale(.62)"/>
+        <circle cx="100" cy="100" r="20"/>
+      </g>
+      <g fill="#fff"><circle cx="100" cy="92" r="4.2"/><circle cx="93" cy="104" r="4.2"/><circle cx="107" cy="104" r="4.2"/></g>
+    </mask>
+    <symbol id="logo-5" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m5)"/></symbol>
+
+    <!-- 6. Túi Sen -->
+    <mask id="m6" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <path d="M76 86 V74 C76 50 124 50 124 74 V86" fill="none" stroke="#000" stroke-width="7" stroke-linecap="round"/>
+      <path d="M56 86 H144 L152 162 Q153 170 145 170 H55 Q47 170 48 162 Z" fill="#000"/>
+      <use href="#petal" fill="#fff" transform="translate(100 156) rotate(-44) scale(.5)"/>
+      <use href="#petal" fill="#fff" transform="translate(100 156) rotate(44) scale(.5)"/>
+      <use href="#petal" fill="#fff" stroke="#000" stroke-width="4" stroke-linejoin="round" transform="translate(100 156) scale(.6)"/>
+    </mask>
+    <symbol id="logo-6" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m6)"/></symbol>
+
+    <!-- 7. Thân Chữ S -->
+    <mask id="m7" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <use href="#petal" fill="#000" transform="translate(100 108) rotate(-46) scale(.62)"/>
+      <use href="#petal" fill="#000" transform="translate(100 108) rotate(46) scale(.62)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round" transform="translate(100 108) scale(.72)"/>
+      <path d="M100 108 C 72 122 72 142 100 150 C 128 158 128 182 102 199" fill="none" stroke="#000" stroke-width="7" stroke-linecap="round"/>
+      <path d="M118 166 C 132 156 150 158 158 166 C 146 176 130 176 118 166 Z" fill="#000"/>
+    </mask>
+    <symbol id="logo-7" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m7)"/></symbol>
+
+    <!-- 8. Con Dấu Đặc Sản -->
+    <mask id="m8" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="100" cy="100" r="89" fill="none" stroke="#000" stroke-width="2.5"/>
+      <circle cx="100" cy="100" r="81" fill="none" stroke="#000" stroke-width="4.5" stroke-dasharray="0 10.6" stroke-linecap="round"/>
+      <use href="#petal" fill="#000" transform="translate(100 118) rotate(-42) scale(.54)"/>
+      <use href="#petal" fill="#000" transform="translate(100 118) rotate(42) scale(.54)"/>
+      <use href="#petal" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round" transform="translate(100 118) scale(.64)"/>
+      <path d="M50 124 H150 L143 137 L150 150 H50 L57 137 Z" fill="#000" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+      <g fill="#000"><circle cx="88" cy="164" r="3"/><circle cx="100" cy="164" r="3"/><circle cx="112" cy="164" r="3"/></g>
+    </mask>
+    <symbol id="logo-8" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" fill="currentColor" mask="url(#m8)"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <h1>Phố Đặc Sản: ý tưởng logo</h1>
+  <p>8 hướng, mỗi hướng 1 logo. Chung quy tắc: hình tròn đơn sắc, hoa sen 3 cánh nổi bật (Bắc, Trung, Nam) khoét âm bản trên nền. Mỗi thẻ có bản trên nền sáng, bản đảo màu, cỡ nhỏ 64/32/16px và ghép chữ. Chọn hướng, rồi mình làm biến thể.</p>
+  <div class="controls" role="group" aria-label="Màu chủ đạo">
+    <span>Màu thử:</span>
+    <button class="sw" style="background:#0b6b55" data-c="#0b6b55" aria-pressed="true" title="Xanh sen (màu site hiện tại)"></button>
+    <button class="sw" style="background:#a32020" data-c="#a32020" aria-pressed="false" title="Đỏ son"></button>
+    <button class="sw" style="background:#7a4a1c" data-c="#7a4a1c" aria-pressed="false" title="Nâu đất"></button>
+    <button class="sw" style="background:#1f3a7a" data-c="#1f3a7a" aria-pressed="false" title="Chàm"></button>
+    <button class="sw" style="background:#c0457a" data-c="#c0457a" aria-pressed="false" title="Hồng sen"></button>
+    <button class="sw" style="background:#1c1b18" data-c="#1c1b18" aria-pressed="false" title="Mực đen"></button>
+  </div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<script>
+  const concepts = [
+    ["Sen Ba Miền", "Bản gốc, tối giản. Ba cánh khoét âm trên nền tròn, cánh giữa cao nhất. Hai đường sóng nước dưới gốc: một gốc, ba miền. Dễ nhớ nhất, nhỏ vẫn rõ."],
+    ["Đồng Xu Sen", "Đồng tiền xưa lỗ vuông: biểu tượng buôn bán. Lỗ vuông chính là nhụy sen, ba cánh xoè ra từ đó; sóng nước bên dưới. Vòng viền mảnh tạo cảm giác tiền đồng."],
+    ["Sạp Chợ", "Mái hiên sọc vỏ sò của sạp chợ, sen nở trên mái. Ba chấm trên quầy là ba món đặc sản. Gợi không khí chợ phiên, rất \"phố\"."],
+    ["Gánh Hàng", "Đòn gánh cong với hai quang gánh, sen nở giữa đòn (nhìn cũng giống cái cân, cũng là buôn bán). Hình ảnh gánh hàng rong chở đặc sản khắp ba miền. Câu chuyện mạnh, chi tiết nhiều hơn."],
+    ["Gương Sen", "Nhìn từ trên xuống: ba cánh lớn xoay đều 120°, ba cánh nhỏ xen kẽ. Gương sen giữa có ba hạt, hạt sen cũng là một đặc sản. Hình học, hiện đại, cân đối."],
+    ["Túi Sen", "Túi mua hàng in hình sen: mua đặc sản ba miền trong một túi. Tín hiệu thương mại điện tử rõ nhất trong các phương án."],
+    ["Thân Chữ S", "Cuống sen uốn hình chữ S như dải đất Việt Nam, xuyên qua mép tròn. Một lá nhỏ bên thân. Ba cánh trên đỉnh là ba miền."],
+    ["Con Dấu Đặc Sản", "Phong cách con dấu, tem chứng nhận: viền đôi chấm tròn, sen trên dải băng. Ba chấm dưới băng là ba miền. Gợi \"hàng chính gốc\", băng trống có thể đặt chữ."],
+  ];
+  const sizes = [64, 32, 16];
+  const grid = document.getElementById("grid");
+  const use = (i, s) => `<svg viewBox="0 0 200 200" width="${s}" height="${s}" role="img" aria-label="Logo ${i}"><use href="#logo-${i}"/></svg>`;
+  grid.innerHTML = concepts.map(([name, desc], k) => {
+    const i = k + 1;
+    return `<article class="card">
+      <div class="hero"><div class="light">${use(i, 132)}</div><div class="dark">${use(i, 132)}</div></div>
+      <div class="meta">
+        <h2><b>${String(i).padStart(2, "0")}</b>${name}</h2>
+        <p>${desc}</p>
+        <div class="sizes">${sizes.map(s => use(i, s)).join("")}
+          <div class="lockup">${use(i, 30)}<span>Phố Đặc Sản</span></div>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+
+  document.querySelectorAll(".sw").forEach(b => b.addEventListener("click", () => {
+    document.documentElement.style.setProperty("--ink", b.dataset.c);
+    document.querySelectorAll(".sw").forEach(x => x.setAttribute("aria-pressed", x === b));
+  }));
+</script>
+</body>
+</html>
