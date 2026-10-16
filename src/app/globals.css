@@ -158,6 +158,8 @@
   }
   html {
     @apply font-sans;
+    /* Site-wide 125% scale: every rem (type, spacing, breakpoints) grows like browser zoom. */
+    font-size: 125%;
   }
 }
 @layer base {
