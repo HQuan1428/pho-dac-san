@@ -55,11 +55,13 @@ export function Faq() {
             {col1.map((faq, index) => (
               <details
                 key={index}
-                className="reveal group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+                data-spotlight
+                style={{ "--spot": "var(--primary)" } as React.CSSProperties}
+                className="reveal group rounded-lg border border-l-4 border-l-transparent bg-card p-4 transition duration-150 open:border-l-primary open:bg-card/90 shadow-xs"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
                   <span className="text-sm sm:text-base font-medium">{faq.question}</span>
-                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 group-open:text-primary" />
                 </summary>
                 <div className="mt-3 border-t pt-3 text-sm leading-relaxed text-muted-foreground">
                   {faq.answer}
@@ -72,11 +74,13 @@ export function Faq() {
             {col2.map((faq, index) => (
               <details
                 key={index + 3}
-                className="reveal group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+                data-spotlight
+                style={{ "--spot": "var(--primary)" } as React.CSSProperties}
+                className="reveal group rounded-lg border border-l-4 border-l-transparent bg-card p-4 transition duration-150 open:border-l-primary open:bg-card/90 shadow-xs"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
                   <span className="text-sm sm:text-base font-medium">{faq.question}</span>
-                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 group-open:text-primary" />
                 </summary>
                 <div className="mt-3 border-t pt-3 text-sm leading-relaxed text-muted-foreground">
                   {faq.answer}

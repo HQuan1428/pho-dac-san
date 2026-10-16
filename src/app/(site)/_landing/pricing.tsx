@@ -19,6 +19,10 @@ type Plan = {
   features: PlanFeature[];
   highlight: boolean;
   cta: string;
+  spot: string;
+  badgeClass: string;
+  topBarClass: string;
+  checkClass: string;
 };
 
 const plans: Plan[] = [
@@ -27,6 +31,10 @@ const plans: Plan[] = [
     price: 0,
     unit: "/tháng",
     description: "Phù hợp cho hộ sản xuất gia đình mới bắt đầu bán lẻ trực tuyến.",
+    spot: "var(--sky)",
+    badgeClass: "border-sky/30 bg-sky/10 text-sky",
+    topBarClass: "bg-sky",
+    checkClass: "text-sky",
     features: [
       { text: "Tối đa 20 sản phẩm", included: true },
       { text: "1 tài khoản nhân viên", included: true },
@@ -44,6 +52,10 @@ const plans: Plan[] = [
     unit: "/tháng",
     badge: "Phổ biến nhất",
     description: "Dành cho xưởng nghề, hợp tác xã muốn mở rộng quy mô kinh doanh.",
+    spot: "var(--primary)",
+    badgeClass: "border-primary/30 bg-primary/10 text-primary",
+    topBarClass: "bg-primary",
+    checkClass: "text-primary",
     features: [
       { text: "Tối đa 200 sản phẩm", included: true },
       { text: "3 tài khoản nhân viên", included: true },
@@ -60,6 +72,10 @@ const plans: Plan[] = [
     price: 499000,
     unit: "/tháng",
     description: "Dành cho doanh nghiệp đặc sản lớn, chuỗi phân phối đa vùng miền.",
+    spot: "var(--turmeric)",
+    badgeClass: "border-turmeric/30 bg-turmeric/10 text-turmeric",
+    topBarClass: "bg-turmeric",
+    checkClass: "text-turmeric",
     features: [
       { text: "Không giới hạn sản phẩm", included: true },
       { text: "Không giới hạn nhân viên", included: true },
@@ -100,15 +116,26 @@ export function Pricing() {
           {plans.map((plan) => (
             <Card
               key={plan.name}
-              className={`reveal flex flex-col justify-between transition-all ${
+              data-spotlight
+              {...(plan.highlight ? { "data-tilt": "" } : {})}
+              style={{ "--spot": plan.spot } as React.CSSProperties}
+              className={`reveal relative flex flex-col justify-between transition-all overflow-hidden ${
                 plan.highlight
-                  ? "relative border-2 border-primary shadow-lg ring-1 ring-primary bg-card lg:-translate-y-2"
+                  ? "border-2 border-primary shadow-lg ring-1 ring-primary bg-card lg:-translate-y-2"
                   : "bg-card shadow-sm"
               }`}
             >
-              <CardHeader className="pb-4">
+              <div className={`absolute top-0 inset-x-0 h-1.5 ${plan.topBarClass}`} />
+              <CardHeader className="pb-4 pt-5">
                 <div className="flex h-7 items-center justify-between">
-                  <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
+                  <CardTitle className="text-xl font-bold flex items-center">
+                    <Badge
+                      variant="outline"
+                      className={`px-2.5 py-0.5 text-xs font-bold tracking-wider uppercase ${plan.badgeClass}`}
+                    >
+                      {plan.name}
+                    </Badge>
+                  </CardTitle>
                   {plan.badge ? (
                     <Badge className="bg-primary text-primary-foreground font-medium">
                       {plan.badge}
@@ -135,7 +162,7 @@ export function Pricing() {
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex h-7 items-center gap-2.5 text-sm">
                         {feature.included ? (
-                          <Check className="size-4 shrink-0 text-primary" />
+                          <Check className={`size-4 shrink-0 ${plan.checkClass}`} />
                         ) : (
                           <Minus className="size-4 shrink-0 text-muted-foreground/40" />
                         )}
