@@ -34,10 +34,13 @@ const faqs = [
 ];
 
 export function Faq() {
+  const col1 = faqs.slice(0, 3);
+  const col2 = faqs.slice(3, 6);
+
   return (
     <section className="py-16 md:py-24">
-      <div className="mx-auto max-w-4xl px-4 md:px-6">
-        <div className="text-center">
+      <div className="container-page">
+        <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Câu hỏi thường gặp
           </h2>
@@ -46,21 +49,41 @@ export function Faq() {
           </p>
         </div>
 
-        <div className="mt-12 space-y-3">
-          {faqs.map((faq, index) => (
-            <details
-              key={index}
-              className="group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
-                <span className="text-base font-medium">{faq.question}</span>
-                <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
-              </summary>
-              <div className="mt-3 border-t pt-3 text-sm leading-relaxed text-muted-foreground">
-                {faq.answer}
-              </div>
-            </details>
-          ))}
+        {/* 2 columns at lg (questions split) */}
+        <div className="mt-12 grid gap-4 lg:grid-cols-2 items-start">
+          <div className="space-y-4">
+            {col1.map((faq, index) => (
+              <details
+                key={index}
+                className="group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
+                  <span className="text-sm sm:text-base font-medium">{faq.question}</span>
+                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+                </summary>
+                <div className="mt-3 border-t pt-3 text-sm leading-relaxed text-muted-foreground">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+
+          <div className="space-y-4">
+            {col2.map((faq, index) => (
+              <details
+                key={index + 3}
+                className="group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
+                  <span className="text-sm sm:text-base font-medium">{faq.question}</span>
+                  <ChevronDown className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+                </summary>
+                <div className="mt-3 border-t pt-3 text-sm leading-relaxed text-muted-foreground">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
         </div>
       </div>
     </section>
