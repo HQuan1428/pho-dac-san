@@ -91,7 +91,7 @@ export function Hero() {
                     <p className="text-[11px] text-muted-foreground">Hiển thị chuẩn hoá trên Phố Đặc Sản</p>
                   </div>
                 </div>
-                <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                <span className="rounded-md bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
                   Đang hoạt động
                 </span>
               </div>

@@ -48,6 +48,18 @@ export function ContactForm() {
         </div>
       ) : (
         <form ref={formRef} action={formAction} className="space-y-5">
+          {/* Honeypot field for spam prevention */}
+          <div className="hidden" aria-hidden="true">
+            <label htmlFor="website">Website</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
           {state.error && !state.fieldErrors && (
             <Alert variant="destructive">
               <AlertTitle>Không thể gửi</AlertTitle>

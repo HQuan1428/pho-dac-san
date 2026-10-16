@@ -143,7 +143,7 @@ export default async function AdminNguoiDungPage(props: {
                         variant="outline"
                         className={`text-xs ${
                           u.status === "ACTIVE"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                            ? "bg-success/10 text-success border-success/30"
                             : "bg-destructive/10 text-destructive border-destructive/30"
                         }`}
                       >
