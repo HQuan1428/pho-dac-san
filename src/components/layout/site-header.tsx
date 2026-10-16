@@ -12,12 +12,12 @@ export async function SiteHeader() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-white/40 bg-background/95 backdrop-blur-xl backdrop-saturate-150 shadow-[0_1px_0_0_rgb(255_255_255/0.4)_inset,0_8px_24px_-12px_rgb(0_0_0/0.15)] supports-[backdrop-filter]:bg-background/55 dark:border-white/10 dark:shadow-[0_1px_0_0_rgb(255_255_255/0.1)_inset,0_8px_24px_-12px_rgb(0_0_0/0.4)]">
       <div className="container-page flex h-16 items-center gap-6">
         <Logo />
         <nav className="hidden gap-1 text-sm md:flex">
-          <Link href="/cho" className="rounded-md px-3 py-1.5 text-muted-foreground hover:text-foreground">Khám phá</Link>
-          <Link href="/kenh-ban" className="rounded-md px-3 py-1.5 text-muted-foreground hover:text-foreground">Bán hàng</Link>
+          <Link href="/cho" className="rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Khám phá</Link>
+          <Link href="/kenh-ban" className="rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:bg-white/50 hover:text-foreground dark:hover:bg-white/10">Bán hàng</Link>
         </nav>
         <form action="/tim-kiem" className="relative ml-auto hidden w-full max-w-xs sm:block">
           <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -25,7 +25,7 @@ export async function SiteHeader() {
             name="q"
             type="search"
             placeholder="Tìm đặc sản, gian hàng…"
-            className="h-9 w-full rounded-md border bg-background pr-3 pl-8 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-9 w-full rounded-md border border-black/10 bg-white/50 pr-3 pl-8 text-sm backdrop-blur-md outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:border-white/15 dark:bg-white/5"
           />
         </form>
         <div className="ml-auto flex items-center gap-1 sm:ml-0">
