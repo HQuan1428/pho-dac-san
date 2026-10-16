@@ -23,7 +23,7 @@ export function ForgotPasswordForm({
   );
 
   return (
-    <Card className={inDialog ? "w-full border-0 shadow-none bg-transparent p-0" : "w-full"}>
+    <Card className={inDialog ? "w-full overflow-visible border-0 bg-transparent p-0 shadow-none ring-0" : "w-full"}>
       {!inDialog && (
         <CardHeader className="space-y-1 text-center">
           <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -102,7 +102,7 @@ export function ForgotPasswordForm({
             </FormField>
           </CardContent>
 
-          <CardFooter className={inDialog ? "flex flex-col gap-3 px-0 pb-0 pt-4" : "flex flex-col gap-3"}>
+          <CardFooter className={inDialog ? "flex flex-col gap-3 border-t-0 bg-transparent px-0 pb-0 pt-4" : "flex flex-col gap-3"}>
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? (
                 <>

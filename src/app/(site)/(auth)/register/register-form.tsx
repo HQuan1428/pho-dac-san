@@ -23,7 +23,7 @@ export function RegisterForm({
   );
 
   return (
-    <Card className={inDialog ? "w-full border-0 shadow-none bg-transparent p-0" : "w-full"}>
+    <Card className={inDialog ? "w-full overflow-visible border-0 bg-transparent p-0 shadow-none ring-0" : "w-full"}>
       {!inDialog && (
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-semibold tracking-tight">Tạo tài khoản</CardTitle>
@@ -146,7 +146,7 @@ export function RegisterForm({
           </FormField>
         </CardContent>
 
-        <CardFooter className={inDialog ? "flex flex-col gap-4 px-0 pb-0 pt-4" : "flex flex-col gap-4"}>
+        <CardFooter className={inDialog ? "flex flex-col gap-4 border-t-0 bg-transparent px-0 pb-0 pt-4" : "flex flex-col gap-4"}>
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? (
               <>
