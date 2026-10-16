@@ -46,7 +46,7 @@ export default async function AddressBookPage() {
           action={<AddressFormDialog provinces={provinces} />}
         />
       ) : (
-        <div className="space-y-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {addresses.map((addr) => (
             <AddressItem
               key={addr.id}

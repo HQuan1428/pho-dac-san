@@ -58,7 +58,7 @@ export default async function FollowedShopsPage() {
           action={<Button render={<Link href="/" />}>Khám phá gian hàng</Button>}
         />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {formattedShops.map((shop) => (
             <FollowedShopCard key={shop.id} shop={shop} />
           ))}
