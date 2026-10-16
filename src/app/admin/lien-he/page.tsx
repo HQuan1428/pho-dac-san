@@ -37,73 +37,82 @@ export default async function AdminLienHePage(props: {
         description="Danh sách phản hồi, câu hỏi và yêu cầu hợp tác gửi từ biểu mẫu liên hệ của website."
       />
 
+      {/* Toolbar above table */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-xs text-muted-foreground">
+          Tổng cộng: <strong className="text-foreground">{totalItems}</strong> tin nhắn
+        </div>
+      </div>
+
       <div className="rounded-lg border bg-card overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-48">Người gửi</TableHead>
-              <TableHead>Nội dung tin nhắn</TableHead>
-              <TableHead className="w-40">Thời gian gửi</TableHead>
-              <TableHead className="w-24 text-right">Phản hồi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {messages.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="h-32 text-center text-sm text-muted-foreground">
-                  <div className="flex flex-col items-center justify-center gap-1">
-                    <MessageSquare className="size-6 text-muted-foreground/60" />
-                    <span>Chưa có tin nhắn liên hệ nào.</span>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
+              <TableRow className="h-11">
+                <TableHead className="w-48">Người gửi</TableHead>
+                <TableHead>Nội dung tin nhắn</TableHead>
+                <TableHead className="w-40">Thời gian gửi</TableHead>
+                <TableHead className="w-24 text-right">Phản hồi</TableHead>
               </TableRow>
-            ) : (
-              messages.map((msg) => (
-                <TableRow key={msg.id} className="align-top">
-                  <TableCell>
-                    <div className="space-y-1">
-                      <p className="font-semibold text-foreground text-sm">{msg.name}</p>
-                      <p className="text-xs text-muted-foreground font-mono">{msg.email}</p>
+            </TableHeader>
+            <TableBody>
+              {messages.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-32 text-center text-sm text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <MessageSquare className="size-6 text-muted-foreground/60" />
+                      <span>Chưa có tin nhắn liên hệ nào.</span>
                     </div>
                   </TableCell>
-
-                  <TableCell>
-                    <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                      {msg.message}
-                    </p>
-                  </TableCell>
-
-                  <TableCell className="text-xs text-muted-foreground">
-                    {new Intl.DateTimeFormat("vi-VN", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }).format(msg.createdAt)}
-                  </TableCell>
-
-                  <TableCell className="text-right">
-                    <Button
-                      size="xs"
-                      variant="outline"
-                      render={
-                        <a
-                          href={`mailto:${msg.email}?subject=${encodeURIComponent(
-                            "[Phố Đặc Sản] Phản hồi liên hệ của quý khách"
-                          )}`}
-                        />
-                      }
-                    >
-                      <Mail data-icon="inline-start" className="size-3.5" />
-                      Email
-                    </Button>
-                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                messages.map((msg) => (
+                  <TableRow key={msg.id} className="align-top hover:bg-muted/30 transition-colors">
+                    <TableCell className="py-2.5">
+                      <div className="space-y-0.5">
+                        <p className="font-semibold text-foreground text-xs">{msg.name}</p>
+                        <p className="text-[11px] text-muted-foreground font-mono">{msg.email}</p>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="py-2.5">
+                      <p className="text-xs text-foreground whitespace-pre-wrap leading-relaxed">
+                        {msg.message}
+                      </p>
+                    </TableCell>
+
+                    <TableCell className="text-xs text-muted-foreground py-2.5">
+                      {new Intl.DateTimeFormat("vi-VN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(msg.createdAt)}
+                    </TableCell>
+
+                    <TableCell className="text-right py-2.5">
+                      <Button
+                        size="xs"
+                        variant="outline"
+                        render={
+                          <a
+                            href={`mailto:${msg.email}?subject=${encodeURIComponent(
+                              "[Phố Đặc Sản] Phản hồi liên hệ của quý khách"
+                            )}`}
+                          />
+                        }
+                      >
+                        <Mail data-icon="inline-start" className="size-3.5" />
+                        Email
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
         <AdminPagination
           currentPage={page}

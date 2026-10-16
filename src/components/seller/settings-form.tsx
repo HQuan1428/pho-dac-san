@@ -92,131 +92,157 @@ export function SettingsForm({ shop, provinces }: SettingsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
-      {/* Current plan card */}
-      <div className="rounded-lg border bg-card p-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="size-5 text-primary" />
-              <h2 className="text-base font-semibold text-foreground">Gói dịch vụ hiện tại</h2>
-              <Badge variant="outline" className="font-semibold text-xs border-primary text-primary">
-                Gói {shop.plan}
-              </Badge>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* 2 columns at lg: main fields left (2/3), side panel right (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Main fields left (2/3 width) */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic shop profile */}
+          <div className="rounded-lg border bg-card p-5 space-y-4">
+            <h2 className="text-base font-semibold text-foreground border-b pb-3">
+              Thông tin gian hàng
+            </h2>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField id="shop-name" label="Tên gian hàng *" required hint="Tên thương hiệu hoặc cửa hàng">
+                <Input
+                  id="shop-name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </FormField>
+
+              <FormField id="shop-phone" label="Số điện thoại gọi xác nhận *" required hint="Dùng để liên hệ khách hàng">
+                <Input
+                  id="shop-phone"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </FormField>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Gói dịch vụ được quản trị viên cấp phát để hỗ trợ quy mô kinh doanh của bạn.
-            </p>
+
+            <FormField id="shop-address" label="Địa chỉ chi tiết" hint="Số nhà, đường, thôn xóm, xã/phường">
+              <Input
+                id="shop-address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </FormField>
+
+            <FormField id="shop-desc" label="Giới thiệu gian hàng" hint="Câu chuyện thương hiệu, cam kết chất lượng đặc sản">
+              <Textarea
+                id="shop-desc"
+                rows={5}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Chia sẻ về đặc sản quê hương của gian hàng..."
+              />
+            </FormField>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            render={<Link href="/#bang-gia" target="_blank" />}
-          >
-            <ExternalLink className="size-3.5 mr-1.5" />
-            Xem bảng giá & quyền lợi các gói
-          </Button>
-        </div>
-      </div>
+          {/* Current plan card */}
+          <div className="rounded-lg border bg-card p-5 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-5 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Gói dịch vụ hiện tại</h3>
+                <Badge variant="outline" className="font-semibold text-xs border-primary text-primary font-mono">
+                  Gói {shop.plan}
+                </Badge>
+              </div>
 
-      {/* Basic shop profile */}
-      <div className="rounded-lg border bg-card p-5 space-y-4">
-        <h2 className="text-base font-semibold text-foreground border-b pb-3">
-          Thông tin gian hàng
-        </h2>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField id="shop-name" label="Tên gian hàng *" required hint="Tên thương hiệu hoặc cửa hàng">
-            <Input
-              id="shop-name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </FormField>
-
-          <FormField id="shop-phone" label="Số điện thoại gọi xác nhận *" required hint="Dùng để liên hệ khách hàng">
-            <Input
-              id="shop-phone"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </FormField>
+              <Button
+                variant="outline"
+                size="xs"
+                render={<Link href="/#bang-gia" target="_blank" />}
+              >
+                <ExternalLink className="size-3 mr-1.5" />
+                Xem bảng giá & quyền lợi các gói
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Gói dịch vụ được ban quản trị phân quyền hỗ trợ quy mô kinh doanh và công cụ bán hàng tối ưu cho gian hàng của bạn.
+            </p>
+          </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField id="shop-province" label="Tỉnh/Thành phố cơ sở *" required>
-            <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
-              <SelectTrigger id="shop-province" className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {provinces.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormField>
+        {/* Side panel right (1/3 width, sticky actions, province, images) */}
+        <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-20">
+          {/* Sticky Actions Card */}
+          <div className="rounded-lg border bg-card p-5 space-y-3 shadow-xs">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Lưu thay đổi
+            </h3>
+            <div className="space-y-2">
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading && <Loader2 className="size-4 mr-2 animate-spin" />}
+                Lưu thông tin gian hàng
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-full text-xs"
+                render={<Link href={`/shop/${shop.slug}`} target="_blank" />}
+              >
+                <ExternalLink className="size-3.5 mr-1.5" />
+                Xem trang gian hàng
+              </Button>
+            </div>
+          </div>
 
-          <FormField id="shop-address" label="Địa chỉ chi tiết" hint="Số nhà, đường, thôn xóm">
-            <Input
-              id="shop-address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </FormField>
+          {/* Province card */}
+          <div className="rounded-lg border bg-card p-5 space-y-3">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Khu vực hoạt động
+            </h3>
+            <FormField id="shop-province" label="Tỉnh/Thành phố cơ sở *" required hint="Tỉnh đặt trụ sở hoặc cơ sở sản xuất">
+              <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
+                <SelectTrigger id="shop-province" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {provinces.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+          </div>
+
+          {/* Branding: Logo & Banner */}
+          <div className="rounded-lg border bg-card p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Hình ảnh thương hiệu
+            </h3>
+
+            <div>
+              <p className="text-xs font-medium text-foreground mb-1.5">Logo gian hàng</p>
+              <ImageUploader
+                value={logos}
+                onChange={setLogos}
+                maxImages={1}
+                label="Tải lên Logo"
+                hint="Ảnh vuông (tối đa 5MB). Hiển thị đại diện cho gian hàng."
+              />
+            </div>
+
+            <div className="border-t pt-3">
+              <p className="text-xs font-medium text-foreground mb-1.5">Ảnh bìa (Banner)</p>
+              <ImageUploader
+                value={banners}
+                onChange={setBanners}
+                maxImages={1}
+                label="Tải lên Banner"
+                hint="Ảnh ngang (tối đa 5MB). Hiển thị đầu trang gian hàng."
+              />
+            </div>
+          </div>
         </div>
-
-        <FormField id="shop-desc" label="Giới thiệu gian hàng" hint="Câu chuyện thương hiệu, cam kết chất lượng">
-          <Textarea
-            id="shop-desc"
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Chia sẻ về đặc sản quê hương của gian hàng..."
-          />
-        </FormField>
-      </div>
-
-      {/* Branding: Logo & Banner */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-lg border bg-card p-5 space-y-3">
-          <h3 className="text-sm font-semibold text-foreground border-b pb-2">
-            Logo gian hàng
-          </h3>
-          <ImageUploader
-            value={logos}
-            onChange={setLogos}
-            maxImages={1}
-            label="Tải lên Logo"
-            hint="Ảnh vuông (tối đa 5MB). Hiển thị đại diện cho gian hàng."
-          />
-        </div>
-
-        <div className="rounded-lg border bg-card p-5 space-y-3">
-          <h3 className="text-sm font-semibold text-foreground border-b pb-2">
-            Ảnh bìa (Banner)
-          </h3>
-          <ImageUploader
-            value={banners}
-            onChange={setBanners}
-            maxImages={1}
-            label="Tải lên Banner"
-            hint="Ảnh ngang (tối đa 5MB). Hiển thị đầu trang gian hàng."
-          />
-        </div>
-      </div>
-
-      {/* Save button */}
-      <div className="flex justify-end pt-2">
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="size-4 mr-2 animate-spin" />}
-          Lưu thông tin gian hàng
-        </Button>
       </div>
     </form>
   );

@@ -2,7 +2,6 @@ import { requireAdmin } from "@/server/access";
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/common/page-header";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AdminPagination } from "../_components/admin-pagination";
 import { UserActionButton } from "./user-action-button";
@@ -57,15 +56,16 @@ export default async function AdminNguoiDungPage(props: {
         description="Danh sách tài khoản thành viên, người bán và quản trị viên trong hệ thống."
       />
 
-      {/* Search */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Toolbar above table */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <form method="GET" action="/admin/nguoi-dung" className="relative w-full sm:w-80">
-          <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-          <Input
+          <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" />
+          <input
+            type="search"
             name="q"
             defaultValue={searchQuery}
             placeholder="Tìm theo tên, email, số điện thoại..."
-            className="pl-8 text-xs h-9"
+            className="h-8 w-full rounded-md border border-input bg-transparent pl-8 pr-3 text-xs placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           />
         </form>
 
@@ -74,59 +74,51 @@ export default async function AdminNguoiDungPage(props: {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table: compact rows h-11, sticky header, pagination footer */}
       <div className="rounded-lg border bg-card overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Người dùng</TableHead>
-              <TableHead>Số điện thoại</TableHead>
-              <TableHead>Vai trò</TableHead>
-              <TableHead>Gian hàng sở hữu</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead>Ngày đăng ký</TableHead>
-              <TableHead className="text-right">Thao tác</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-32 text-center text-sm text-muted-foreground">
-                  <div className="flex flex-col items-center justify-center gap-1">
-                    <UserIcon className="size-6 text-muted-foreground/60" />
-                    <span>Không tìm thấy người dùng nào phù hợp.</span>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
+              <TableRow className="h-11">
+                <TableHead>Người dùng</TableHead>
+                <TableHead>Số điện thoại</TableHead>
+                <TableHead>Vai trò</TableHead>
+                <TableHead>Gian hàng sở hữu</TableHead>
+                <TableHead>Trạng thái</TableHead>
+                <TableHead>Ngày đăng ký</TableHead>
+                <TableHead className="text-right">Thao tác</TableHead>
               </TableRow>
-            ) : (
-              users.map((u) => {
-                const isSelf = u.id === currentAdmin.id;
-                return (
-                  <TableRow key={u.id}>
+            </TableHeader>
+            <TableBody>
+              {users.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-32 text-center text-sm text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <UserIcon className="size-6 text-muted-foreground/60" />
+                      <span>Không tìm thấy người dùng nào phù hợp.</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                users.map((u) => (
+                  <TableRow key={u.id} className="h-11">
                     <TableCell>
                       <div className="space-y-0.5">
-                        <div className="font-semibold text-foreground flex items-center gap-2">
-                          {u.name}
-                          {isSelf && (
-                            <Badge variant="secondary" className="text-[10px] py-0 px-1.5">
-                              Bạn
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-xs text-muted-foreground font-mono">{u.email}</div>
+                        <p className="font-semibold text-xs text-foreground">{u.name || "Chưa đặt tên"}</p>
+                        <p className="font-mono text-[11px] text-muted-foreground">{u.email}</p>
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-xs text-muted-foreground font-mono">
+                    <TableCell className="font-mono text-xs">
                       {u.phone || "—"}
                     </TableCell>
 
                     <TableCell>
                       <Badge
                         variant={u.role === "ADMIN" ? "default" : "outline"}
-                        className="text-xs"
+                        className="text-[10px] font-semibold"
                       >
-                        {u.role === "ADMIN" ? "Quản trị viên" : "Người dùng"}
+                        {u.role}
                       </Badge>
                     </TableCell>
 
@@ -140,14 +132,10 @@ export default async function AdminNguoiDungPage(props: {
 
                     <TableCell>
                       <Badge
-                        variant="outline"
-                        className={`text-xs ${
-                          u.status === "ACTIVE"
-                            ? "bg-success/10 text-success border-success/30"
-                            : "bg-destructive/10 text-destructive border-destructive/30"
-                        }`}
+                        variant={u.status === "ACTIVE" ? "outline" : "destructive"}
+                        className="text-[10px]"
                       >
-                        {u.status === "ACTIVE" ? "Hoạt động" : "Đã khóa"}
+                        {u.status === "ACTIVE" ? "Hoạt động" : "Bị khóa"}
                       </Badge>
                     </TableCell>
 
@@ -160,20 +148,22 @@ export default async function AdminNguoiDungPage(props: {
                     </TableCell>
 
                     <TableCell className="text-right">
-                      <UserActionButton
-                        userId={u.id}
-                        userName={u.name}
-                        status={u.status}
-                        role={u.role}
-                        isSelf={isSelf}
-                      />
+                      {u.id !== currentAdmin.id && (
+                        <UserActionButton
+                          userId={u.id}
+                          userName={u.name || u.email}
+                          status={u.status}
+                          role={u.role}
+                          isSelf={u.id === currentAdmin.id}
+                        />
+                      )}
                     </TableCell>
                   </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
         <AdminPagination
           currentPage={page}

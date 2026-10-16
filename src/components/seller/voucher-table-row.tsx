@@ -83,7 +83,7 @@ export function VoucherTableRow({ voucher }: VoucherTableRowProps) {
   const isExpired = new Date(voucher.endsAt) < new Date();
 
   return (
-    <TableRow>
+    <TableRow className="h-11">
       <TableCell>
         <span className="font-mono font-bold text-sm text-foreground bg-muted px-2 py-1 rounded">
           {voucher.code}

@@ -99,11 +99,19 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
     }
     for (const [idx, v] of variants.entries()) {
       if (!v.name.trim()) {
-        toast.error(`Phân loại hàng thứ ${idx + 1} chưa có tên`);
+        toast.error(`Phân loại hàng thứ #${idx + 1} chưa có tên`);
         return;
       }
-      if (v.price < 0) {
-        toast.error(`Giá của "${v.name}" không hợp lệ`);
+      if (v.price < 1000) {
+        toast.error(`Giá của phân loại "${v.name}" phải từ 1.000 đ`);
+        return;
+      }
+      if (v.compareAtPrice && v.compareAtPrice <= v.price) {
+        toast.error(`Giá niêm yết của "${v.name}" phải lớn hơn giá bán`);
+        return;
+      }
+      if (v.stock < 0) {
+        toast.error(`Số lượng kho của "${v.name}" không hợp lệ`);
         return;
       }
     }
@@ -135,7 +143,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
         if (res.error) {
           toast.error(res.error);
         } else {
-          toast.success("Thêm sản phẩm thành công");
+          toast.success("Tạo sản phẩm mới thành công");
           router.push("/kenh-ban/san-pham");
           router.refresh();
         }
@@ -171,7 +179,8 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Top action header */}
       <div className="flex items-center justify-between gap-4">
         <Button
           type="button"
@@ -179,15 +188,15 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
           size="sm"
           render={<Link href="/kenh-ban/san-pham" />}
         >
-          <ArrowLeft className="size-4 mr-1" />
-          Quay lại danh sách
+          <ArrowLeft className="size-4 mr-1.5" />
+          Quay lại danh sách sản phẩm
         </Button>
 
         {isEdit && (
           <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
             <DialogTrigger
               render={
-                <Button variant="destructive" size="sm" type="button" />
+                <Button variant="outline" size="sm" type="button" className="text-destructive hover:bg-destructive/10" />
               }
             >
               <Trash2 className="size-3.5 mr-1.5" />
@@ -233,143 +242,166 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
         )}
       </div>
 
-      {/* Basic information */}
-      <div className="rounded-lg border bg-card p-5 space-y-5">
-        <h2 className="text-base font-semibold text-foreground border-b pb-3">
-          Thông tin cơ bản
-        </h2>
+      {/* 2 columns at lg: main fields left (2/3), side panel right (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Main fields left (2/3 width) */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic information */}
+          <div className="rounded-lg border bg-card p-5 space-y-4">
+            <h2 className="text-base font-semibold text-foreground border-b pb-3">
+              Thông tin cơ bản
+            </h2>
 
-        <FormField id="name" label="Tên sản phẩm" required hint="Tên gọi đặc sản, rõ ràng, dễ tìm kiếm">
-          <Input
-            id="name"
-            required
-            placeholder="VD: Mắm tép Gia Viễn Ninh Bình hũ 500g"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </FormField>
+            <FormField id="name" label="Tên sản phẩm" required hint="Tên gọi đặc sản, rõ ràng, dễ tìm kiếm">
+              <Input
+                id="name"
+                required
+                placeholder="VD: Mắm tép Gia Viễn Ninh Bình hũ 500g"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormField>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField id="category" label="Danh mục đặc sản" required>
-            <Select value={categoryId} onValueChange={(val) => val && setCategoryId(val)}>
-              <SelectTrigger id="category" className="w-full">
-                <SelectValue placeholder="Chọn danh mục" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormField>
-
-          <FormField id="province" label="Tỉnh/Thành xuất xứ" required hint="Nguồn gốc chính gốc của món ăn">
-            <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
-              <SelectTrigger id="province" className="w-full">
-                <SelectValue placeholder="Chọn tỉnh xuất xứ" />
-              </SelectTrigger>
-              <SelectContent>
-                {provinces.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
-                    {p.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormField>
-        </div>
-
-        <FormField
-          id="description"
-          label="Mô tả chi tiết"
-          required
-          hint="Mô tả hương vị, nguyên liệu, hạn sử dụng, cách dùng và đóng gói"
-        >
-          <Textarea
-            id="description"
-            rows={5}
-            required
-            placeholder="Mô tả chi tiết đặc sản của bạn..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </FormField>
-      </div>
-
-      {/* Images */}
-      <div className="rounded-lg border bg-card p-5">
-        <ImageUploader value={images} onChange={setImages} maxImages={8} />
-      </div>
-
-      {/* Variants */}
-      <div className="rounded-lg border bg-card p-5">
-        <VariantTable variants={variants} onChange={setVariants} />
-      </div>
-
-      {/* Status */}
-      <div className="rounded-lg border bg-card p-5 space-y-4">
-        <h2 className="text-base font-semibold text-foreground border-b pb-3">
-          Trạng thái kinh doanh
-        </h2>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            {
-              value: "ACTIVE" as const,
-              label: "Đang bán (ACTIVE)",
-              desc: "Hiển thị công khai trên gian hàng và kết quả tìm kiếm",
-            },
-            {
-              value: "DRAFT" as const,
-              label: "Bản nháp (DRAFT)",
-              desc: "Chưa công bố, chỉ hiển thị trong trang quản trị",
-            },
-            {
-              value: "HIDDEN" as const,
-              label: "Ẩn (HIDDEN)",
-              desc: "Tạm dừng bán, giữ lại dữ liệu và các đơn hàng cũ",
-            },
-          ].map((item) => (
-            <label
-              key={item.value}
-              className={`flex flex-col rounded-lg border p-3 cursor-pointer transition-colors ${
-                status === item.value
-                  ? "border-primary bg-primary/5 ring-1 ring-primary"
-                  : "hover:bg-muted/50"
-              }`}
+            <FormField
+              id="description"
+              label="Mô tả chi tiết"
+              required
+              hint="Mô tả hương vị, nguyên liệu, hạn sử dụng, cách dùng và đóng gói"
             >
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="product-status"
-                  value={item.value}
-                  checked={status === item.value}
-                  onChange={() => setStatus(item.value)}
-                  className="accent-primary"
-                />
-                <span className="text-sm font-semibold">{item.label}</span>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground">{item.desc}</p>
-            </label>
-          ))}
-        </div>
-      </div>
+              <Textarea
+                id="description"
+                rows={6}
+                required
+                placeholder="Mô tả chi tiết đặc sản của bạn..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </FormField>
+          </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-3 pt-2">
-        <Button
-          type="button"
-          variant="outline"
-          render={<Link href="/kenh-ban/san-pham" />}
-        >
-          Hủy bỏ
-        </Button>
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="size-4 mr-2 animate-spin" />}
-          {isEdit ? "Lưu thay đổi" : "Tạo sản phẩm"}
-        </Button>
+          {/* Variants table */}
+          <div className="rounded-lg border bg-card p-5">
+            <VariantTable variants={variants} onChange={setVariants} />
+          </div>
+        </div>
+
+        {/* Side panel right (1/3 width, sticky actions, status, category/province, images) */}
+        <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-20">
+          {/* Sticky Actions Card */}
+          <div className="rounded-lg border bg-card p-5 space-y-3 shadow-xs">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Hành động
+            </h3>
+            <div className="space-y-2">
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading && <Loader2 className="size-4 mr-2 animate-spin" />}
+                {isEdit ? "Lưu thay đổi" : "Tạo sản phẩm"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                render={<Link href="/kenh-ban/san-pham" />}
+              >
+                Hủy bỏ
+              </Button>
+            </div>
+          </div>
+
+          {/* Business Status */}
+          <div className="rounded-lg border bg-card p-5 space-y-3">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Trạng thái kinh doanh
+            </h3>
+
+            <div className="space-y-2">
+              {[
+                {
+                  value: "ACTIVE" as const,
+                  label: "Đang bán (ACTIVE)",
+                  desc: "Hiển thị công khai",
+                },
+                {
+                  value: "DRAFT" as const,
+                  label: "Bản nháp (DRAFT)",
+                  desc: "Chỉ hiện trong quản trị",
+                },
+                {
+                  value: "HIDDEN" as const,
+                  label: "Ẩn (HIDDEN)",
+                  desc: "Tạm dừng bán",
+                },
+              ].map((item) => (
+                <label
+                  key={item.value}
+                  className={`flex items-start gap-2.5 rounded-md border p-2.5 cursor-pointer transition-colors ${
+                    status === item.value
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "hover:bg-muted/50"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="product-status"
+                    value={item.value}
+                    checked={status === item.value}
+                    onChange={() => setStatus(item.value)}
+                    className="accent-primary mt-0.5"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <span className="text-xs font-semibold block text-foreground">{item.label}</span>
+                    <span className="text-[11px] text-muted-foreground">{item.desc}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Category & Province */}
+          <div className="rounded-lg border bg-card p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Phân loại & Xuất xứ
+            </h3>
+
+            <FormField id="category" label="Danh mục đặc sản" required>
+              <Select value={categoryId} onValueChange={(val) => val && setCategoryId(val)}>
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue placeholder="Chọn danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+
+            <FormField id="province" label="Tỉnh/Thành xuất xứ" required hint="Nguồn gốc chỉ dẫn địa lý">
+              <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
+                <SelectTrigger id="province" className="w-full">
+                  <SelectValue placeholder="Chọn tỉnh xuất xứ" />
+                </SelectTrigger>
+                <SelectContent>
+                  {provinces.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
+          </div>
+
+          {/* Product Images */}
+          <div className="rounded-lg border bg-card p-5 space-y-3">
+            <h3 className="text-sm font-semibold text-foreground border-b pb-2">
+              Hình ảnh sản phẩm
+            </h3>
+            <ImageUploader value={images} onChange={setImages} maxImages={8} />
+          </div>
+        </div>
       </div>
     </form>
   );
