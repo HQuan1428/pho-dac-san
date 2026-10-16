@@ -159,7 +159,11 @@ export function AddProvinceDialog({
             <Label htmlFor="add-province-region">
               Vùng miền <span className="text-destructive">*</span>
             </Label>
-            <Select name="regionId" defaultValue={defaultRegionId || regions[0]?.id}>
+            <Select
+              name="regionId"
+              defaultValue={defaultRegionId || regions[0]?.id}
+              items={regions.map((r) => ({ value: r.id, label: r.name }))}
+            >
               <SelectTrigger id="add-province-region" className="w-full">
                 <SelectValue placeholder="Chọn vùng miền" />
               </SelectTrigger>
@@ -263,7 +267,11 @@ export function EditProvinceDialog({
             <Label htmlFor={`edit-prov-region-${province.id}`}>
               Vùng miền trực thuộc <span className="text-destructive">*</span>
             </Label>
-            <Select name="regionId" defaultValue={province.regionId}>
+            <Select
+              name="regionId"
+              defaultValue={province.regionId}
+              items={regions.map((r) => ({ value: r.id, label: r.name }))}
+            >
               <SelectTrigger id={`edit-prov-region-${province.id}`} className="w-full">
                 <SelectValue placeholder="Chọn vùng miền" />
               </SelectTrigger>
