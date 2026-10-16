@@ -59,3 +59,23 @@ export function useCart() {
     () => EMPTY,
   );
 }
+
+// Cart sheet open state: any client component can open the cart sheet (e.g. after add-to-cart).
+let sheetOpen = false;
+const sheetListeners = new Set<() => void>();
+
+export function setCartSheetOpen(open: boolean) {
+  sheetOpen = open;
+  sheetListeners.forEach((l) => l());
+}
+
+export function useCartSheetOpen() {
+  return useSyncExternalStore(
+    (l) => {
+      sheetListeners.add(l);
+      return () => sheetListeners.delete(l);
+    },
+    () => sheetOpen,
+    () => false,
+  );
+}

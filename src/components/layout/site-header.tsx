@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { CartButton } from "./cart-button";
 import { Logo } from "./logo";
+import { AuthButtons } from "./auth-buttons";
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
@@ -57,10 +58,7 @@ export async function SiteHeader() {
               </DropdownMenu>
             </>
           ) : (
-            <>
-              <Button variant="ghost" size="sm" render={<Link href="/login" />}>Đăng nhập</Button>
-              <Button size="sm" render={<Link href="/register" />}>Đăng ký</Button>
-            </>
+            <AuthButtons />
           )}
         </div>
       </div>
