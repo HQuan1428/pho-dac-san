@@ -46,7 +46,7 @@ export default async function AdminLienHePage(props: {
 
       <div className="rounded-lg border bg-card overflow-hidden">
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="min-w-[600px]">
             <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
               <TableRow className="h-11">
                 <TableHead className="w-48">Người gửi</TableHead>

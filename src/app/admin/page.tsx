@@ -106,7 +106,7 @@ export default async function AdminDashboardPage() {
       />
 
       {/* KPI row: 4 StatCards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           label="Tổng người dùng"
           value={userCount.toLocaleString("vi-VN")}
@@ -136,7 +136,7 @@ export default async function AdminDashboardPage() {
           {/* Shops breakdown */}
           <Card>
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <CardTitle className="text-base font-semibold">Gian hàng theo trạng thái</CardTitle>
                   <CardDescription>Tình trạng kiểm duyệt và hoạt động của các đối tác</CardDescription>
@@ -218,8 +218,8 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Right: 1/3 width Latest pending shops */}
-        <div className="lg:col-span-1 rounded-lg border bg-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b pb-3">
+        <div className="lg:col-span-1 rounded-lg border bg-card p-4 sm:p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
             <div>
               <h2 className="text-base font-semibold text-foreground">Shop chờ duyệt</h2>
               <p className="text-xs text-muted-foreground">{shopStats.PENDING} hồ sơ đang đợi</p>
@@ -268,7 +268,7 @@ export default async function AdminDashboardPage() {
 
       {/* Tables: Full width pending shops table */}
       <div className="rounded-lg border bg-card overflow-hidden">
-        <div className="flex items-center justify-between border-b p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b p-4">
           <div>
             <h2 className="text-base font-semibold text-foreground">Hồ sơ gian hàng mới đăng ký</h2>
             <p className="text-xs text-muted-foreground">Danh sách đối tác cần Ban quản trị xác minh nguồn gốc và phê duyệt</p>
@@ -288,7 +288,7 @@ export default async function AdminDashboardPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <Table>
+            <Table className="min-w-[640px]">
               <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
                 <TableRow className="h-11">
                   <TableHead>Gian hàng</TableHead>

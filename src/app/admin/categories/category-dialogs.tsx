@@ -82,7 +82,14 @@ export function CreateCategoryDialog({
 
           <div className="space-y-1.5">
             <Label htmlFor="create-parent">Danh mục cha (tùy chọn)</Label>
-            <Select name="parentId" defaultValue="none">
+            <Select
+              name="parentId"
+              defaultValue="none"
+              items={[
+                { value: "none", label: "-- Không thuộc danh mục cha (Cấp 1) --" },
+                ...categories.map((c) => ({ value: c.id, label: c.name })),
+              ]}
+            >
               <SelectTrigger id="create-parent" className="w-full">
                 <SelectValue placeholder="Chọn danh mục cha nếu có" />
               </SelectTrigger>
@@ -193,7 +200,14 @@ export function EditCategoryDialog({
 
           <div className="space-y-1.5">
             <Label htmlFor={`edit-parent-${category.id}`}>Danh mục cha</Label>
-            <Select name="parentId" defaultValue={category.parentId || "none"}>
+            <Select
+              name="parentId"
+              defaultValue={category.parentId || "none"}
+              items={[
+                { value: "none", label: "-- Không thuộc danh mục cha (Cấp 1) --" },
+                ...parentOptions.map((c) => ({ value: c.id, label: c.name })),
+              ]}
+            >
               <SelectTrigger id={`edit-parent-${category.id}`} className="w-full">
                 <SelectValue placeholder="Chọn danh mục cha nếu có" />
               </SelectTrigger>

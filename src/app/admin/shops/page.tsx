@@ -153,7 +153,7 @@ export default async function AdminGianHangPage(props: {
       {/* Table: compact rows h-11, sticky header, pagination footer */}
       <div className="rounded-lg border bg-card overflow-hidden">
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="min-w-[700px]">
             <TableHeader className="sticky top-0 bg-muted/60 dark:bg-muted/30 backdrop-blur z-10">
               <TableRow className="h-11">
                 <TableHead>Gian hàng</TableHead>

@@ -270,13 +270,13 @@ export function AdminAppShell({ admin, children }: AdminAppShellProps) {
         {/* Content Area: full available width */}
         <div className="flex flex-1 flex-col min-w-0">
           {/* Top Bar with breadcrumb, search, user menu */}
-          <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur md:px-6">
+          <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-2 sm:gap-4 border-b bg-background/95 px-3 sm:px-4 backdrop-blur md:px-6">
             {/* Left: Mobile menu toggle, desktop collapse toggle, breadcrumb */}
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="md:hidden"
+                className="md:hidden shrink-0"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Mở menu điều hướng"
               >
@@ -286,26 +286,26 @@ export function AdminAppShell({ admin, children }: AdminAppShellProps) {
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="hidden md:flex text-muted-foreground hover:text-foreground"
+                className="hidden md:flex text-muted-foreground hover:text-foreground shrink-0"
                 onClick={() => setCollapsed(!collapsed)}
                 aria-label={collapsed ? "Mở rộng sidebar (240px)" : "Thu gọn sidebar (icon)"}
               >
                 <PanelLeft className="size-4" />
               </Button>
 
-              <div className="hidden sm:block min-w-0">
+              <div className="hidden sm:block min-w-0 overflow-hidden">
                 <Breadcrumb>
-                  <BreadcrumbList>
+                  <BreadcrumbList className="flex-nowrap whitespace-nowrap overflow-hidden">
                     {crumbs.map((crumb, idx) => {
                       const isLast = idx === crumbs.length - 1;
                       return (
-                        <span key={crumb.label} className="inline-flex items-center gap-1.5">
-                          {idx > 0 && <BreadcrumbSeparator />}
-                          <BreadcrumbItem>
+                        <span key={crumb.label} className="inline-flex items-center gap-1.5 min-w-0 truncate">
+                          {idx > 0 && <BreadcrumbSeparator className="shrink-0" />}
+                          <BreadcrumbItem className="min-w-0 truncate">
                             {isLast || !crumb.href ? (
-                              <BreadcrumbPage className="font-medium text-foreground">{crumb.label}</BreadcrumbPage>
+                              <BreadcrumbPage className="font-medium text-foreground truncate">{crumb.label}</BreadcrumbPage>
                             ) : (
-                              <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
+                              <BreadcrumbLink href={crumb.href} className="truncate">{crumb.label}</BreadcrumbLink>
                             )}
                           </BreadcrumbItem>
                         </span>
@@ -317,8 +317,8 @@ export function AdminAppShell({ admin, children }: AdminAppShellProps) {
             </div>
 
             {/* Right: Search + User Menu */}
-            <div className="flex items-center gap-3">
-              <form method="GET" action="/admin/shops" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <form method="GET" action="/admin/shops" className="relative hidden lg:block w-48 xl:w-64">
                 <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none" />
                 <input
                   type="search"
@@ -366,8 +366,8 @@ export function AdminAppShell({ admin, children }: AdminAppShellProps) {
             </div>
           </header>
 
-          {/* Main content: p-6 with container-page wrapper */}
-          <main className="flex-1 p-6">
+          {/* Main content: responsive padding with container-page wrapper */}
+          <main className="flex-1 p-3.5 sm:p-5 md:p-6">
             <div className="container-page space-y-6">
               {children}
             </div>
