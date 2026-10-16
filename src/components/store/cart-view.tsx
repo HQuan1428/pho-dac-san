@@ -3,23 +3,27 @@
 import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Store, Trash2, ArrowRight, Tag, AlertCircle, ShoppingBag, Loader2 } from "lucide-react";
+import { Store, ArrowRight, Tag, AlertCircle, ShoppingBag, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useCart, cart } from "@/lib/cart";
-import { getCartLines, validateVoucher, type CartLineData, type ValidatedVoucher } from "@/server/store/cart";
-import { formatVnd, Price } from "@/components/common/price";
-import { QuantityInput } from "@/components/common/quantity-input";
+import { validateVoucher, type ValidatedVoucher } from "@/server/store/cart";
+import { formatVnd } from "@/components/common/price";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getProductImageUrl, getProductPlaceholder } from "./placeholder";
+import { useCartLines, CartLineItem } from "./cart-shared";
 
 export function CartView() {
   const router = useRouter();
-  const cartItems = useCart();
-  const [lines, setLines] = useState<CartLineData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [droppedNotice, setDroppedNotice] = useState(false);
+  const {
+    cartItems,
+    lines,
+    loading,
+    droppedNotice,
+    shopGroups,
+    grandSubtotal,
+    totalQuantity,
+  } = useCartLines();
+
   const [vouchers, setVouchers] = useState<Record<string, ValidatedVoucher>>({});
   const [voucherInputs, setVoucherInputs] = useState<Record<string, string>>({});
   const [voucherErrors, setVoucherErrors] = useState<Record<string, string>>({});
@@ -41,80 +45,6 @@ export function CartView() {
       sessionStorage.setItem("pds_vouchers", JSON.stringify(newVouchers));
     } catch {}
   };
-
-  // Fetch cart line details from DB
-  useEffect(() => {
-    let active = true;
-
-    async function loadData() {
-      if (cartItems.length === 0) {
-        setLines([]);
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const variantIds = cartItems.map((i) => i.variantId);
-        const res = await getCartLines(variantIds);
-
-        if (!active) return;
-
-        if (res.droppedVariantIds.length > 0) {
-          res.droppedVariantIds.forEach((id) => cart.remove(id));
-          setDroppedNotice(true);
-        }
-
-        setLines(res.lines);
-      } catch (err) {
-        console.error("Failed to load cart lines:", err);
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-
-    loadData();
-
-    return () => {
-      active = false;
-    };
-  }, [cartItems]);
-
-  // Group cart lines by shop
-  type ShopGroup = {
-    shopId: string;
-    shopName: string;
-    shopSlug: string;
-    provinceName: string;
-    items: Array<{
-      line: CartLineData;
-      quantity: number;
-      lineSubtotal: number;
-    }>;
-    subtotal: number;
-  };
-
-  const shopGroups: ShopGroup[] = [];
-  const itemMap = new Map(cartItems.map((i) => [i.variantId, i.quantity]));
-
-  for (const line of lines) {
-    const qty = itemMap.get(line.variantId) || 1;
-    let group = shopGroups.find((g) => g.shopId === line.shopId);
-    if (!group) {
-      group = {
-        shopId: line.shopId,
-        shopName: line.shopName,
-        shopSlug: line.shopSlug,
-        provinceName: line.provinceName,
-        items: [],
-        subtotal: 0,
-      };
-      shopGroups.push(group);
-    }
-    const lineSubtotal = line.price * qty;
-    group.items.push({ line, quantity: qty, lineSubtotal });
-    group.subtotal += lineSubtotal;
-  }
 
   // Handle voucher verification
   const handleApplyVoucher = (shopId: string, shopSubtotal: number) => {
@@ -172,7 +102,6 @@ export function CartView() {
   }
 
   // Calculate totals across shops
-  const grandSubtotal = shopGroups.reduce((sum, g) => sum + g.subtotal, 0);
   const grandDiscount = shopGroups.reduce((sum, g) => {
     const v = vouchers[g.shopId];
     return sum + (v ? v.discount : 0);
@@ -219,60 +148,12 @@ export function CartView() {
                 {/* Products in this shop */}
                 <div className="divide-y p-4">
                   {group.items.map(({ line, quantity, lineSubtotal }) => (
-                    <div
+                    <CartLineItem
                       key={line.variantId}
-                      className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
-                    >
-                      <div className="flex items-center gap-3">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={getProductImageUrl(line.productImages, line.provinceName)}
-                          alt={line.productName}
-                          onError={(e) => {
-                            e.currentTarget.src = getProductPlaceholder(line.provinceName);
-                          }}
-                          className="size-16 rounded-md border object-cover bg-muted shrink-0"
-                        />
-                        <div className="min-w-0">
-                          <Link
-                            href={`/products/${line.shopSlug}/${line.productSlug}`}
-                            className="font-medium text-foreground hover:underline line-clamp-1 text-sm"
-                          >
-                            {line.productName}
-                          </Link>
-                          <div className="text-xs text-muted-foreground mt-0.5">
-                            Phân loại: <span className="text-foreground">{line.variantName}</span>
-                          </div>
-                          <div className="mt-1">
-                            <Price amount={line.price} original={line.compareAtPrice ?? undefined} className="text-sm" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between gap-4 sm:justify-end">
-                        <QuantityInput
-                          value={quantity}
-                          onChange={(newQty) => cart.setQuantity(line.variantId, newQty)}
-                          min={1}
-                          max={line.stock}
-                        />
-                        <div className="w-24 text-right font-semibold text-sm tabular-nums">
-                          {formatVnd(lineSubtotal)}
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => {
-                            cart.remove(line.variantId);
-                            toast.info("Đã xóa sản phẩm khỏi giỏ hàng");
-                          }}
-                          aria-label="Xóa sản phẩm"
-                          className="text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
-                      </div>
-                    </div>
+                      line={line}
+                      quantity={quantity}
+                      lineSubtotal={lineSubtotal}
+                    />
                   ))}
                 </div>
 
@@ -360,7 +241,7 @@ export function CartView() {
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-muted-foreground">
-                <span>Tạm tính ({cartItems.reduce((n, i) => n + i.quantity, 0)} sản phẩm):</span>
+                <span>Tạm tính ({totalQuantity} sản phẩm):</span>
                 <span className="font-medium text-foreground">{formatVnd(grandSubtotal)}</span>
               </div>
 
