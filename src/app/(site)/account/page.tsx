@@ -6,6 +6,9 @@ import {
   CheckCircle2,
   Clock,
   Heart,
+  LayoutDashboard,
+  MapPin,
+  Package,
   ShoppingBag,
   Store,
   Truck,
@@ -28,20 +31,92 @@ import { EmptyState } from "@/components/common/empty-state";
 import { OrderStatusBadge } from "@/components/common/order-status-badge";
 import { PageHeader } from "@/components/common/page-header";
 import { Price } from "@/components/common/price";
+import { cn } from "@/lib/utils";
 import { ChangePasswordForm } from "./change-password-form";
 import { EmailVerificationBanner } from "./email-verification-banner";
 import { ProfileForm } from "./profile-form";
+import { OrdersPanel } from "./orders-panel";
+import { WishlistPanel } from "./wishlist-panel";
+import { AddressesPanel } from "./addresses-panel";
+import { FollowingPanel } from "./following-panel";
 
 export const metadata: Metadata = {
-  title: "Tổng quan tài khoản - Phố Đặc Sản",
+  title: "Tài khoản của tôi - Phố Đặc Sản",
 };
 
+const HUB_TABS = [
+  { id: "overview", label: "Tổng quan", icon: LayoutDashboard, href: "/account" },
+  { id: "orders", label: "Đơn hàng", icon: Package, href: "/account?tab=orders" },
+  { id: "wishlist", label: "Yêu thích", icon: Heart, href: "/account?tab=wishlist" },
+  { id: "addresses", label: "Sổ địa chỉ", icon: MapPin, href: "/account?tab=addresses" },
+  { id: "following", label: "Gian hàng", icon: Store, href: "/account?tab=following" },
+];
+
 export default async function AccountPage(props: {
-  searchParams: Promise<{ verify?: string }>;
+  searchParams: Promise<{ tab?: string; status?: string; verify?: string }>;
 }) {
   const sessionUser = await requireUser("/account");
   const searchParams = await props.searchParams;
+  const currentTab = searchParams.tab || "overview";
 
+  return (
+    <div className="space-y-6">
+      {/* Icon tabs driven by ?tab= */}
+      <div className="flex items-center gap-1.5 overflow-x-auto border-b pb-2.5 scrollbar-none">
+        {HUB_TABS.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = currentTab === tab.id;
+
+          return (
+            <Link
+              key={tab.id}
+              href={tab.href}
+              scroll={false}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition cursor-pointer",
+                isActive
+                  ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Icon className="size-4" aria-hidden />
+              <span>{tab.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Tab Panels */}
+      {currentTab === "orders" && (
+        <OrdersPanel userId={sessionUser.id} currentStatus={searchParams.status} />
+      )}
+
+      {currentTab === "wishlist" && (
+        <WishlistPanel userId={sessionUser.id} />
+      )}
+
+      {currentTab === "addresses" && (
+        <AddressesPanel userId={sessionUser.id} />
+      )}
+
+      {currentTab === "following" && (
+        <FollowingPanel userId={sessionUser.id} />
+      )}
+
+      {currentTab === "overview" && (
+        <OverviewPanel sessionUserId={sessionUser.id} verify={searchParams.verify} />
+      )}
+    </div>
+  );
+}
+
+async function OverviewPanel({
+  sessionUserId,
+  verify,
+}: {
+  sessionUserId: string;
+  verify?: string;
+}) {
   const [
     user,
     newOrdersCount,
@@ -54,7 +129,7 @@ export default async function AccountPage(props: {
     recentOrders,
   ] = await Promise.all([
     db.user.findUnique({
-      where: { id: sessionUser.id },
+      where: { id: sessionUserId },
       select: {
         id: true,
         name: true,
@@ -64,15 +139,15 @@ export default async function AccountPage(props: {
         createdAt: true,
       },
     }),
-    db.order.count({ where: { customerId: sessionUser.id, status: "NEW" } }),
-    db.order.count({ where: { customerId: sessionUser.id, status: "SHIPPING" } }),
-    db.order.count({ where: { customerId: sessionUser.id, status: "COMPLETED" } }),
-    db.order.count({ where: { customerId: sessionUser.id } }),
-    db.wishlistItem.count({ where: { userId: sessionUser.id } }),
-    db.shopFollow.count({ where: { userId: sessionUser.id } }),
-    db.address.count({ where: { userId: sessionUser.id } }),
+    db.order.count({ where: { customerId: sessionUserId, status: "NEW" } }),
+    db.order.count({ where: { customerId: sessionUserId, status: "SHIPPING" } }),
+    db.order.count({ where: { customerId: sessionUserId, status: "COMPLETED" } }),
+    db.order.count({ where: { customerId: sessionUserId } }),
+    db.wishlistItem.count({ where: { userId: sessionUserId } }),
+    db.shopFollow.count({ where: { userId: sessionUserId } }),
+    db.address.count({ where: { userId: sessionUserId } }),
     db.order.findMany({
-      where: { customerId: sessionUser.id },
+      where: { customerId: sessionUserId },
       include: {
         shop: { select: { name: true, slug: true } },
         items: {
@@ -103,13 +178,13 @@ export default async function AccountPage(props: {
 
       <EmailVerificationBanner
         emailVerified={user.emailVerified}
-        showNotice={searchParams.verify === "pending"}
+        showNotice={verify === "pending"}
       />
 
       {/* Top grid: Profile card + quick stats */}
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Profile Card */}
-        <Card className="flex flex-col justify-between">
+        <Card className="flex flex-col justify-between shadow-2xs">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
               <Avatar className="size-12">
@@ -122,7 +197,7 @@ export default async function AccountPage(props: {
                   <h3 className="truncate font-semibold text-foreground">{user.name}</h3>
                   {user.emailVerified ? (
                     <Badge variant="secondary" className="gap-1 text-[11px] text-success border-success/30">
-                      <CheckCircle2 className="size-3" /> Đã xác thực
+                      <CheckCircle2 className="size-3" aria-hidden /> Đã xác thực
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="text-[11px] text-warning border-warning/30">
@@ -167,11 +242,11 @@ export default async function AccountPage(props: {
 
         {/* Quick stats grid (orders by status, wishlist, following) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:col-span-2">
-          <Link href="/account/orders?status=NEW" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=orders&status=NEW" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Chờ xác nhận</span>
-                <Clock className="size-4 text-warning" />
+                <Clock className="size-4 text-warning" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {newOrdersCount}
@@ -180,11 +255,11 @@ export default async function AccountPage(props: {
             </Card>
           </Link>
 
-          <Link href="/account/orders?status=SHIPPING" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=orders&status=SHIPPING" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Đang giao hàng</span>
-                <Truck className="size-4 text-info" />
+                <Truck className="size-4 text-info" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {shippingOrdersCount}
@@ -193,11 +268,11 @@ export default async function AccountPage(props: {
             </Card>
           </Link>
 
-          <Link href="/account/orders?status=COMPLETED" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=orders&status=COMPLETED" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Đã hoàn thành</span>
-                <CheckCircle2 className="size-4 text-success" />
+                <CheckCircle2 className="size-4 text-success" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {completedOrdersCount}
@@ -206,11 +281,11 @@ export default async function AccountPage(props: {
             </Card>
           </Link>
 
-          <Link href="/account/wishlist" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=wishlist" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Yêu thích</span>
-                <Heart className="size-4 text-destructive" />
+                <Heart className="size-4 text-destructive" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {wishlistCount}
@@ -219,11 +294,11 @@ export default async function AccountPage(props: {
             </Card>
           </Link>
 
-          <Link href="/account/following" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=following" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Gian hàng</span>
-                <Store className="size-4 text-primary" />
+                <Store className="size-4 text-primary" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {followingCount}
@@ -232,11 +307,11 @@ export default async function AccountPage(props: {
             </Card>
           </Link>
 
-          <Link href="/account/orders" className="group block">
-            <Card className="h-full p-4 transition-colors hover:border-primary/50">
+          <Link href="/account?tab=orders" scroll={false} className="group block">
+            <Card className="h-full p-4 transition-colors hover:border-primary/50 shadow-2xs">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Tổng đơn hàng</span>
-                <ShoppingBag className="size-4 text-muted-foreground" />
+                <ShoppingBag className="size-4 text-muted-foreground" aria-hidden />
               </div>
               <p className="mt-2 text-2xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                 {totalOrdersCount}
@@ -257,11 +332,11 @@ export default async function AccountPage(props: {
           <Button
             variant="ghost"
             size="sm"
-            render={<Link href="/account/orders" />}
+            render={<Link href="/account?tab=orders" scroll={false} />}
             className="gap-1 text-xs text-primary"
           >
             <span>Xem tất cả</span>
-            <ArrowRight className="size-3.5" />
+            <ArrowRight className="size-3.5" aria-hidden />
           </Button>
         </div>
 
@@ -270,12 +345,12 @@ export default async function AccountPage(props: {
             icon={ShoppingBag}
             title="Chưa có đơn hàng nào"
             description="Bạn chưa đặt mua đơn hàng nào tại Phố Đặc Sản. Hãy dạo phố và khám phá ngay nhé!"
-            action={<Button render={<Link href="/" />}>Khám phá đặc sản</Button>}
+            action={<Button render={<Link href="/market" />}>Khám phá đặc sản</Button>}
           />
         ) : (
           <>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-hidden rounded-lg border bg-card">
+            <div className="hidden md:block overflow-hidden rounded-xl border bg-card shadow-2xs">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -343,7 +418,7 @@ export default async function AccountPage(props: {
                 const otherCount = order.items.length - 1;
 
                 return (
-                  <Card key={order.id} className="p-4 space-y-3">
+                  <Card key={order.id} className="p-4 space-y-3 shadow-2xs">
                     <div className="flex items-center justify-between gap-2 border-b pb-2">
                       <span className="font-mono text-xs font-medium text-muted-foreground">
                         {order.code}

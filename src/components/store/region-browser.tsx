@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { regionTone } from "@/lib/ui-icons";
+import { cn } from "@/lib/utils";
 
 export type ProvinceData = {
   id: string;
@@ -26,20 +28,27 @@ function RegionColumn({ region }: { region: RegionData }) {
     ? region.provinces
     : region.provinces.slice(0, INITIAL_LIMIT);
   const remainingCount = region.provinces.length - INITIAL_LIMIT;
+  const tone = regionTone(region.slug);
 
   return (
-    <div className="flex flex-col justify-between rounded-lg border bg-card p-3.5 shadow-xs transition hover:border-border">
+    <div className="flex flex-col justify-between rounded-xl border bg-card p-4 shadow-2xs transition hover:border-primary/40">
       <div>
-        <div className="flex items-center justify-between border-b pb-2 mb-2.5">
+        <div className="flex items-center justify-between border-b pb-2.5 mb-3">
           <Link
             href={`/search?vung=${region.slug}`}
-            className="font-semibold text-sm text-foreground hover:text-primary transition"
+            className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition"
           >
-            {region.name}
+            <span className={cn("size-2 rounded-full", tone.dot)} aria-hidden />
+            <span>{region.name}</span>
           </Link>
           <Link
             href={`/search?vung=${region.slug}`}
-            className="text-[11px] text-muted-foreground hover:text-primary transition"
+            className={cn(
+              "rounded-md px-2 py-0.5 text-[11px] font-medium transition",
+              tone.bg,
+              tone.text,
+              "hover:opacity-85"
+            )}
           >
             Xem tất cả
           </Link>
@@ -68,7 +77,7 @@ function RegionColumn({ region }: { region: RegionData }) {
               className="inline-flex items-center gap-0.5 rounded-md border border-dashed border-primary/40 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/10 transition cursor-pointer"
             >
               <span>+{remainingCount} tỉnh</span>
-              <ChevronDown className="size-3" />
+              <ChevronDown className="size-3" aria-hidden />
             </button>
           )}
 
@@ -79,7 +88,7 @@ function RegionColumn({ region }: { region: RegionData }) {
               className="inline-flex items-center gap-0.5 rounded-md border border-dashed border-muted-foreground/30 bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               <span>Thu gọn</span>
-              <ChevronUp className="size-3" />
+              <ChevronUp className="size-3" aria-hidden />
             </button>
           )}
         </div>
