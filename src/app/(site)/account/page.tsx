@@ -28,7 +28,6 @@ import { EmptyState } from "@/components/common/empty-state";
 import { OrderStatusBadge } from "@/components/common/order-status-badge";
 import { PageHeader } from "@/components/common/page-header";
 import { Price } from "@/components/common/price";
-import { cn } from "@/lib/utils";
 import { ChangePasswordForm } from "./change-password-form";
 import { EmailVerificationBanner } from "./email-verification-banner";
 import { ProfileForm } from "./profile-form";

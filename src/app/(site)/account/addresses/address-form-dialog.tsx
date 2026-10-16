@@ -155,6 +155,7 @@ export function AddressFormDialog({
             error={state?.errors?.provinceId}
           >
             <Select
+              items={provinces.map((x) => ({ value: x.id, label: x.name }))}
               value={selectedProvince}
               onValueChange={(val) => setSelectedProvince(val ?? "")}
               disabled={isPending}

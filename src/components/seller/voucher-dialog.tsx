@@ -186,6 +186,7 @@ export function VoucherDialog({ voucher, trigger }: VoucherDialogProps) {
             <div className="grid grid-cols-2 gap-3">
               <FormField id="voucher-type" label="Loại giảm giá *">
                 <Select
+                  items={{ PERCENT: "Theo phần trăm (%)", FIXED: "Số tiền cố định (đ)" }}
                   value={type}
                   onValueChange={(val) => val && setType(val as "PERCENT" | "FIXED")}
                 >

@@ -114,7 +114,7 @@ export function RegistrationForm({ provinces, defaultPhone = "" }: RegistrationF
           required
           hint="Nơi đặt trụ sở hoặc cơ sở sản xuất đặc sản"
         >
-          <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
+          <Select items={provinces.map((x) => ({ value: x.id, label: x.name }))} value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
             <SelectTrigger id="reg-province" className="w-full">
               <SelectValue placeholder="Chọn Tỉnh/Thành" />
             </SelectTrigger>

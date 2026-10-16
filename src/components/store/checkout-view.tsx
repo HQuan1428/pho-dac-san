@@ -378,7 +378,7 @@ export function CheckoutView({
                 <Label htmlFor="province">
                   Tỉnh / Thành phố <span className="text-destructive">*</span>
                 </Label>
-                <Select value={provinceId} onValueChange={(val) => setProvinceId(val ?? "")}>
+                <Select items={provinces.map((x) => ({ value: x.id, label: x.name }))} value={provinceId} onValueChange={(val) => setProvinceId(val ?? "")}>
                   <SelectTrigger id="province" className="w-full">
                     <SelectValue placeholder="Chọn Tỉnh / Thành" />
                   </SelectTrigger>

@@ -201,7 +201,7 @@ export function SettingsForm({ shop, provinces }: SettingsFormProps) {
               Khu vực hoạt động
             </h3>
             <FormField id="shop-province" label="Tỉnh/Thành phố cơ sở *" required hint="Tỉnh đặt trụ sở hoặc cơ sở sản xuất">
-              <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
+              <Select items={provinceItems} value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
                 <SelectTrigger id="shop-province" className="w-full">
                   <SelectValue />
                 </SelectTrigger>

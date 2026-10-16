@@ -364,7 +364,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
             </h3>
 
             <FormField id="category" label="Danh mục đặc sản" required>
-              <Select value={categoryId} onValueChange={(val) => val && setCategoryId(val)}>
+              <Select items={categories.map((x) => ({ value: x.id, label: x.name }))} value={categoryId} onValueChange={(val) => val && setCategoryId(val)}>
                 <SelectTrigger id="category" className="w-full">
                   <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
@@ -379,7 +379,7 @@ export function ProductForm({ categories, provinces, initialData }: ProductFormP
             </FormField>
 
             <FormField id="province" label="Tỉnh/Thành xuất xứ" required hint="Nguồn gốc chỉ dẫn địa lý">
-              <Select value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
+              <Select items={provinces.map((x) => ({ value: x.id, label: x.name }))} value={provinceId} onValueChange={(val) => val && setProvinceId(val)}>
                 <SelectTrigger id="province" className="w-full">
                   <SelectValue placeholder="Chọn tỉnh xuất xứ" />
                 </SelectTrigger>
