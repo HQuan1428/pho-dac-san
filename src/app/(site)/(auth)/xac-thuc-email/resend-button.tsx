@@ -21,8 +21,8 @@ export function ResendVerificationButton() {
       )}
 
       {state?.success && (
-        <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100">
-          <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+        <Alert className="border-success/30 bg-success/10 text-success">
+          <CheckCircle2 className="size-4 text-success" />
           <AlertDescription>{state.message}</AlertDescription>
         </Alert>
       )}

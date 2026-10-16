@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { type TokenType } from "@prisma/client";
 import { db } from "@/lib/db";
 import { sendMail } from "@/lib/mail";
+import { escapeHtml } from "@/lib/html";
 
 export function hashToken(rawToken: string): string {
   return crypto.createHash("sha256").update(rawToken).digest("hex");
@@ -81,6 +82,22 @@ export async function checkVerificationRateLimit(userId: string): Promise<boolea
   return recentCount < 3;
 }
 
+export async function checkPasswordResetRateLimit(userIdOrEmail: string): Promise<boolean> {
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+  const recentCount = await db.authToken.count({
+    where: {
+      OR: [
+        { userId: userIdOrEmail },
+        { user: { email: userIdOrEmail.toLowerCase() } },
+      ],
+      type: "RESET_PASSWORD",
+      createdAt: { gte: oneHourAgo },
+    },
+  });
+
+  return recentCount < 3;
+}
+
 export async function sendVerificationEmail(user: { id: string; email: string; name: string }) {
   const canSend = await checkVerificationRateLimit(user.id);
   if (!canSend) {
@@ -94,7 +111,7 @@ export async function sendVerificationEmail(user: { id: string; email: string; n
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #047857; margin-bottom: 16px;">Xác thực tài khoản Phố Đặc Sản</h2>
-      <p>Xin chào <strong>${user.name}</strong>,</p>
+      <p>Xin chào <strong>${escapeHtml(user.name)}</strong>,</p>
       <p>Cảm ơn bạn đã đăng ký tài khoản tại Phố Đặc Sản. Vui lòng bấm vào nút bên dưới để xác thực địa chỉ email của bạn:</p>
       <div style="margin: 24px 0;">
         <a href="${verifyUrl}" style="background-color: #059669; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">
@@ -113,6 +130,11 @@ export async function sendVerificationEmail(user: { id: string; email: string; n
 }
 
 export async function sendPasswordResetEmail(user: { id: string; email: string; name: string }) {
+  const canSend = await checkPasswordResetRateLimit(user.id);
+  if (!canSend) {
+    return { success: false, error: "Bạn đã yêu cầu gửi quá 3 lần trong 1 giờ. Vui lòng thử lại sau." };
+  }
+
   const { rawToken } = await createAuthToken(user.id, "RESET_PASSWORD", 1);
   const baseUrl = process.env.APP_URL || "http://localhost:3000";
   const resetUrl = `${baseUrl}/dat-lai-mat-khau?token=${rawToken}`;
@@ -120,7 +142,7 @@ export async function sendPasswordResetEmail(user: { id: string; email: string; 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #047857; margin-bottom: 16px;">Đặt lại mật khẩu - Phố Đặc Sản</h2>
-      <p>Xin chào <strong>${user.name}</strong>,</p>
+      <p>Xin chào <strong>${escapeHtml(user.name)}</strong>,</p>
       <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại Phố Đặc Sản. Vui lòng bấm vào nút bên dưới để tạo mật khẩu mới:</p>
       <div style="margin: 24px 0;">
         <a href="${resetUrl}" style="background-color: #059669; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">

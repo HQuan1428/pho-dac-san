@@ -38,7 +38,7 @@ export default async function VerifyEmailPage(props: {
       <CardHeader className="space-y-2">
         <div className="mx-auto flex size-12 items-center justify-center rounded-full">
           {isSuccess ? (
-            <div className="flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+            <div className="flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
               <CheckCircle2 className="size-6" />
             </div>
           ) : (

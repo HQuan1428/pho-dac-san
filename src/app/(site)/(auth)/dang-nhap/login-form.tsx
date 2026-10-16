@@ -34,8 +34,8 @@ export function LoginForm({
         <input type="hidden" name="callbackUrl" value={callbackUrl || ""} />
         <CardContent className="space-y-4">
           {resetSuccess && (
-            <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100">
-              <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+            <Alert className="border-success/30 bg-success/10 text-success">
+              <CheckCircle2 className="size-4 text-success" />
               <AlertDescription>
                 Đặt lại mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới của bạn.
               </AlertDescription>

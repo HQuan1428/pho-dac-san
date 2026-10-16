@@ -8,12 +8,28 @@ import { signIn } from "@/auth";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/server/access";
 import {
+  checkPasswordResetRateLimit,
   consumeAuthToken,
   invalidateOtherTokens,
   sendPasswordResetEmail,
   sendVerificationEmail,
   verifyAuthToken,
 } from "@/server/auth-tokens";
+
+// ponytail: in-memory failed sign-in attempts per email are tracked per-process.
+const failedLoginAttempts = new Map<string, number[]>();
+const FAILED_LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const MAX_FAILED_LOGIN_ATTEMPTS = 10;
+
+export function isValidCallbackUrl(cb?: string | null): cb is string {
+  if (!cb || typeof cb !== "string") return false;
+  if (!cb.startsWith("/") || cb.includes("\\")) return false;
+  try {
+    return new URL(cb, "http://x").origin === "http://x";
+  } catch {
+    return false;
+  }
+}
 
 const vnPhoneRegex = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
@@ -138,7 +154,7 @@ export async function loginAction(
   const raw = {
     email: formData.get("email"),
     password: formData.get("password"),
-    callbackUrl: formData.get("callbackUrl"),
+    callbackUrl: formData.get("callbackUrl") || undefined,
   };
 
   const parsed = loginSchema.safeParse(raw);
@@ -146,25 +162,42 @@ export async function loginAction(
     return { error: "Email hoặc mật khẩu không đúng" };
   }
 
+  const email = parsed.data.email.toLowerCase();
+
+  const now = Date.now();
+  const recentAttempts = (failedLoginAttempts.get(email) ?? []).filter(
+    (timestamp) => now - timestamp < FAILED_LOGIN_WINDOW_MS
+  );
+  failedLoginAttempts.set(email, recentAttempts);
+
+  if (recentAttempts.length >= MAX_FAILED_LOGIN_ATTEMPTS) {
+    return {
+      error: "Quá nhiều lần đăng nhập không thành công. Vui lòng thử lại sau 15 phút.",
+    };
+  }
+
   let redirectTo = "/tai-khoan";
-  if (
-    parsed.data.callbackUrl &&
-    parsed.data.callbackUrl.startsWith("/") &&
-    !parsed.data.callbackUrl.startsWith("//")
-  ) {
+  if (isValidCallbackUrl(parsed.data.callbackUrl)) {
     redirectTo = parsed.data.callbackUrl;
   }
 
   try {
     await signIn("credentials", {
-      email: parsed.data.email.toLowerCase(),
+      email,
       password: parsed.data.password,
       redirectTo,
     });
+    failedLoginAttempts.delete(email);
   } catch (err) {
     if (err instanceof AuthError) {
+      const currentAttempts = (failedLoginAttempts.get(email) ?? []).filter(
+        (timestamp) => Date.now() - timestamp < FAILED_LOGIN_WINDOW_MS
+      );
+      currentAttempts.push(Date.now());
+      failedLoginAttempts.set(email, currentAttempts);
       return { error: "Email hoặc mật khẩu không đúng" };
     }
+    failedLoginAttempts.delete(email);
     throw err;
   }
 
@@ -193,17 +226,27 @@ export async function forgotPasswordAction(
   }
 
   const email = parsed.data.email.toLowerCase();
+  const canSend = await checkPasswordResetRateLimit(email);
+  if (!canSend) {
+    return {
+      error: "Bạn đã yêu cầu gửi quá 3 lần trong 1 giờ. Vui lòng thử lại sau.",
+    };
+  }
+
   const user = await db.user.findUnique({
     where: { email },
   });
 
   if (user && user.status !== "LOCKED") {
     try {
-      await sendPasswordResetEmail({
+      const res = await sendPasswordResetEmail({
         id: user.id,
         email: user.email,
         name: user.name,
       });
+      if (!res.success && res.error) {
+        return { error: res.error };
+      }
     } catch (err) {
       console.error("Failed to send password reset email:", err);
     }

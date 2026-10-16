@@ -30,8 +30,8 @@ export function ForgotPasswordForm() {
 
       {state?.success ? (
         <CardContent className="space-y-4 pt-2">
-          <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-100">
-            <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+          <Alert className="border-success/30 bg-success/10 text-success">
+            <CheckCircle2 className="size-4 text-success" />
             <AlertDescription className="text-sm leading-relaxed">
               {state.message}
             </AlertDescription>

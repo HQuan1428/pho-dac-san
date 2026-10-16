@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { type Metadata } from "next";
 import { getCurrentUser } from "@/server/access";
+import { isValidCallbackUrl } from "../actions";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -15,12 +16,9 @@ export default async function LoginPage(props: {
   const searchParams = await props.searchParams;
 
   if (user) {
-    const callbackUrl =
-      searchParams.callbackUrl &&
-      searchParams.callbackUrl.startsWith("/") &&
-      !searchParams.callbackUrl.startsWith("//")
-        ? searchParams.callbackUrl
-        : "/tai-khoan";
+    const callbackUrl = isValidCallbackUrl(searchParams.callbackUrl)
+      ? searchParams.callbackUrl
+      : "/tai-khoan";
     redirect(callbackUrl);
   }
 
