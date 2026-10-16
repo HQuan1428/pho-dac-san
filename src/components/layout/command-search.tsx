@@ -163,7 +163,7 @@ export function CommandSearch({
 
   return (
     <>
-      <div className="relative ml-auto hidden w-full max-w-xs sm:block">
+      <div className="relative ml-auto hidden w-full min-w-0 max-w-xs sm:block">
         <button
           type="button"
           onClick={() => setOpen(true)}

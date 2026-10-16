@@ -28,7 +28,7 @@ export function AuthButtons() {
       <Button
         size="sm"
         onClick={() => handleOpen("register")}
-        className="gap-1.5"
+        className="gap-1.5 max-sm:hidden"
       >
         <UserPlus className="size-4" aria-hidden />
         <span>Đăng ký</span>
