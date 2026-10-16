@@ -50,8 +50,12 @@ export function ShopActionButtons({
   const handleApprove = () => {
     startTransition(async () => {
       try {
-        await approveShop(shopId);
-        toast.success(`Đã phê duyệt gian hàng "${shopName}"`);
+        const res = await approveShop(shopId);
+        if (res.success) {
+          toast.success(`Đã phê duyệt gian hàng "${shopName}"`);
+        } else {
+          toast.error(res.error || "Không thể duyệt gian hàng");
+        }
       } catch (err: unknown) {
         toast.error((err as Error)?.message || "Không thể duyệt gian hàng");
       }
@@ -103,8 +107,12 @@ export function ShopActionButtons({
   const handleReactivate = () => {
     startTransition(async () => {
       try {
-        await reactivateShop(shopId);
-        toast.success(`Đã kích hoạt lại gian hàng "${shopName}"`);
+        const res = await reactivateShop(shopId);
+        if (res.success) {
+          toast.success(`Đã kích hoạt lại gian hàng "${shopName}"`);
+        } else {
+          toast.error(res.error || "Lỗi kích hoạt lại");
+        }
       } catch (err: unknown) {
         toast.error((err as Error)?.message || "Lỗi kích hoạt lại");
       }

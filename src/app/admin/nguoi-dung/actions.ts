@@ -11,32 +11,45 @@ export async function lockUser(userId: string) {
     return { success: false, error: "Không thể tự khóa tài khoản của chính mình" };
   }
 
-  const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target) return { success: false, error: "Không tìm thấy người dùng" };
-
-  if (target.role === "ADMIN") {
-    return { success: false, error: "Không thể khóa tài khoản Quản trị viên khác" };
-  }
-
-  await db.user.update({
-    where: { id: userId },
+  const updated = await db.user.updateMany({
+    where: {
+      id: userId,
+      role: "USER",
+      NOT: { id: admin.id },
+    },
     data: { status: "LOCKED" },
   });
+
+  if (updated.count === 0) {
+    const target = await db.user.findUnique({ where: { id: userId } });
+    if (!target) return { success: false, error: "Không tìm thấy người dùng" };
+    if (target.role === "ADMIN") {
+      return { success: false, error: "Không thể khóa tài khoản Quản trị viên khác" };
+    }
+    return { success: false, error: "Không thể khóa người dùng này" };
+  }
 
   revalidatePath("/admin/nguoi-dung");
   return { success: true };
 }
 
 export async function unlockUser(userId: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
-  const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target) return { success: false, error: "Không tìm thấy người dùng" };
-
-  await db.user.update({
-    where: { id: userId },
+  const updated = await db.user.updateMany({
+    where: {
+      id: userId,
+      role: "USER",
+      NOT: { id: admin.id },
+    },
     data: { status: "ACTIVE" },
   });
+
+  if (updated.count === 0) {
+    const target = await db.user.findUnique({ where: { id: userId } });
+    if (!target) return { success: false, error: "Không tìm thấy người dùng" };
+    return { success: false, error: "Không thể mở khóa người dùng này" };
+  }
 
   revalidatePath("/admin/nguoi-dung");
   return { success: true };

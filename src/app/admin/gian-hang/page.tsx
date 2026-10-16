@@ -24,7 +24,7 @@ const statusTabs = [
 
 const statusBadgeConfig: Record<ShopStatus, { label: string; className: string }> = {
   PENDING: { label: "Chờ duyệt", className: "bg-warning/15 text-warning border-warning/30" },
-  ACTIVE: { label: "Hoạt động", className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30" },
+  ACTIVE: { label: "Hoạt động", className: "bg-success/15 text-success border-success/30" },
   REJECTED: { label: "Bị từ chối", className: "bg-destructive/15 text-destructive border-destructive/30" },
   SUSPENDED: { label: "Tạm đình chỉ", className: "bg-muted text-muted-foreground border-border" },
 };
