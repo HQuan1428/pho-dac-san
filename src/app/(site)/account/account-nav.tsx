@@ -20,91 +20,71 @@ export type AccountNavCounts = {
   notifications?: number;
 };
 
+const NAV_ITEMS = [
+  { id: "overview", label: "Tổng quan", icon: LayoutDashboard, href: "/account" },
+  { id: "orders", label: "Đơn hàng", icon: Package, href: "/account?tab=orders" },
+  { id: "wishlist", label: "Yêu thích", icon: Heart, href: "/account?tab=wishlist" },
+  { id: "addresses", label: "Sổ địa chỉ", icon: MapPin, href: "/account?tab=addresses" },
+  { id: "following", label: "Gian hàng", icon: Store, href: "/account?tab=following" },
+  { id: "notifications", label: "Thông báo", icon: Bell, href: "/notifications" },
+];
+
 export function AccountNav({ counts }: { counts?: AccountNavCounts }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "overview";
 
-  const navItems = [
-    {
-      href: "/account",
-      tab: "overview",
-      label: "Tổng quan tài khoản",
-      icon: LayoutDashboard,
-      count: undefined,
-    },
-    {
-      href: "/account?tab=orders",
-      tab: "orders",
-      label: "Đơn hàng của tôi",
-      icon: Package,
-      count: counts?.orders,
-    },
-    {
-      href: "/account?tab=wishlist",
-      tab: "wishlist",
-      label: "Sản phẩm yêu thích",
-      icon: Heart,
-      count: counts?.wishlist,
-    },
-    {
-      href: "/account?tab=following",
-      tab: "following",
-      label: "Gian hàng theo dõi",
-      icon: Store,
-      count: counts?.following,
-    },
-    {
-      href: "/account?tab=addresses",
-      tab: "addresses",
-      label: "Sổ địa chỉ",
-      icon: MapPin,
-      count: counts?.addresses,
-    },
-    {
-      href: "/notifications",
-      tab: null,
-      label: "Thông báo",
-      icon: Bell,
-      count: counts?.notifications,
-    },
-  ];
-
   return (
-    <nav className="flex flex-row gap-1.5 overflow-x-auto pb-2 md:flex-col md:pb-0 scrollbar-none">
-      {navItems.map((item) => {
+    <nav
+      aria-label="Account navigation"
+      className="flex items-center gap-1.5 overflow-x-auto border-b pb-2.5 scrollbar-none w-full min-w-0"
+    >
+      {NAV_ITEMS.map((item) => {
         const Icon = item.icon;
         const isActive =
-          item.tab !== null
-            ? pathname === "/account" && currentTab === item.tab
-            : pathname.startsWith(item.href);
+          item.id === "notifications"
+            ? pathname.startsWith("/notifications")
+            : item.id === "orders"
+              ? pathname.startsWith("/account/orders") || (pathname === "/account" && currentTab === "orders")
+              : pathname === "/account" && currentTab === item.id;
+
+        const count =
+          item.id === "orders"
+            ? counts?.orders
+            : item.id === "wishlist"
+              ? counts?.wishlist
+              : item.id === "following"
+                ? counts?.following
+                : item.id === "addresses"
+                  ? counts?.addresses
+                  : item.id === "notifications"
+                    ? counts?.notifications
+                    : undefined;
 
         return (
           <Link
-            key={item.href}
+            key={item.id}
             href={item.href}
             scroll={false}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm whitespace-nowrap transition-colors",
+              "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer shrink-0",
               isActive
-                ? "bg-muted font-medium text-foreground"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             <Icon className="size-4 shrink-0" aria-hidden />
-            <span className="truncate">{item.label}</span>
-            {typeof item.count === "number" && (
+            <span>{item.label}</span>
+            {typeof count === "number" && count > 0 && (
               <span
                 className={cn(
-                  "ml-auto rounded-full px-2 py-0.5 text-xs font-mono font-medium transition-colors",
+                  "rounded-full px-1.5 py-0.2 text-[11px] font-mono font-medium transition-colors",
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : item.count > 0
-                      ? "bg-muted-foreground/15 text-foreground"
-                      : "text-muted-foreground/60"
+                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    : "bg-muted text-foreground"
                 )}
               >
-                {item.count}
+                {count}
               </span>
             )}
           </Link>
