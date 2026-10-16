@@ -4,7 +4,7 @@ import { Logo } from "./logo";
 const columns = [
   { title: "Khám phá", links: [["Chợ đặc sản", "/cho"], ["Tìm kiếm", "/tim-kiem"], ["Giới thiệu", "/gioi-thieu"]] },
   { title: "Người bán", links: [["Mở gian hàng", "/kenh-ban/dang-ky"], ["Bảng giá", "/#bang-gia"], ["Chính sách người bán", "/chinh-sach/nguoi-ban"]] },
-  { title: "Hỗ trợ", links: [["Liên hệ", "/lien-he"], ["Đổi trả & khiếu nại", "/chinh-sach/doi-tra"], ["Điều khoản", "/chinh-sach/dieu-khoan"], ["Bảo mật", "/chinh-sach/bao-mat"]] },
+  { title: "Hỗ trợ", links: [["Liên hệ", "/lien-he"], ["Đổi trả & khiếu nại", "/chinh-sach/doi-tra"], ["Điều khoản", "/chinh-sach/dieu-khoan"], ["Bảo mật", "/chinh-sach/bao-mat"], ["Nguồn ảnh", "/nguon-anh"]] },
 ];
 
 // Brand marks are drawn inline because lucide-react no longer ships them.
