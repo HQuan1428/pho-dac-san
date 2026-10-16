@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { UserCheck, PackagePlus, PhoneCall } from "lucide-react";
 
 const steps = [
@@ -5,6 +6,9 @@ const steps = [
     step: "01",
     title: "Đăng ký & được duyệt",
     icon: UserCheck,
+    accent: "primary",
+    circleClass: "border-primary text-primary",
+    iconTileClass: "bg-primary/10 text-primary",
     description:
       "Tạo tài khoản và điền thông tin gian hàng, đính kèm nguồn gốc tỉnh thành. Ban quản trị sẽ xác thực và phê duyệt trong vòng 24 giờ làm việc.",
   },
@@ -12,6 +16,9 @@ const steps = [
     step: "02",
     title: "Đăng sản phẩm",
     icon: PackagePlus,
+    accent: "turmeric",
+    circleClass: "border-turmeric text-turmeric",
+    iconTileClass: "bg-turmeric/10 text-turmeric",
     description:
       "Tải ảnh sản phẩm thực tế, nhập mô tả xuất xứ, thiết lập các biến thể đóng gói (khối lượng, hộp quà) và giá bán tương ứng.",
   },
@@ -19,6 +26,9 @@ const steps = [
     step: "03",
     title: "Nhận đơn, gọi điện chốt",
     icon: PhoneCall,
+    accent: "lotus",
+    circleClass: "border-lotus text-lotus",
+    iconTileClass: "bg-lotus/10 text-lotus",
     description:
       "Khi có đơn mới, hệ thống gửi thông báo ngay lập tức. Bạn gọi điện xác nhận chi tiết đơn hàng, thời gian giao hàng và tiến hành gửi hàng cho khách.",
   },
@@ -41,7 +51,7 @@ export function HowItWorks() {
         <div className="relative mt-12 grid gap-6 md:grid-cols-3">
           {/* Connecting line on desktop */}
           <div
-            className="reveal-x hidden md:block absolute top-11 left-[15%] right-[15%] h-0.5 bg-border z-0"
+            className="reveal-x hidden md:block absolute top-11 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-primary via-turmeric to-lotus z-0"
             aria-hidden="true"
           />
 
@@ -50,14 +60,20 @@ export function HowItWorks() {
             return (
               <div
                 key={item.step}
+                data-spotlight
+                style={{ "--spot": `var(--${item.accent})` } as CSSProperties}
                 className="reveal motion-safe:transition-transform motion-safe:hover:-translate-y-0.5 relative z-10 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="flex size-10 items-center justify-center rounded-full border-2 border-primary bg-background font-mono text-sm font-bold text-primary shadow-xs">
+                    <div
+                      className={`flex size-10 items-center justify-center rounded-full border-2 bg-background font-mono text-sm font-bold shadow-xs ${item.circleClass}`}
+                    >
                       {item.step}
                     </div>
-                    <div className="flex size-9 items-center justify-center rounded-md bg-muted text-foreground">
+                    <div
+                      className={`flex size-9 items-center justify-center rounded-md ${item.iconTileClass}`}
+                    >
                       <Icon className="size-4" />
                     </div>
                   </div>
@@ -75,3 +91,4 @@ export function HowItWorks() {
     </section>
   );
 }
+
