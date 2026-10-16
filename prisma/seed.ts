@@ -66,17 +66,56 @@ async function main() {
   const shops = [
     {
       ownerId: users.seller, name: "Nhà Mắm Sầm Sơn", provinceId: province["Thanh Hóa"],
+      logo: "/images/shops/nha-mam-sam-son-logo.webp",
+      banner: "/images/shops/nha-mam-sam-son-banner.webp",
       products: [
-        { name: "Mắm tôm Sầm Sơn hũ thủy tinh", cat: "Gia vị & nước chấm", variants: [["Hũ 250g", 45000], ["Hũ 500g", 85000]] },
-        { name: "Mực khô Sầm Sơn loại 1", cat: "Đồ khô & hải sản khô", variants: [["250g", 320000], ["500g", 620000]] },
-        { name: "Nem chua Thanh Hóa", cat: "Quà biếu", variants: [["Chục 10 cái", 50000], ["Hộp 50 cái", 230000]] },
+        {
+          name: "Mắm tôm Sầm Sơn hũ thủy tinh", cat: "Gia vị & nước chấm",
+          images: [
+            "/images/products/mam-tom-sam-son-1.webp",
+            "/images/products/mam-tom-sam-son-2.webp",
+          ],
+          variants: [["Hũ 250g", 45000], ["Hũ 500g", 85000]],
+        },
+        {
+          name: "Mực khô Sầm Sơn loại 1", cat: "Đồ khô & hải sản khô",
+          images: [
+            "/images/products/muc-kho-sam-son-1.webp",
+            "/images/products/muc-kho-sam-son-2.webp",
+          ],
+          variants: [["250g", 320000], ["500g", 620000]],
+        },
+        {
+          name: "Nem chua Thanh Hóa", cat: "Quà biếu",
+          images: [
+            "/images/products/nem-chua-thanh-hoa-1.webp",
+            "/images/products/nem-chua-thanh-hoa-2.webp",
+          ],
+          variants: [["Chục 10 cái", 50000], ["Hộp 50 cái", 230000]],
+        },
       ],
     },
     {
       ownerId: users.seller2, name: "Trà Tân Cương Xanh", provinceId: province["Thái Nguyên"],
+      logo: "/images/shops/tra-tan-cuong-xanh-logo.webp",
+      banner: "/images/shops/tra-tan-cuong-xanh-banner.webp",
       products: [
-        { name: "Chè Tân Cương đặc biệt", cat: "Trà & cà phê", variants: [["200g", 140000], ["500g", 320000]] },
-        { name: "Chè búp Thái Nguyên hộp quà", cat: "Quà biếu", variants: [["Hộp 2 túi", 450000]] },
+        {
+          name: "Chè Tân Cương đặc biệt", cat: "Trà & cà phê",
+          images: [
+            "/images/products/che-tan-cuong-1.webp",
+            "/images/products/che-tan-cuong-2.webp",
+          ],
+          variants: [["200g", 140000], ["500g", 320000]],
+        },
+        {
+          name: "Chè búp Thái Nguyên hộp quà", cat: "Quà biếu",
+          images: [
+            "/images/products/che-bup-thai-nguyen-hop-qua-1.webp",
+            "/images/products/che-bup-thai-nguyen-hop-qua-2.webp",
+          ],
+          variants: [["Hộp 2 túi", 450000]],
+        },
       ],
     },
   ];
@@ -84,10 +123,11 @@ async function main() {
   for (const s of shops) {
     const shop = await db.shop.upsert({
       where: { slug: slugify(s.name) },
-      update: {},
+      update: { logo: s.logo, banner: s.banner },
       create: {
         ownerId: s.ownerId, name: s.name, slug: slugify(s.name), provinceId: s.provinceId,
         phone: "0912345678", status: "ACTIVE", description: `Đặc sản chính gốc từ ${s.name}.`,
+        logo: s.logo, banner: s.banner,
       },
     });
     for (const p of s.products) {
@@ -97,7 +137,7 @@ async function main() {
       await db.product.create({
         data: {
           shopId: shop.id, categoryId: category[p.cat], provinceId: s.provinceId, name: p.name, slug,
-          description: `${p.name} — đặc sản chính gốc, đóng gói cẩn thận.`, status: "ACTIVE", images: [],
+          description: `${p.name} — đặc sản chính gốc, đóng gói cẩn thận.`, status: "ACTIVE", images: p.images,
           variants: { create: p.variants.map(([name, price], i) => ({ name: name as string, price: price as number, stock: 100, sortOrder: i })) },
         },
       });
@@ -113,10 +153,15 @@ async function main() {
 
   await db.shop.upsert({
     where: { slug: "dac-san-cho-duyet" },
-    update: {},
+    update: {
+      logo: "/images/shops/dac-san-cho-duyet-logo.webp",
+      banner: "/images/shops/dac-san-cho-duyet-banner.webp",
+    },
     create: {
       ownerId: users.customer, name: "Đặc Sản Chờ Duyệt", slug: "dac-san-cho-duyet",
       provinceId: province["Huế"], phone: "0987654321", status: "PENDING",
+      logo: "/images/shops/dac-san-cho-duyet-logo.webp",
+      banner: "/images/shops/dac-san-cho-duyet-banner.webp",
     },
   });
 
