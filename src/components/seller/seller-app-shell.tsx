@@ -10,13 +10,13 @@ import {
   Ticket,
   Users,
   Settings,
-  Store,
   ExternalLink,
   PanelLeft,
   Menu,
   Search,
   LogOut,
 } from "lucide-react";
+import { BrandMark } from "@/components/layout/logo";
 import type { ShopRole } from "@/server/access";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -147,9 +147,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
                     onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
                   >
-                    <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                      <Store className="size-4" />
-                    </span>
+                    <BrandMark className="size-7" />
                     <span className="text-base font-bold">Kênh Người Bán</span>
                   </Link>
 
@@ -227,9 +225,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
           {/* Header */}
           <div className={cn("flex h-14 items-center border-b px-4", collapsed ? "justify-center px-2" : "justify-between")}>
             <Link href="/kenh-ban" className="flex items-center gap-2 overflow-hidden font-semibold tracking-tight text-foreground">
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <Store className="size-4" />
-              </span>
+              <BrandMark className="size-7 shrink-0" />
               {!collapsed && (
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold leading-tight">Kênh Người Bán</p>

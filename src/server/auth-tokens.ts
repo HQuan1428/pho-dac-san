@@ -110,16 +110,16 @@ export async function sendVerificationEmail(user: { id: string; email: string; n
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #047857; margin-bottom: 16px;">Xác thực tài khoản Phố Đặc Sản</h2>
+      <h2 style="color: #0b6b55; margin-bottom: 16px;">Xác thực tài khoản Phố Đặc Sản</h2>
       <p>Xin chào <strong>${escapeHtml(user.name)}</strong>,</p>
       <p>Cảm ơn bạn đã đăng ký tài khoản tại Phố Đặc Sản. Vui lòng bấm vào nút bên dưới để xác thực địa chỉ email của bạn:</p>
       <div style="margin: 24px 0;">
-        <a href="${verifyUrl}" style="background-color: #059669; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">
+        <a href="${verifyUrl}" style="background-color: #0b6b55; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">
           Xác thực email
         </a>
       </div>
       <p style="color: #6b7280; font-size: 14px;">Liên kết này có hiệu lực trong vòng 24 giờ.</p>
-      <p style="color: #6b7280; font-size: 14px;">Nếu nút trên không hoạt động, bạn có thể sao chép liên kết này vào trình duyệt:<br/><a href="${verifyUrl}" style="color: #059669;">${verifyUrl}</a></p>
+      <p style="color: #6b7280; font-size: 14px;">Nếu nút trên không hoạt động, bạn có thể sao chép liên kết này vào trình duyệt:<br/><a href="${verifyUrl}" style="color: #0b6b55;">${verifyUrl}</a></p>
       <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
       <p style="color: #9ca3af; font-size: 12px;">Nếu bạn không tạo tài khoản này, vui lòng bỏ qua email này.</p>
     </div>
@@ -141,16 +141,16 @@ export async function sendPasswordResetEmail(user: { id: string; email: string; 
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #047857; margin-bottom: 16px;">Đặt lại mật khẩu - Phố Đặc Sản</h2>
+      <h2 style="color: #0b6b55; margin-bottom: 16px;">Đặt lại mật khẩu - Phố Đặc Sản</h2>
       <p>Xin chào <strong>${escapeHtml(user.name)}</strong>,</p>
       <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại Phố Đặc Sản. Vui lòng bấm vào nút bên dưới để tạo mật khẩu mới:</p>
       <div style="margin: 24px 0;">
-        <a href="${resetUrl}" style="background-color: #059669; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">
+        <a href="${resetUrl}" style="background-color: #0b6b55; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500; display: inline-block;">
           Đặt lại mật khẩu
         </a>
       </div>
       <p style="color: #6b7280; font-size: 14px;">Liên kết này có hiệu lực trong vòng 1 giờ.</p>
-      <p style="color: #6b7280; font-size: 14px;">Nếu nút trên không hoạt động, bạn có thể sao chép liên kết này vào trình duyệt:<br/><a href="${resetUrl}" style="color: #059669;">${resetUrl}</a></p>
+      <p style="color: #6b7280; font-size: 14px;">Nếu nút trên không hoạt động, bạn có thể sao chép liên kết này vào trình duyệt:<br/><a href="${resetUrl}" style="color: #0b6b55;">${resetUrl}</a></p>
       <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
       <p style="color: #9ca3af; font-size: 12px;">Nếu bạn không yêu cầu đặt lại mật khẩu, bạn có thể an tâm bỏ qua email này. Mật khẩu hiện tại của bạn vẫn được bảo mật.</p>
     </div>

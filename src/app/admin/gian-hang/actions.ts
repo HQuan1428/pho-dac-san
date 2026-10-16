@@ -50,7 +50,7 @@ export async function approveShop(shopId: string) {
           <h2>Chúc mừng ${safeOwnerName}!</h2>
           <p>Hồ sơ gian hàng <strong>${safeShopName}</strong> của bạn đã được Ban quản trị Phố Đặc Sản phê duyệt thành công.</p>
           <p>Bạn có thể đăng nhập vào Kênh Người Bán để bắt đầu đăng sản phẩm và tiếp nhận đơn hàng.</p>
-          <p><a href="${process.env.NEXTAUTH_URL || "http://localhost:3001"}/kenh-ban" style="display:inline-block;padding:10px 20px;background:#10b981;color:#fff;text-decoration:none;border-radius:6px;">Truy cập Kênh Người Bán</a></p>
+          <p><a href="${process.env.NEXTAUTH_URL || "http://localhost:3001"}/kenh-ban" style="display:inline-block;padding:10px 20px;background:#0b6b55;color:#fff;text-decoration:none;border-radius:6px;">Truy cập Kênh Người Bán</a></p>
         </div>`
       );
     } catch (err) {
