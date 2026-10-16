@@ -18,7 +18,7 @@ export function mapProductToCardData(product: ProductWithDetails): ProductCardDa
     : null;
 
   return {
-    href: `/san-pham/${product.shop.slug}/${product.slug}`,
+    href: `/products/${product.shop.slug}/${product.slug}`,
     name: product.name,
     image: getProductImageUrl(product.images, product.province.name),
     price: minVariant ? minVariant.price : 0,
@@ -44,7 +44,7 @@ export type ShopWithCounts = Prisma.ShopGetPayload<{
 
 export function mapShopToCardData(shop: ShopWithCounts): ShopCardData {
   return {
-    href: `/gian-hang/${shop.slug}`,
+    href: `/shops/${shop.slug}`,
     name: shop.name,
     logo: shop.logo ?? undefined,
     province: shop.province.name,

@@ -78,42 +78,42 @@ const statusBadgeConfig = {
 };
 
 const navItems = [
-  { title: "Tổng quan", href: "/kenh-ban", icon: LayoutDashboard, exact: true, ownerOnly: false },
-  { title: "Sản phẩm", href: "/kenh-ban/san-pham", icon: PackageOpen, exact: false, ownerOnly: false },
-  { title: "Đơn hàng", href: "/kenh-ban/don-hang", icon: ShoppingBag, exact: false, ownerOnly: false },
-  { title: "Khuyến mãi", href: "/kenh-ban/khuyen-mai", icon: Ticket, exact: false, ownerOnly: true },
-  { title: "Nhân viên", href: "/kenh-ban/nhan-vien", icon: Users, exact: false, ownerOnly: true },
-  { title: "Cài đặt", href: "/kenh-ban/cai-dat", icon: Settings, exact: false, ownerOnly: true },
+  { title: "Tổng quan", href: "/seller", icon: LayoutDashboard, exact: true, ownerOnly: false },
+  { title: "Sản phẩm", href: "/seller/products", icon: PackageOpen, exact: false, ownerOnly: false },
+  { title: "Đơn hàng", href: "/seller/orders", icon: ShoppingBag, exact: false, ownerOnly: false },
+  { title: "Khuyến mãi", href: "/seller/vouchers", icon: Ticket, exact: false, ownerOnly: true },
+  { title: "Nhân viên", href: "/seller/staff", icon: Users, exact: false, ownerOnly: true },
+  { title: "Cài đặt", href: "/seller/settings", icon: Settings, exact: false, ownerOnly: true },
 ];
 
 function getBreadcrumbs(pathname: string) {
-  const crumbs: { label: string; href?: string }[] = [{ label: "Kênh Người Bán", href: "/kenh-ban" }];
+  const crumbs: { label: string; href?: string }[] = [{ label: "Kênh Người Bán", href: "/seller" }];
 
-  if (pathname === "/kenh-ban") {
+  if (pathname === "/seller") {
     crumbs.push({ label: "Tổng quan" });
-  } else if (pathname.startsWith("/kenh-ban/san-pham")) {
-    if (pathname === "/kenh-ban/san-pham/moi") {
-      crumbs.push({ label: "Sản phẩm", href: "/kenh-ban/san-pham" });
+  } else if (pathname.startsWith("/seller/products")) {
+    if (pathname === "/seller/products/new") {
+      crumbs.push({ label: "Sản phẩm", href: "/seller/products" });
       crumbs.push({ label: "Thêm sản phẩm" });
-    } else if (pathname === "/kenh-ban/san-pham") {
+    } else if (pathname === "/seller/products") {
       crumbs.push({ label: "Sản phẩm" });
     } else {
-      crumbs.push({ label: "Sản phẩm", href: "/kenh-ban/san-pham" });
+      crumbs.push({ label: "Sản phẩm", href: "/seller/products" });
       crumbs.push({ label: "Chỉnh sửa" });
     }
-  } else if (pathname.startsWith("/kenh-ban/don-hang")) {
-    if (pathname === "/kenh-ban/don-hang") {
+  } else if (pathname.startsWith("/seller/orders")) {
+    if (pathname === "/seller/orders") {
       crumbs.push({ label: "Đơn hàng" });
     } else {
-      crumbs.push({ label: "Đơn hàng", href: "/kenh-ban/don-hang" });
+      crumbs.push({ label: "Đơn hàng", href: "/seller/orders" });
       const code = pathname.split("/").pop();
       crumbs.push({ label: code ? `#${code}` : "Chi tiết" });
     }
-  } else if (pathname.startsWith("/kenh-ban/khuyen-mai")) {
+  } else if (pathname.startsWith("/seller/vouchers")) {
     crumbs.push({ label: "Khuyến mãi & Mã giảm giá" });
-  } else if (pathname.startsWith("/kenh-ban/nhan-vien")) {
+  } else if (pathname.startsWith("/seller/staff")) {
     crumbs.push({ label: "Nhân viên" });
-  } else if (pathname.startsWith("/kenh-ban/cai-dat")) {
+  } else if (pathname.startsWith("/seller/settings")) {
     crumbs.push({ label: "Cài đặt gian hàng" });
   }
 
@@ -143,7 +143,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
               <div className="space-y-6">
                 <div className="px-4">
                   <Link
-                    href="/kenh-ban"
+                    href="/seller"
                     onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-2 font-semibold tracking-tight text-foreground"
                   >
@@ -224,7 +224,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
         >
           {/* Header */}
           <div className={cn("flex h-14 items-center border-b px-4", collapsed ? "justify-center px-2" : "justify-between")}>
-            <Link href="/kenh-ban" className="flex items-center gap-2 overflow-hidden font-semibold tracking-tight text-foreground">
+            <Link href="/seller" className="flex items-center gap-2 overflow-hidden font-semibold tracking-tight text-foreground">
               <BrandMark className="size-7 shrink-0" />
               {!collapsed && (
                 <div className="min-w-0">
@@ -400,7 +400,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
 
             {/* Right side: Search and User dropdown */}
             <div className="flex items-center gap-3">
-              <form method="GET" action="/kenh-ban/san-pham" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
+              <form method="GET" action="/seller/products" className="relative hidden sm:block w-48 md:w-64 lg:w-72">
                 <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none" />
                 <input
                   type="search"
@@ -439,7 +439,7 @@ export function SellerAppShell({ shop, role, user, children }: SellerAppShellPro
                       </Badge>
                     </div>
                   </div>
-                  <DropdownMenuItem render={<Link href="/kenh-ban/cai-dat" />}>
+                  <DropdownMenuItem render={<Link href="/seller/settings" />}>
                     <Settings className="size-4 mr-2" />
                     Cài đặt gian hàng
                   </DropdownMenuItem>

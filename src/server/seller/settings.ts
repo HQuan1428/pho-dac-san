@@ -94,8 +94,8 @@ export async function updateShopSettingsAction(data: ShopSettingsFormValues) {
       },
     });
 
-    revalidatePath("/kenh-ban/cai-dat");
-    revalidatePath("/kenh-ban");
+    revalidatePath("/seller/settings");
+    revalidatePath("/seller");
     return { success: true };
   } catch (err: unknown) {
     console.error("updateShopSettingsAction error:", err);

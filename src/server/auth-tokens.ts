@@ -106,7 +106,7 @@ export async function sendVerificationEmail(user: { id: string; email: string; n
 
   const { rawToken } = await createAuthToken(user.id, "VERIFY_EMAIL", 24);
   const baseUrl = process.env.APP_URL || "http://localhost:3000";
-  const verifyUrl = `${baseUrl}/xac-thuc-email?token=${rawToken}`;
+  const verifyUrl = `${baseUrl}/verify-email?token=${rawToken}`;
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -137,7 +137,7 @@ export async function sendPasswordResetEmail(user: { id: string; email: string; 
 
   const { rawToken } = await createAuthToken(user.id, "RESET_PASSWORD", 1);
   const baseUrl = process.env.APP_URL || "http://localhost:3000";
-  const resetUrl = `${baseUrl}/dat-lai-mat-khau?token=${rawToken}`;
+  const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #1f2937; max-width: 600px; margin: 0 auto; padding: 20px;">

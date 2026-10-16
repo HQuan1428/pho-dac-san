@@ -86,7 +86,7 @@ export async function createVoucherAction(data: VoucherFormValues) {
       },
     });
 
-    revalidatePath("/kenh-ban/khuyen-mai");
+    revalidatePath("/seller/vouchers");
     return { success: true };
   } catch (err: unknown) {
     console.error("createVoucherAction error:", err);
@@ -137,7 +137,7 @@ export async function updateVoucherAction(id: string, data: VoucherFormValues) {
       },
     });
 
-    revalidatePath("/kenh-ban/khuyen-mai");
+    revalidatePath("/seller/vouchers");
     return { success: true };
   } catch (err: unknown) {
     console.error("updateVoucherAction error:", err);
@@ -154,7 +154,7 @@ export async function toggleVoucherActiveAction(id: string, active: boolean) {
       data: { active },
     });
 
-    revalidatePath("/kenh-ban/khuyen-mai");
+    revalidatePath("/seller/vouchers");
     return { success: true };
   } catch (err: unknown) {
     console.error("toggleVoucherActiveAction error:", err);
@@ -176,7 +176,7 @@ export async function deleteVoucherAction(id: string) {
 
   try {
     await db.voucher.delete({ where: { id } });
-    revalidatePath("/kenh-ban/khuyen-mai");
+    revalidatePath("/seller/vouchers");
     return { success: true };
   } catch (err: unknown) {
     console.error("deleteVoucherAction error:", err);

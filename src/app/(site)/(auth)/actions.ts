@@ -120,7 +120,7 @@ export async function registerAction(
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/tai-khoan?verify=pending",
+      redirectTo: "/account?verify=pending",
     });
   } catch (err) {
     if (err instanceof AuthError) {
@@ -167,7 +167,7 @@ export async function loginAction(
     };
   }
 
-  let redirectTo = "/tai-khoan";
+  let redirectTo = "/account";
   if (isValidCallbackUrl(parsed.data.callbackUrl)) {
     redirectTo = parsed.data.callbackUrl;
   }
@@ -305,7 +305,7 @@ export async function resetPasswordAction(
   await consumeAuthToken(tokenRecord.id);
   await invalidateOtherTokens(tokenRecord.userId, "RESET_PASSWORD", tokenRecord.id);
 
-  redirect("/dang-nhap?reset=success");
+  redirect("/login?reset=success");
 }
 
 export async function resendVerificationAction(): Promise<ActionState> {

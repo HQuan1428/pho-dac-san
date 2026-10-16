@@ -46,42 +46,42 @@ export function SellerNavContent({ shop, role, user, onNavigate }: SellerNavProp
   const navItems = [
     {
       title: "Tổng quan",
-      href: "/kenh-ban",
+      href: "/seller",
       icon: LayoutDashboard,
       ownerOnly: false,
       exact: true,
     },
     {
       title: "Sản phẩm",
-      href: "/kenh-ban/san-pham",
+      href: "/seller/products",
       icon: PackageOpen,
       ownerOnly: false,
       exact: false,
     },
     {
       title: "Đơn hàng",
-      href: "/kenh-ban/don-hang",
+      href: "/seller/orders",
       icon: ShoppingBag,
       ownerOnly: false,
       exact: false,
     },
     {
       title: "Khuyến mãi",
-      href: "/kenh-ban/khuyen-mai",
+      href: "/seller/vouchers",
       icon: Ticket,
       ownerOnly: true,
       exact: false,
     },
     {
       title: "Nhân viên",
-      href: "/kenh-ban/nhan-vien",
+      href: "/seller/staff",
       icon: Users,
       ownerOnly: true,
       exact: false,
     },
     {
       title: "Cài đặt",
-      href: "/kenh-ban/cai-dat",
+      href: "/seller/settings",
       icon: Settings,
       ownerOnly: true,
       exact: false,
@@ -97,7 +97,7 @@ export function SellerNavContent({ shop, role, user, onNavigate }: SellerNavProp
         {/* Shop identity */}
         <div className="px-4">
           <Link
-            href="/kenh-ban"
+            href="/seller"
             onClick={onNavigate}
             className="flex items-center gap-2 font-semibold tracking-tight text-foreground hover:opacity-90"
           >

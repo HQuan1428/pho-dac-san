@@ -156,7 +156,7 @@ export function SettingsForm({ shop, provinces }: SettingsFormProps) {
               <Button
                 variant="outline"
                 size="xs"
-                render={<Link href="/#bang-gia" target="_blank" />}
+                render={<Link href="/#pricing" target="_blank" />}
               >
                 <ExternalLink className="size-3 mr-1.5" />
                 Xem bảng giá & quyền lợi các gói

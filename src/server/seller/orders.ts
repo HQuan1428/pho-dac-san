@@ -239,9 +239,9 @@ export async function updateOrderStatusAction({
       reason,
     });
 
-    revalidatePath(`/kenh-ban/don-hang/${code}`);
-    revalidatePath("/kenh-ban/don-hang");
-    revalidatePath("/kenh-ban");
+    revalidatePath(`/seller/orders/${code}`);
+    revalidatePath("/seller/orders");
+    revalidatePath("/seller");
 
     return { success: true };
   } catch (err: unknown) {
@@ -287,7 +287,7 @@ export async function addCallNoteAction({
       },
     });
 
-    revalidatePath(`/kenh-ban/don-hang/${code}`);
+    revalidatePath(`/seller/orders/${code}`);
     return { success: true };
   } catch (err: unknown) {
     console.error("addCallNoteAction error:", err);
@@ -339,7 +339,7 @@ export async function toggleCustomerFlagAction({
       });
     }
 
-    revalidatePath("/kenh-ban/don-hang");
+    revalidatePath("/seller/orders");
     return { success: true };
   } catch (err: unknown) {
     console.error("toggleCustomerFlagAction error:", err);
@@ -394,7 +394,7 @@ async function notifyCustomer({
           userId: customerId,
           title: content.title,
           body: content.body,
-          link: `/tai-khoan/don-hang`,
+          link: `/account/orders`,
         },
       });
     }

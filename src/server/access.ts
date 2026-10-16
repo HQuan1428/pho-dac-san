@@ -29,7 +29,7 @@ export const getCurrentUser = cache(async () => {
 
 export async function requireUser(callbackUrl = "/") {
   const user = await getCurrentUser();
-  if (!user) redirect(`/dang-nhap?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  if (!user) redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   return user;
 }
 
@@ -44,7 +44,7 @@ export type ShopRole = "OWNER" | "STAFF";
 // The shop the current user works on, as owner or staff. Staff may manage
 // orders and products only; pass ownerOnly for shop settings, staff and vouchers.
 export async function requireShop({ ownerOnly = false } = {}) {
-  const user = await requireUser("/kenh-ban");
+  const user = await requireUser("/seller");
   const owned = await db.shop.findUnique({ where: { ownerId: user.id } });
   if (owned) return { user, shop: owned, role: "OWNER" as ShopRole };
   if (ownerOnly) notFound();
@@ -53,5 +53,5 @@ export async function requireShop({ ownerOnly = false } = {}) {
     include: { shop: true },
   });
   if (membership) return { user, shop: membership.shop, role: "STAFF" as ShopRole };
-  redirect("/kenh-ban/dang-ky");
+  redirect("/seller/register");
 }

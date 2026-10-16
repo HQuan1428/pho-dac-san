@@ -199,8 +199,8 @@ export async function createProductAction(data: ProductFormValues) {
       });
     });
 
-    revalidatePath("/kenh-ban/san-pham");
-    revalidatePath("/kenh-ban");
+    revalidatePath("/seller/products");
+    revalidatePath("/seller");
     return { success: true, productId: product.id };
   } catch (err: unknown) {
     console.error("createProductAction error:", err);
@@ -317,9 +317,9 @@ export async function updateProductAction(id: string, data: ProductFormValues) {
       });
     });
 
-    revalidatePath("/kenh-ban/san-pham");
-    revalidatePath(`/kenh-ban/san-pham/${id}`);
-    revalidatePath("/kenh-ban");
+    revalidatePath("/seller/products");
+    revalidatePath(`/seller/products/${id}`);
+    revalidatePath("/seller");
     return { success: true };
   } catch (err: unknown) {
     console.error("updateProductAction error:", err);
@@ -349,8 +349,8 @@ export async function deleteProductAction(id: string) {
 
   try {
     await db.product.delete({ where: { id } });
-    revalidatePath("/kenh-ban/san-pham");
-    revalidatePath("/kenh-ban");
+    revalidatePath("/seller/products");
+    revalidatePath("/seller");
     return { success: true };
   } catch (err: unknown) {
     console.error("deleteProductAction error:", err);

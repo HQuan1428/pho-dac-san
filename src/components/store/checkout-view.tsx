@@ -156,7 +156,7 @@ export function CheckoutView({
         <p className="mt-1 text-sm text-muted-foreground">
           Vui lòng thêm sản phẩm vào giỏ trước khi tiến hành đặt hàng.
         </p>
-        <Button className="mt-6 gap-2" render={<Link href="/cho" />}>
+        <Button className="mt-6 gap-2" render={<Link href="/market" />}>
           <span>Khám phá chợ đặc sản</span>
         </Button>
       </div>
@@ -268,7 +268,7 @@ export function CheckoutView({
         } catch {}
 
         toast.success("Đặt hàng thành công!");
-        router.push(`/dat-hang/thanh-cong?checkout=${res.checkoutId}`);
+        router.push(`/checkout/success?checkout=${res.checkoutId}`);
       }
     });
   };
@@ -533,7 +533,7 @@ export function CheckoutView({
 
             <div className="flex items-center justify-between pt-1">
               <Link
-                href="/gio-hang"
+                href="/cart"
                 className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition"
               >
                 <ArrowLeft className="size-3.5" />

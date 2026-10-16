@@ -382,7 +382,7 @@ export async function placeOrder(input: CheckoutInput) {
             userId: uid,
             title: `Đơn hàng mới #${ord.code}`,
             body: `Khách hàng ${data.name} đã đặt đơn hàng trị giá ${formatVnd(ord.total)}.`,
-            link: `/kenh-ban/don-hang`,
+            link: `/seller/orders`,
           },
         }).catch((e) => console.error("Notification creation failed:", e));
       }

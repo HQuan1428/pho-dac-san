@@ -14,11 +14,11 @@ import {
 
 const navItems = [
   { href: "/admin", label: "Tổng quan", icon: LayoutDashboard, exact: true },
-  { href: "/admin/gian-hang", label: "Gian hàng", icon: Store },
-  { href: "/admin/nguoi-dung", label: "Người dùng", icon: Users },
-  { href: "/admin/danh-muc", label: "Danh mục", icon: FolderTree },
-  { href: "/admin/vung-mien", label: "Vùng miền & Tỉnh", icon: MapPin },
-  { href: "/admin/lien-he", label: "Tin nhắn liên hệ", icon: MessageSquare },
+  { href: "/admin/shops", label: "Gian hàng", icon: Store },
+  { href: "/admin/users", label: "Người dùng", icon: Users },
+  { href: "/admin/categories", label: "Danh mục", icon: FolderTree },
+  { href: "/admin/regions", label: "Vùng miền & Tỉnh", icon: MapPin },
+  { href: "/admin/contacts", label: "Tin nhắn liên hệ", icon: MessageSquare },
 ];
 
 export function AdminNav() {

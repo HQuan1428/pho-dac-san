@@ -91,7 +91,7 @@ const plans: Plan[] = [
 
 export function Pricing() {
   return (
-    <section id="bang-gia" className="scroll-mt-16 py-16 md:py-24">
+    <section id="pricing" className="scroll-mt-16 py-16 md:py-24">
       <div className="container-page">
         <div className="reveal mx-auto max-w-2xl text-center">
           <Badge variant="secondary" className="mb-3">
@@ -185,7 +185,7 @@ export function Pricing() {
                 <Button
                   className="w-full"
                   variant={plan.highlight ? "default" : "outline"}
-                  render={<Link href="/kenh-ban/dang-ky" />}
+                  render={<Link href="/seller/register" />}
                 >
                   {plan.cta}
                 </Button>

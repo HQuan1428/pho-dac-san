@@ -45,7 +45,7 @@ export function ProductPurchaseBox({
     toast.success(`Đã thêm ${quantity} "${productName} (${selectedVariant.name})" vào giỏ hàng!`, {
       action: {
         label: "Xem giỏ hàng",
-        onClick: () => router.push("/gio-hang"),
+        onClick: () => router.push("/cart"),
       },
     });
   };
@@ -56,7 +56,7 @@ export function ProductPurchaseBox({
       return;
     }
     cart.add(selectedVariant.id, quantity);
-    router.push("/gio-hang");
+    router.push("/cart");
   };
 
   return (
