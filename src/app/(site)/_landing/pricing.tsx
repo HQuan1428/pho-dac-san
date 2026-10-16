@@ -75,7 +75,7 @@ const plans: Plan[] = [
 
 export function Pricing() {
   return (
-    <section id="bang-gia" className="scroll-mt-16 border-t py-16 md:py-24">
+    <section id="bang-gia" className="scroll-mt-16 py-16 md:py-24">
       <div className="container-page">
         <div className="reveal mx-auto max-w-2xl text-center">
           <Badge variant="secondary" className="mb-3">

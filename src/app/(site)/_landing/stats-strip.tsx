@@ -32,9 +32,9 @@ export async function StatsStrip() {
   ];
 
   return (
-    <section className="border-b bg-muted/30 py-6 md:py-8">
+    <section className="bg-primary text-primary-foreground py-6 md:py-8">
       <div className="container-page">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x divide-border">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x divide-primary-foreground/20">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -42,14 +42,14 @@ export async function StatsStrip() {
                 key={stat.label}
                 className="reveal flex items-center gap-4 px-2 lg:px-8 first:pl-0 last:pr-0"
               >
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary-foreground/15 text-primary-foreground">
                   <Icon className="size-5" />
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground tabular-nums">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white tabular-nums">
                     {stat.value}
                   </div>
-                  <div className="text-xs sm:text-sm font-medium text-muted-foreground">
+                  <div className="text-xs sm:text-sm font-medium text-primary-foreground/75">
                     {stat.label}
                   </div>
                 </div>

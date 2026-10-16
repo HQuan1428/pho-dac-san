@@ -65,7 +65,12 @@ const mockOrders = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b py-16 lg:py-24">
+    <section className="relative overflow-hidden py-16 lg:py-24">
+      {/* Decorative top green glow for sticky glass header */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 left-1/2 -z-10 -translate-x-1/2 h-72 w-[600px] max-w-full rounded-full bg-primary/10 blur-3xl"
+      />
       <div className="container-page">
         <div className="grid items-center gap-8 lg:gap-12 lg:grid-cols-[1.1fr_1fr]">
           {/* Left Column: Headline, CTAs, Social Proof */}
