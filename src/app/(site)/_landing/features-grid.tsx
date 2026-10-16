@@ -6,7 +6,7 @@ export function FeaturesGrid() {
   return (
     <section className="py-16 md:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Mọi công cụ bạn cần để kinh doanh đặc sản số
           </h2>
@@ -19,7 +19,7 @@ export function FeaturesGrid() {
         {/* 3x2 Bento Grid */}
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Bento Item 1: Col-span-2 with Mini UI (Nhận đơn & gọi chốt) */}
-          <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
+          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
             <div>
               <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <PhoneCall className="size-5" />
@@ -53,7 +53,7 @@ export function FeaturesGrid() {
           </div>
 
           {/* Bento Item 2: Col-span-1 (Gian hàng riêng biệt) */}
-          <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
+          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
             <div>
               <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Store className="size-5" />
@@ -70,7 +70,7 @@ export function FeaturesGrid() {
           </div>
 
           {/* Bento Item 3: Col-span-1 (Sản phẩm đa biến thể) */}
-          <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
+          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-1">
             <div>
               <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Layers className="size-5" />
@@ -87,7 +87,7 @@ export function FeaturesGrid() {
           </div>
 
           {/* Bento Item 4: Col-span-2 with Mini UI (Thống kê doanh số & Voucher) */}
-          <div className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
+          <div className="reveal flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm lg:col-span-2">
             <div>
               <div className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <TrendingUp className="size-5" />
