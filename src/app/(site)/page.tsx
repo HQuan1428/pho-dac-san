@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "vi_VN",
     siteName: "Phố Đặc Sản",
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "Phố Đặc Sản" }],
   },
 };
 
