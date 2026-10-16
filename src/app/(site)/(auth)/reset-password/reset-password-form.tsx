@@ -6,7 +6,7 @@ import { AlertCircle, KeyRound, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { FormField } from "@/components/common/form-field";
 import { resetPasswordAction, type ActionState } from "../actions";
 
@@ -46,10 +46,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
             hint="Ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái và 1 chữ số"
             error={state?.errors?.password}
           >
-            <Input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               placeholder="••••••••"
               required
               disabled={isPending}
@@ -63,10 +62,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
             required
             error={state?.errors?.confirmPassword}
           >
-            <Input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              type="password"
               placeholder="••••••••"
               required
               disabled={isPending}
