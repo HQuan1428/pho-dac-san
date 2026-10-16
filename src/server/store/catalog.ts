@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getProductImageUrl } from "@/components/store/placeholder";
+import { getCategoryImageUrl } from "@/components/store/category-image";
 import type { ProductCardData } from "@/components/common/product-card";
 import type { ShopCardData } from "@/components/common/shop-card";
 
@@ -441,5 +442,112 @@ export type ProductDetailData = NonNullable<Awaited<ReturnType<typeof getProduct
 
 export async function getSharedProductDetail(shopSlug: string, productSlug: string) {
   return getProductDetail(shopSlug, productSlug);
+}
+
+export type SearchSuggestionResult = {
+  products: {
+    id: string;
+    name: string;
+    href: string;
+    image: string;
+    price: number;
+    shopName: string;
+  }[];
+  shops: {
+    id: string;
+    name: string;
+    href: string;
+    logo?: string | null;
+    province: string;
+  }[];
+  categories: {
+    id: string;
+    name: string;
+    slug: string;
+    href: string;
+    image?: string | null;
+  }[];
+};
+
+export async function suggestSearch(query: string): Promise<SearchSuggestionResult> {
+  const q = query.trim();
+  if (!q) {
+    return { products: [], shops: [], categories: [] };
+  }
+
+  const [productsRaw, shopsRaw, categoriesRaw] = await Promise.all([
+    db.product.findMany({
+      where: {
+        status: "ACTIVE",
+        shop: { status: "ACTIVE" },
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { slug: { contains: q, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        shop: { select: { name: true, slug: true } },
+        variants: { orderBy: { price: "asc" }, select: { price: true }, take: 1 },
+        province: { select: { name: true } },
+      },
+      take: 5,
+    }),
+    db.shop.findMany({
+      where: {
+        status: "ACTIVE",
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { slug: { contains: q, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        province: { select: { name: true } },
+      },
+      take: 5,
+    }),
+    db.category.findMany({
+      where: {
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { slug: { contains: q, mode: "insensitive" } },
+        ],
+      },
+      orderBy: { sortOrder: "asc" },
+      take: 5,
+    }),
+  ]);
+
+  return {
+    products: productsRaw.map((p) => ({
+      id: p.id,
+      name: p.name,
+      href: `/products/${p.shop.slug}/${p.slug}`,
+      image: getProductImageUrl(p.images, p.province.name),
+      price: p.variants[0]?.price ?? 0,
+      shopName: p.shop.name,
+    })),
+    shops: shopsRaw.map((s) => ({
+      id: s.id,
+      name: s.name,
+      href: `/shops/${s.slug}`,
+      logo: s.logo,
+      province: s.province.name,
+    })),
+    categories: categoriesRaw.map((c) => ({
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      href: `/search?danh-muc=${c.slug}`,
+      image: getCategoryImageUrl(c.slug),
+    })),
+  };
+}
+
+export async function getFeaturedCategories() {
+  return db.category.findMany({
+    orderBy: { sortOrder: "asc" },
+    take: 8,
+    select: { id: true, name: true, slug: true },
+  });
 }
 
