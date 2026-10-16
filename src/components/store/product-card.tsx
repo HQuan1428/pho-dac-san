@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Eye, Heart } from "lucide-react";
+import { ExternalLink, Eye, Heart } from "lucide-react";
 import { Price } from "@/components/common/price";
 import { RatingStars } from "@/components/common/rating-stars";
 import { RegionTag } from "@/components/common/region-tag";
@@ -67,19 +67,19 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           />
           <div className="flex items-center justify-between gap-1 text-[11px] text-muted-foreground">
             <RatingStars value={product.rating} count={product.reviewCount} compact />
+            <a
+              href={product.href}
+              className="relative z-10 inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline"
+            >
+              Xem chi tiết
+              <ExternalLink className="size-3" aria-hidden="true" />
+            </a>
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground truncate pt-0.5">
             <span className="truncate">{product.shopName}</span>
             <span>·</span>
             <RegionTag province={product.province} />
           </div>
-          <a
-            href={product.href}
-            className="relative z-10 mt-1.5 inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border text-[11px] font-medium text-foreground transition hover:border-primary hover:text-primary"
-          >
-            Xem chi tiết
-            <ArrowRight className="size-3" aria-hidden="true" />
-          </a>
         </div>
       </div>
     </div>
