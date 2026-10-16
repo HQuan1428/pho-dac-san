@@ -49,7 +49,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/40 bg-background/95 backdrop-blur-xl backdrop-saturate-150 shadow-[0_1px_0_0_rgb(255_255_255/0.4)_inset,0_8px_24px_-12px_rgb(0_0_0/0.15)] supports-[backdrop-filter]:bg-background/55 dark:border-white/10 dark:shadow-[0_1px_0_0_rgb(255_255_255/0.1)_inset,0_8px_24px_-12px_rgb(0_0_0/0.4)]">
-      <div className="container-page flex h-16 items-center gap-3 xl:gap-6">
+      <div className="container-page flex h-16 items-center gap-2 sm:gap-3 xl:gap-6">
         <Logo />
         <nav className="hidden gap-1 text-sm md:flex">
           <Link
@@ -73,7 +73,7 @@ export async function SiteHeader() {
         {/* Command Search Trigger & Dialog */}
         <CommandSearch featuredCategories={featuredCategories} />
 
-        <div className="ml-auto flex items-center gap-1 sm:ml-0">
+        <div className="ml-auto flex items-center gap-0.5 sm:gap-1 sm:ml-0">
           <CartButton />
           {user ? (
             <>

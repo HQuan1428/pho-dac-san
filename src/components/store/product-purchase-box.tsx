@@ -88,7 +88,7 @@ export function ProductPurchaseBox({
             <span>Phân loại:</span>
             <span className="font-semibold text-foreground">{selectedVariant?.name}</span>
           </label>
-          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Phân loại sản phẩm">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2" role="radiogroup" aria-label="Phân loại sản phẩm">
             {variants.map((v) => {
               const isSelected = v.id === selectedVariantId;
               const disabled = v.stock <= 0;
@@ -105,7 +105,7 @@ export function ProductPurchaseBox({
                     setQuantity(1);
                   }}
                   className={cn(
-                    "relative flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition cursor-pointer",
+                    "relative flex items-center gap-1 sm:gap-1.5 rounded-lg border px-2.5 sm:px-3 py-1.5 text-xs font-medium transition cursor-pointer max-w-full",
                     isSelected
                       ? "border-primary bg-primary/10 text-primary ring-1 ring-primary font-semibold"
                       : "border-border bg-card text-foreground hover:border-foreground/30",
@@ -113,8 +113,8 @@ export function ProductPurchaseBox({
                   )}
                 >
                   {isSelected && <Check className="size-3.5 text-primary shrink-0" aria-hidden="true" />}
-                  <span>{v.name}</span>
-                  <span className="text-[11px] font-normal text-muted-foreground">
+                  <span className="truncate">{v.name}</span>
+                  <span className="text-[11px] font-normal text-muted-foreground shrink-0">
                     ({formatVnd(v.price)})
                   </span>
                 </button>
@@ -136,16 +136,16 @@ export function ProductPurchaseBox({
       </div>
 
       {/* CTA action buttons: EXACTLY ONE primary solid green ("Thêm vào giỏ"), outline ("Mua ngay") */}
-      <div className="grid grid-cols-2 gap-2.5 pt-2">
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 pt-2">
         <Button
           type="button"
           size="default"
           disabled={isOutOfStock}
           onClick={handleAddToCart}
-          className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-10 shadow-xs cursor-pointer"
+          className="gap-1 sm:gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-10 px-2 sm:px-3 shadow-xs cursor-pointer min-w-0"
         >
           <ShoppingCart className="size-4 shrink-0" aria-hidden="true" />
-          <span>Thêm vào giỏ</span>
+          <span className="truncate">Thêm vào giỏ</span>
         </Button>
 
         <Button
@@ -154,10 +154,10 @@ export function ProductPurchaseBox({
           size="default"
           disabled={isOutOfStock}
           onClick={handleBuyNow}
-          className="gap-1.5 border-primary text-primary hover:bg-primary/10 hover:text-primary text-xs sm:text-sm font-medium h-10 cursor-pointer"
+          className="gap-1 sm:gap-1.5 border-primary text-primary hover:bg-primary/10 hover:text-primary text-xs sm:text-sm font-medium h-10 px-2 sm:px-3 cursor-pointer min-w-0"
         >
           <Zap className="size-4 shrink-0" aria-hidden="true" />
-          <span>Mua ngay</span>
+          <span className="truncate">Mua ngay</span>
         </Button>
       </div>
 
@@ -166,22 +166,22 @@ export function ProductPurchaseBox({
         <div className="rounded-lg border bg-muted/20 p-3 space-y-2 text-xs text-muted-foreground mt-2">
           <div className="flex items-center gap-2">
             <Truck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span>Giao hàng toàn quốc · Đóng gói bảo quản cẩn thận</span>
+            <span className="leading-tight">Giao hàng toàn quốc · Đóng gói bảo quản cẩn thận</span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span>Kiểm tra hàng trước khi thanh toán (COD)</span>
+            <span className="leading-tight">Kiểm tra hàng trước khi thanh toán (COD)</span>
           </div>
           <div className="flex items-center gap-2">
             <PhoneCall className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-            <span>Shop gọi điện xác nhận chi tiết trước khi gửi</span>
+            <span className="leading-tight">Shop gọi điện xác nhận chi tiết trước khi gửi</span>
           </div>
         </div>
       )}
 
       {/* Mobile sticky bottom buy bar (price + ONE primary "Thêm vào giỏ") */}
       {showMobileBar && (
-        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur-md p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg flex items-center justify-between gap-3">
+        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur-md px-3 sm:px-4 py-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg flex items-center justify-between gap-2.5">
           <div className="flex flex-col min-w-0">
             <span className="text-[11px] text-muted-foreground truncate">
               {selectedVariant ? selectedVariant.name : "Giá"}
@@ -196,7 +196,7 @@ export function ProductPurchaseBox({
             size="default"
             disabled={isOutOfStock}
             onClick={handleAddToCart}
-            className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-10 px-5 shadow-xs shrink-0 cursor-pointer"
+            className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs sm:text-sm font-medium h-9 sm:h-10 px-3.5 sm:px-5 shadow-xs shrink-0 cursor-pointer"
           >
             <ShoppingCart className="size-4 shrink-0" aria-hidden="true" />
             <span>Thêm vào giỏ</span>
