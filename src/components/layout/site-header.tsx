@@ -13,7 +13,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 md:px-6">
+      <div className="container-page flex h-16 items-center gap-6">
         <Logo />
         <nav className="hidden gap-1 text-sm md:flex">
           <Link href="/cho" className="rounded-md px-3 py-1.5 text-muted-foreground hover:text-foreground">Khám phá</Link>

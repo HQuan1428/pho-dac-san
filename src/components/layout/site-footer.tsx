@@ -18,7 +18,7 @@ const socials = [
 export function SiteFooter() {
   return (
     <footer className="border-t bg-muted/40">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-[1.5fr_repeat(3,1fr)] md:px-6">
+      <div className="container-page grid gap-8 py-12 md:grid-cols-[1.5fr_repeat(3,1fr)]">
         <div className="space-y-3">
           <Logo />
           <p className="max-w-xs text-sm text-muted-foreground">Chợ đặc sản vùng miền nhiều gian hàng. Người bán mở shop miễn phí, khách đặt hàng, shop gọi điện chốt đơn.</p>
@@ -42,7 +42,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t">
-        <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-muted-foreground md:px-6">© {new Date().getFullYear()} Phố Đặc Sản. Bảo lưu mọi quyền.</p>
+        <p className="container-page py-4 text-xs text-muted-foreground">© {new Date().getFullYear()} Phố Đặc Sản. Bảo lưu mọi quyền.</p>
       </div>
     </footer>
   );

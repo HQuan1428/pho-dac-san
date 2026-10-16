@@ -19,8 +19,13 @@ pnpm typecheck && pnpm lint # must pass before you finish
 ## Conventions
 - **Design**: follow `/design-token` (`src/app/design-token/page.tsx`). Use semantic tokens
   only (`bg-primary`, `text-muted-foreground`, `border`), never raw colors. Neutral-first,
-  one brand color, borders over shadows, `rounded-lg` cards, `max-w-6xl` container with
-  `px-4 md:px-6`. Mobile first.
+  one brand color, borders over shadows, `rounded-lg` cards. Mobile first.
+- **Layout density (desktop matters)**: wrap page content in the `container-page` utility
+  (1280px max, responsive gutters); never `max-w-6xl`/`max-w-2xl` page wrappers except for
+  reading-width prose (`max-w-prose`) and auth forms. Product grids: 2 cols mobile, 3 md,
+  4 lg, 5 xl (`grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`, gap 16–24px).
+  No `min-h-screen`/huge vertical padding sections; section spacing `py-12 md:py-16`.
+  Above-the-fold content must start within 64–96px under the header. Sidebars 240–280px.
 - **Components**: reuse `src/components/ui/*` and `src/components/common/*`
   (Price, ProductCard, ShopCard, OrderStatusBadge, RatingStars, RegionTag, QuantityInput,
   EmptyState, PageHeader, StatCard, FormField). Do not edit these shared files; if you need
