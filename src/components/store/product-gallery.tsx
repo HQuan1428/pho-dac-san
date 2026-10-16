@@ -22,7 +22,7 @@ export function ProductGallery({
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex aspect-square w-full max-w-[520px] flex-col items-center justify-center rounded-lg border bg-muted/50 p-6 text-muted-foreground shadow-xs">
+      <div className="flex aspect-square w-full max-w-[560px] flex-col items-center justify-center rounded-lg border bg-muted/50 p-6 text-muted-foreground shadow-xs">
         <Package className="size-16 stroke-1 text-muted-foreground/50" />
         <span className="mt-3 text-sm font-medium">Chưa có hình ảnh sản phẩm</span>
         <span className="mt-1 text-xs text-muted-foreground">Đặc sản chính gốc đóng gói chuẩn chất lượng</span>
@@ -33,9 +33,9 @@ export function ProductGallery({
   const currentImage = failedIndices[activeIdx] ? fallbackSvg : images[activeIdx] || images[0];
 
   return (
-    <div className={cn("flex flex-col gap-3 w-full max-w-[520px] mx-auto lg:mx-0", className)}>
-      {/* Main Image (capped max-w-[520px], square, object-cover, rounded-lg) */}
-      <div className="relative aspect-square w-full max-w-[520px] overflow-hidden rounded-lg border bg-muted shadow-xs">
+    <div className={cn("flex flex-col gap-3 w-full max-w-[560px] mx-auto lg:mx-0", className)}>
+      {/* Main Image (capped max-w-[560px], square, object-cover, rounded-lg) */}
+      <div className="relative aspect-square w-full max-w-[560px] overflow-hidden rounded-lg border bg-muted shadow-xs">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={currentImage}

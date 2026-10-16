@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Eye, Heart } from "lucide-react";
+import { ArrowRight, Eye, Heart } from "lucide-react";
 import { Price } from "@/components/common/price";
 import { RatingStars } from "@/components/common/rating-stars";
 import { RegionTag } from "@/components/common/region-tag";
@@ -28,10 +28,9 @@ export function ProductCard({ product }: { product: ProductCardData }) {
   }, [product.image, fallbackSvg]);
 
   return (
-    <Link
-      href={product.href}
-      className="group flex flex-col overflow-hidden rounded-lg bg-card border border-border/60 hover:border-border hover:shadow-md hover:-translate-y-1 transition-all duration-200"
-    >
+    // Card body is a stretched Link (soft nav, opens the quick-view modal); "Xem chi tiết" is a plain <a>
+    // so it does a full navigation to the product page.
+    <div className="group relative flex flex-col overflow-hidden rounded-lg bg-card border border-border/60 hover:border-border hover:shadow-md hover:-translate-y-1 transition-all duration-200">
       <div className="relative aspect-square w-full overflow-hidden bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -56,7 +55,9 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 
       <div className="flex flex-1 flex-col gap-1 p-2.5">
         <h3 className="line-clamp-2 text-xs sm:text-sm font-medium leading-snug group-hover:text-primary transition">
-          {product.name}
+          <Link href={product.href} className="after:absolute after:inset-0">
+            {product.name}
+          </Link>
         </h3>
         <div className="mt-auto pt-1 space-y-1">
           <Price
@@ -72,8 +73,15 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             <span>·</span>
             <RegionTag province={product.province} />
           </div>
+          <a
+            href={product.href}
+            className="relative z-10 mt-1.5 inline-flex h-7 w-full items-center justify-center gap-1 rounded-md border text-[11px] font-medium text-foreground transition hover:border-primary hover:text-primary"
+          >
+            Xem chi tiết
+            <ArrowRight className="size-3" aria-hidden="true" />
+          </a>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

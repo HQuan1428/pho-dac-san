@@ -125,7 +125,7 @@ export default async function ProductQuickViewPage({ params }: PageProps) {
               href={`/products/${shopSlug}/${productSlug}`}
               className="inline-flex items-center gap-1.5 text-xs text-primary font-medium hover:underline"
             >
-              <span>Xem chi tiết đầy đủ</span>
+              <span>Xem chi tiết</span>
               <ExternalLink className="size-3.5" aria-hidden="true" />
             </a>
           </div>

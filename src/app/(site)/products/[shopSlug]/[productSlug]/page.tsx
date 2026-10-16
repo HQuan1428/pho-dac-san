@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { BadgeCheck, ChevronRight, FileText, Flame, PackageCheck, Star, Store, Tag } from "lucide-react";
+import { BadgeCheck, ChevronRight, FileText, Flame, Star, Store, Tag } from "lucide-react";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/server/access";
 import { getProductDetail } from "@/server/store/catalog";
@@ -91,7 +91,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
   }
 
   const currentPath = `/products/${shopSlug}/${productSlug}`;
-  const totalStock = product.variants.reduce((acc, v) => acc + v.stock, 0);
 
   return (
     <div className="container-page py-4 md:py-6 space-y-6 pb-20 lg:pb-6">
@@ -114,8 +113,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{product.name}</span>
       </nav>
 
-      {/* Main Product Info: Large Gallery Left + Sticky Buy Box Right (minmax(0,1fr) 420px) */}
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] items-start">
+      {/* Main Product Info: gallery column (max 560px) + sticky buy box filling the rest */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] xl:gap-12 items-start">
         {/* Gallery left (large gallery max ~520px, thumbnails row) */}
         <div className="flex justify-center lg:justify-start w-full">
           <ProductGallery
@@ -151,7 +150,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {product.name}
             </h1>
 
-            {/* Ratings & Meta rows with icons: Rating, Sold (Flame), Stock (PackageCheck) */}
+            {/* Ratings & Meta rows with icons: Rating, Sold (Flame) */}
             <div className="mt-2.5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <RatingStars value={product.ratingAvg} />
@@ -165,13 +164,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <Flame className="size-3.5 text-primary shrink-0" aria-hidden="true" />
                 <span>
                   Đã bán: <strong className="text-foreground">{product.soldCount}</strong>
-                </span>
-              </div>
-              <span>·</span>
-              <div className="flex items-center gap-1">
-                <PackageCheck className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-                <span>
-                  Kho: <strong className="text-foreground">{totalStock > 0 ? `Còn ${totalStock}` : "Hết hàng"}</strong>
                 </span>
               </div>
             </div>
