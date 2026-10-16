@@ -40,7 +40,7 @@ export function Faq() {
   return (
     <section className="py-16 md:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Câu hỏi thường gặp
           </h2>
@@ -55,7 +55,7 @@ export function Faq() {
             {col1.map((faq, index) => (
               <details
                 key={index}
-                className="group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+                className="reveal group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
                   <span className="text-sm sm:text-base font-medium">{faq.question}</span>
@@ -72,7 +72,7 @@ export function Faq() {
             {col2.map((faq, index) => (
               <details
                 key={index + 3}
-                className="group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
+                className="reveal group rounded-lg border bg-card p-4 transition duration-150 open:bg-card/90 shadow-xs"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-foreground select-none [&::-webkit-details-marker]:hidden">
                   <span className="text-sm sm:text-base font-medium">{faq.question}</span>

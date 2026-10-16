@@ -40,7 +40,7 @@ export async function StatsStrip() {
             return (
               <div
                 key={stat.label}
-                className="flex items-center gap-4 px-2 lg:px-8 first:pl-0 last:pr-0"
+                className="reveal flex items-center gap-4 px-2 lg:px-8 first:pl-0 last:pr-0"
               >
                 <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icon className="size-5" />

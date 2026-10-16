@@ -77,7 +77,7 @@ export function Pricing() {
   return (
     <section id="bang-gia" className="scroll-mt-16 border-t py-16 md:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <Badge variant="secondary" className="mb-3">
             Bảng giá minh bạch
           </Badge>
@@ -100,7 +100,7 @@ export function Pricing() {
           {plans.map((plan) => (
             <Card
               key={plan.name}
-              className={`flex flex-col justify-between transition-all ${
+              className={`reveal flex flex-col justify-between transition-all ${
                 plan.highlight
                   ? "relative border-2 border-primary shadow-lg ring-1 ring-primary bg-card lg:-translate-y-2"
                   : "bg-card shadow-sm"

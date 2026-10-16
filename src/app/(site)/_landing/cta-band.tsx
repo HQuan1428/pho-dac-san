@@ -11,6 +11,28 @@ export function CtaBand() {
           <div className="pointer-events-none absolute -right-12 -top-12 size-64 rounded-full bg-primary-foreground/10 blur-2xl" />
           <div className="pointer-events-none absolute -left-12 -bottom-12 size-64 rounded-full bg-primary-foreground/10 blur-2xl" />
 
+          {/* Decorative lotus pattern */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/logo-mark-white.svg"
+              alt=""
+              className="absolute -top-16 -left-16 size-64 md:size-80 opacity-10 -rotate-12"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/logo-mark-white.svg"
+              alt=""
+              className="absolute -bottom-20 -right-16 size-72 md:size-96 opacity-10 rotate-12"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/logo-mark-white.svg"
+              alt=""
+              className="hidden sm:block absolute -top-20 right-1/4 size-48 md:size-60 opacity-[0.08] rotate-45"
+            />
+          </div>
+
           <div className="relative mx-auto max-w-2xl space-y-4">
             <span className="inline-flex size-12 items-center justify-center rounded-xl bg-primary-foreground/15 text-primary-foreground shadow-xs">
               <Store className="size-6" />

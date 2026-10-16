@@ -28,7 +28,7 @@ export function HowItWorks() {
   return (
     <section className="border-t bg-muted/20 py-16 md:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Bắt đầu kinh doanh chỉ với 3 bước đơn giản
           </h2>
@@ -41,7 +41,7 @@ export function HowItWorks() {
         <div className="relative mt-12 grid gap-6 md:grid-cols-3">
           {/* Connecting line on desktop */}
           <div
-            className="hidden md:block absolute top-11 left-[15%] right-[15%] h-0.5 bg-border z-0"
+            className="reveal-x hidden md:block absolute top-11 left-[15%] right-[15%] h-0.5 bg-border z-0"
             aria-hidden="true"
           />
 
@@ -50,7 +50,7 @@ export function HowItWorks() {
             return (
               <div
                 key={item.step}
-                className="relative z-10 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
+                className="reveal motion-safe:transition-transform motion-safe:hover:-translate-y-0.5 relative z-10 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
               >
                 <div>
                   <div className="flex items-center justify-between">

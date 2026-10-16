@@ -36,7 +36,7 @@ export function Testimonials() {
   return (
     <section className="border-t bg-muted/20 py-16 md:py-24">
       <div className="container-page">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Được tin cậy bởi các nhà làm nghề truyền thống
           </h2>
@@ -53,7 +53,7 @@ export function Testimonials() {
           {testimonials.map((item) => (
             <div
               key={item.author}
-              className="flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
+              className="reveal motion-safe:transition-transform motion-safe:hover:-translate-y-0.5 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
             >
               <div>
                 <div className="flex items-center justify-between">
