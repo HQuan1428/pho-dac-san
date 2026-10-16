@@ -119,8 +119,8 @@ export async function OrdersPanel({
       ) : (
         <>
           {/* Desktop Table View */}
-          <div className="hidden md:block overflow-hidden rounded-xl border bg-card shadow-2xs">
-            <Table>
+          <div className="hidden md:block overflow-x-auto rounded-xl border bg-card shadow-2xs">
+            <Table className="min-w-[650px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Mã đơn</TableHead>
@@ -143,7 +143,7 @@ export async function OrdersPanel({
                         {order.code}
                       </TableCell>
                       <TableCell className="text-sm font-medium">
-                        <span className="flex items-center gap-1.5">
+                        <span className="flex items-center gap-1.5 min-w-0">
                           <Store className="size-3.5 text-muted-foreground shrink-0" aria-hidden />
                           <span className="truncate max-w-[140px]">{order.shop.name}</span>
                         </span>
@@ -151,18 +151,8 @@ export async function OrdersPanel({
                       <TableCell className="text-xs text-muted-foreground max-w-[220px]">
                         <p className="truncate font-medium text-foreground">
                           {firstItem ? firstItem.productName : "Sản phẩm"}
-                          {firstItem?.variantName && (
-                            <span className="text-muted-foreground font-normal">
-                              {" "}
-                              ({firstItem.variantName})
-                            </span>
-                          )}
-                          {firstItem?.quantity && (
-                            <span className="text-muted-foreground font-normal">
-                              {" "}
-                              × {firstItem.quantity}
-                            </span>
-                          )}
+                          {firstItem?.variantName ? ` (${firstItem.variantName})` : ""}
+                          {firstItem?.quantity ? ` × ${firstItem.quantity}` : ""}
                         </p>
                         {otherCount > 0 && (
                           <p className="text-[11px] text-muted-foreground mt-0.5">

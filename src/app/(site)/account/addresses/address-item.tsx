@@ -49,24 +49,24 @@ export function AddressItem({
 
   return (
     <Card className={address.isDefault ? "border-primary/50 bg-primary/[0.02]" : ""}>
-      <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1.5 min-w-0 flex-1">
+      <CardContent className="flex flex-col justify-between gap-4 p-4 sm:p-5">
+        <div className="space-y-1.5 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-foreground">{address.name}</span>
             <span className="text-muted-foreground">·</span>
             <span className="text-sm text-muted-foreground">{address.phone}</span>
             {address.isDefault && (
-              <Badge variant="outline" className="border-primary/50 text-primary text-xs">
+              <Badge variant="outline" className="border-primary/50 text-primary text-xs shrink-0">
                 Mặc định
               </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed break-words">
             {address.detail}, {provinceName}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:self-start">
+        <div className="flex flex-wrap items-center gap-2 pt-3 border-t">
           {!address.isDefault && (
             <Button
               variant="ghost"

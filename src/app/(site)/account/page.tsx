@@ -6,9 +6,6 @@ import {
   CheckCircle2,
   Clock,
   Heart,
-  LayoutDashboard,
-  MapPin,
-  Package,
   ShoppingBag,
   Store,
   Truck,
@@ -44,14 +41,6 @@ export const metadata: Metadata = {
   title: "Tài khoản của tôi - Phố Đặc Sản",
 };
 
-const HUB_TABS = [
-  { id: "overview", label: "Tổng quan", icon: LayoutDashboard, href: "/account" },
-  { id: "orders", label: "Đơn hàng", icon: Package, href: "/account?tab=orders" },
-  { id: "wishlist", label: "Yêu thích", icon: Heart, href: "/account?tab=wishlist" },
-  { id: "addresses", label: "Sổ địa chỉ", icon: MapPin, href: "/account?tab=addresses" },
-  { id: "following", label: "Gian hàng", icon: Store, href: "/account?tab=following" },
-];
-
 export default async function AccountPage(props: {
   searchParams: Promise<{ tab?: string; status?: string; verify?: string }>;
 }) {
@@ -61,31 +50,6 @@ export default async function AccountPage(props: {
 
   return (
     <div className="space-y-6">
-      {/* Icon tabs driven by ?tab= */}
-      <div className="flex items-center gap-1.5 overflow-x-auto border-b pb-2.5 scrollbar-none">
-        {HUB_TABS.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = currentTab === tab.id;
-
-          return (
-            <Link
-              key={tab.id}
-              href={tab.href}
-              scroll={false}
-              className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition cursor-pointer",
-                isActive
-                  ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
-                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Icon className="size-4" aria-hidden />
-              <span>{tab.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-
       {/* Tab Panels */}
       {currentTab === "orders" && (
         <OrdersPanel userId={sessionUser.id} currentStatus={searchParams.status} />
@@ -350,8 +314,8 @@ async function OverviewPanel({
         ) : (
           <>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-hidden rounded-xl border bg-card shadow-2xs">
-              <Table>
+            <div className="hidden md:block overflow-x-auto rounded-xl border bg-card shadow-2xs">
+              <Table className="min-w-[650px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead>Mã đơn</TableHead>
