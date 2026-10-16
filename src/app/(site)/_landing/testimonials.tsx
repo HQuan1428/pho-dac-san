@@ -1,3 +1,4 @@
+import { Quote } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RatingStars } from "@/components/common/rating-stars";
 import { RegionTag } from "@/components/common/region-tag";
@@ -11,6 +12,11 @@ const testimonials = [
     province: "Thanh Hóa",
     initials: "LH",
     rating: 5,
+    spot: "var(--clay)",
+    quoteClass: "text-clay",
+    avatarBorderClass: "border-clay/30",
+    avatarFallbackClass: "bg-clay/10 text-clay",
+    regionTagClass: "border-clay/30 bg-clay/10 [&_span]:text-clay [&_svg]:text-clay",
   },
   {
     quote:
@@ -20,6 +26,11 @@ const testimonials = [
     province: "Thái Nguyên",
     initials: "TT",
     rating: 5,
+    spot: "var(--lotus)",
+    quoteClass: "text-lotus",
+    avatarBorderClass: "border-lotus/30",
+    avatarFallbackClass: "bg-lotus/10 text-lotus",
+    regionTagClass: "border-lotus/30 bg-lotus/10 [&_span]:text-lotus [&_svg]:text-lotus",
   },
   {
     quote:
@@ -29,6 +40,11 @@ const testimonials = [
     province: "Bến Tre",
     initials: "HN",
     rating: 5,
+    spot: "var(--sky)",
+    quoteClass: "text-sky",
+    avatarBorderClass: "border-sky/30",
+    avatarFallbackClass: "bg-sky/10 text-sky",
+    regionTagClass: "border-sky/30 bg-sky/10 [&_span]:text-sky [&_svg]:text-sky",
   },
 ];
 
@@ -53,21 +69,26 @@ export function Testimonials() {
           {testimonials.map((item) => (
             <div
               key={item.author}
+              data-spotlight
+              style={{ "--spot": item.spot } as React.CSSProperties}
               className="reveal motion-safe:transition-transform motion-safe:hover:-translate-y-0.5 flex flex-col justify-between rounded-xl border bg-card p-6 shadow-sm transition-colors hover:border-foreground/20"
             >
               <div>
                 <div className="flex items-center justify-between">
                   <RatingStars value={item.rating} />
-                  <RegionTag province={item.province} />
+                  <div className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${item.regionTagClass}`}>
+                    <RegionTag province={item.province} />
+                  </div>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground italic">
+                <Quote className={`mt-4 size-5 shrink-0 ${item.quoteClass}`} />
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground italic">
                   &ldquo;{item.quote}&rdquo;
                 </p>
               </div>
 
               <div className="mt-6 flex items-center gap-3 border-t pt-4">
-                <Avatar className="size-10 border shrink-0">
-                  <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs">
+                <Avatar className={`size-10 border shrink-0 ${item.avatarBorderClass}`}>
+                  <AvatarFallback className={`font-medium text-xs ${item.avatarFallbackClass}`}>
                     {item.initials}
                   </AvatarFallback>
                 </Avatar>

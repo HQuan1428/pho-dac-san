@@ -6,10 +6,34 @@ export function CtaBand() {
   return (
     <section className="bg-primary/5 py-16 md:py-20">
       <div className="container-page">
-        <div className="relative overflow-hidden rounded-2xl bg-primary text-primary-foreground px-6 py-12 text-center md:px-12 md:py-16 shadow-lg">
+        <div
+          data-spotlight
+          style={{ "--spot": "var(--turmeric)" } as React.CSSProperties}
+          className="relative overflow-hidden rounded-2xl bg-primary text-primary-foreground px-6 py-12 text-center md:px-12 md:py-16 shadow-lg"
+        >
           {/* Subtle background glow */}
           <div className="pointer-events-none absolute -right-12 -top-12 size-64 rounded-full bg-primary-foreground/10 blur-2xl" />
           <div className="pointer-events-none absolute -left-12 -bottom-12 size-64 rounded-full bg-primary-foreground/10 blur-2xl" />
+
+          {/* Blurred accent blobs with cursor parallax */}
+          <div
+            aria-hidden="true"
+            data-parallax
+            style={{ "--depth": "28px" } as React.CSSProperties}
+            className="pointer-events-none absolute -top-16 -right-10 size-72 rounded-full bg-lotus/15 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            data-parallax
+            style={{ "--depth": "-20px" } as React.CSSProperties}
+            className="pointer-events-none absolute -bottom-16 -left-10 size-80 rounded-full bg-turmeric/15 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            data-parallax
+            style={{ "--depth": "16px" } as React.CSSProperties}
+            className="pointer-events-none absolute top-1/2 left-1/3 -translate-y-1/2 size-64 rounded-full bg-sky/15 blur-3xl"
+          />
 
           {/* Decorative lotus pattern */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
