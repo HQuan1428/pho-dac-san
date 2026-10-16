@@ -10,6 +10,15 @@ export const metadata = {
   description: "Cảm ơn bạn đã đặt hàng trên Phố Đặc Sản. Các shop sẽ liên hệ sớm nhất để xác nhận đơn hàng.",
 };
 
+function maskPhone(phone: string): string {
+  const trimmed = phone.trim();
+  if (trimmed.length <= 4) return trimmed;
+  const prefix = trimmed.slice(0, 2);
+  const suffix = trimmed.slice(-2);
+  const maskedLength = trimmed.length - 4;
+  return `${prefix}${"*".repeat(maskedLength)}${suffix}`;
+}
+
 export default async function DatHangThanhCongPage({
   searchParams,
 }: {
@@ -61,7 +70,7 @@ export default async function DatHangThanhCongPage({
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 space-y-8">
       {/* Success banner */}
       <div className="text-center space-y-3">
-        <div className="inline-flex size-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+        <div className="inline-flex size-16 items-center justify-center rounded-full bg-success/10 text-success">
           <CheckCircle2 className="size-10" />
         </div>
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">
@@ -81,7 +90,7 @@ export default async function DatHangThanhCongPage({
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             Các gian hàng sẽ sớm liên hệ qua số điện thoại{" "}
-            <strong className="text-foreground">{firstOrder.customerPhone}</strong> để xác nhận số lượng,
+            <strong className="text-foreground">{maskPhone(firstOrder.customerPhone)}</strong> để xác nhận số lượng,
             thời gian giao và thông báo phí vận chuyển chi tiết trước khi gửi hàng.
           </p>
           <p className="text-xs text-muted-foreground font-medium pt-1">
@@ -95,15 +104,10 @@ export default async function DatHangThanhCongPage({
         <h2 className="font-semibold text-foreground border-b pb-2">Thông tin người nhận</h2>
         <div className="grid gap-1 sm:grid-cols-2 text-muted-foreground pt-1">
           <div>Họ và tên: <strong className="text-foreground">{firstOrder.customerName}</strong></div>
-          <div>Số điện thoại: <strong className="text-foreground">{firstOrder.customerPhone}</strong></div>
+          <div>Số điện thoại: <strong className="text-foreground">{maskPhone(firstOrder.customerPhone)}</strong></div>
           <div className="sm:col-span-2">
             Địa chỉ giao hàng: <strong className="text-foreground">{firstOrder.shippingAddress}</strong>
           </div>
-          {firstOrder.customerEmail && (
-            <div className="sm:col-span-2">
-              Email nhận thông báo: <strong className="text-foreground">{firstOrder.customerEmail}</strong>
-            </div>
-          )}
           {firstOrder.note && (
             <div className="sm:col-span-2 italic text-xs">
               Ghi chú: {firstOrder.note}

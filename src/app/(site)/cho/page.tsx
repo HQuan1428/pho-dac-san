@@ -132,7 +132,7 @@ export default async function ChoPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Flame className="size-5 text-amber-500" />
+              <Flame className="size-5 text-warning" />
               <h2 className="text-xl font-bold text-foreground md:text-2xl">Đặc sản bán chạy</h2>
             </div>
             <Link
