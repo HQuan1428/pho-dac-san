@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, BadgeCheck, KeyRound, LogIn, MapPinned, PhoneCall, UserPlus, type LucideIcon } from "lucide-react";
+import { ArrowLeft, BadgeCheck, MapPinned, PhoneCall, type LucideIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { LoginForm } from "@/app/(site)/(auth)/login/login-form";
@@ -11,10 +11,10 @@ import { ForgotPasswordForm } from "@/app/(site)/(auth)/forgot-password/forgot-p
 
 export type AuthView = "login" | "register" | "forgot-password";
 
-const VIEWS: Record<AuthView, { title: string; subtitle: string; icon: LucideIcon }> = {
-  login: { title: "Đăng nhập", subtitle: "Chào mừng bạn quay lại Phố Đặc Sản.", icon: LogIn },
-  register: { title: "Tạo tài khoản", subtitle: "Miễn phí, chỉ mất chưa tới một phút.", icon: UserPlus },
-  "forgot-password": { title: "Quên mật khẩu", subtitle: "Nhập email để nhận liên kết đặt lại mật khẩu.", icon: KeyRound },
+const VIEWS: Record<AuthView, { title: string; subtitle: string }> = {
+  login: { title: "Đăng nhập", subtitle: "Chào mừng bạn quay lại Phố Đặc Sản." },
+  register: { title: "Tạo tài khoản", subtitle: "Miễn phí, chỉ mất chưa tới một phút." },
+  "forgot-password": { title: "Quên mật khẩu", subtitle: "Nhập email để nhận liên kết đặt lại mật khẩu." },
 };
 
 const BENEFITS: { icon: LucideIcon; text: string }[] = [
@@ -53,13 +53,13 @@ export function AuthDialog({
     router.refresh();
   };
 
-  const { title, subtitle, icon: Icon } = VIEWS[view];
+  const { title, subtitle } = VIEWS[view];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent mobileSheet className="gap-0 overflow-hidden p-0 sm:max-w-4xl md:grid-cols-2 md:[&>[data-slot=dialog-close]]:text-primary-foreground md:[&>[data-slot=dialog-close]]:hover:bg-white/15">
         <div className="flex flex-col gap-5 p-6 sm:p-8">
-          <div className="flex items-start gap-3 pr-6">
+          <div className="flex items-start gap-2 pr-6">
             {view === "forgot-password" ? (
               <Button
                 variant="ghost"
@@ -70,11 +70,7 @@ export function AuthDialog({
               >
                 <ArrowLeft className="size-4" aria-hidden />
               </Button>
-            ) : (
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Icon className="size-5" aria-hidden />
-              </span>
-            )}
+            ) : null}
             <div className="min-w-0">
               <DialogTitle className="text-xl font-bold tracking-tight">{title}</DialogTitle>
               <DialogDescription className="mt-0.5 text-sm text-muted-foreground">{subtitle}</DialogDescription>
