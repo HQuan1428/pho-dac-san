@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function CtaBand() {
   return (
-    <section className="py-16 md:py-20 border-t">
+    <section className="bg-primary/5 py-16 md:py-20">
       <div className="container-page">
         <div className="relative overflow-hidden rounded-2xl bg-primary text-primary-foreground px-6 py-12 text-center md:px-12 md:py-16 shadow-lg">
           {/* Subtle background glow */}
